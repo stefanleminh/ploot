@@ -1,4 +1,5 @@
 const Discord = require("discord.js");
+const functions = require('../modules/functions')
 
 exports.run = (client, message, args) => {
   let randomizedPlayers = shuffle(client.currentPlayers);
@@ -49,7 +50,9 @@ function printTeam(title, team, color, message) {
     .setTitle(title)
     .setColor(color)
     .setAuthor(`${message.guild.name} Event`, message.guild.iconURL)
-    .addField("Team", team);
+    .addFields((functions.chunk(team, 6)).map(chunk => {
+      return {name: title, value: chunk , inline: true}
+    }))
 
   message.channel.send(teamEmbed);
 }

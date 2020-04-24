@@ -1,4 +1,21 @@
+const functions = require("../modules/functions");
+const Discord = require("discord.js");
+
 exports.run = (client, message, args) => {
-  message.channel.send("Active players: " + client.currentPlayers);
-  message.channel.send("Spectators: " + client.currentSpectators);
+  printList(client.currentPlayers, "Players", "#000088", message);
+  printList(client.currentSpectators, "Spectators", "#fe0000", message);
 };
+
+function printList(list, title, color, message) {
+  let embed = new Discord.MessageEmbed()
+    .setTitle(title)
+    .setColor(color)
+    .setAuthor(`${message.guild.name} Event`, message.guild.iconURL)
+    .addFields(
+      functions.chunk(list, 6).map((chunk) => {
+        return { name: title, value: chunk, inline: true };
+      })
+    );
+
+  message.channel.send(embed);
+}
