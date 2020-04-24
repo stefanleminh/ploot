@@ -8,18 +8,19 @@ exports.run = (client, message, args) => {
     .addField("`=help`", "Shows this help message")
     .addField("`=list`", "Lists active players and spectators")
     .addField(
-      "`=addPlayer [name] ...`",
+      "`=addplayer [name] ...`",
       "Adds one or multiple participants to the active players"
     )
     .addField(
-      "`=addSpectator [name] ...`",
+      "`=addspectator [name] ...`",
       "Adds one or multiple participants as a spectator"
     )
     .addField("`=remove [name] ...`", "Removes one player from the session")
     .addField(
-      "`=switchMode [name]`",
+      "`=switchmode [name]`",
       "Switches the player form active player to spectator or vise versa"
     )
-    .addField("`=randomize`", "Randomizes and shows the new teams");
+    .addField("`=randomize`", "Randomizes and shows the new teams")
+    .addField("`=clear`", "Clears active players and spectators list");
   message.channel.send(helpEmbed);
 };
