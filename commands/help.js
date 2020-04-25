@@ -15,7 +15,7 @@ exports.run = (client, message, args) => {
       "`=addspectator [name] ...`",
       "Adds one or multiple participants as a spectator"
     )
-    .addField("`=remove [name] ...`", "Removes one player from the session")
+    .addField("`=remove [name] ...`", "Removes one or multiple participants from the session")
     .addField(
       "`=switchmode [name]`",
       "Switches the player form active player to spectator or vise versa"
