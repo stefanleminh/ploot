@@ -10,7 +10,7 @@ function printList(list, title, color, message) {
   let embed = new Discord.MessageEmbed()
     .setTitle(title)
     .setColor(color)
-    .setAuthor(`${message.guild.name} Event`, message.guild.iconURL)
+    .setAuthor(`${message.guild.name} 6v6-Event`, message.guild.iconURL)
     .addFields(
       functions.chunk(list, 6).map((chunk) => {
         return { name: title, value: chunk, inline: true };

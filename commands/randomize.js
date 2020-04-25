@@ -8,8 +8,8 @@ exports.run = (client, message, args) => {
   let firstTeam = teams[0];
   let secondTeam = teams[1];
   let spectators = client.currentSpectators.concat(randomizedPlayers.slice(12));
-  printTeam("Team 1", firstTeam, "#000088", message);
-  printTeam("Team 2", secondTeam, "#fe0000", message);
+  printTeam("Coochiecookers", firstTeam, "#000088", message);
+  printTeam("Chanqlas", secondTeam, "#fe0000", message);
   printTeam("Spectators", spectators, "#ffa500", message);
 };
 
@@ -49,7 +49,7 @@ function printTeam(title, team, color, message) {
   let teamEmbed = new Discord.MessageEmbed()
     .setTitle(title)
     .setColor(color)
-    .setAuthor(`${message.guild.name} Event`, message.guild.iconURL)
+    .setAuthor(`${message.guild.name} 6v6-Event`, message.guild.iconURL)
     .addFields((functions.chunk(team, 6)).map(chunk => {
       return {name: title, value: chunk , inline: true}
     }))

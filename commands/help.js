@@ -4,7 +4,7 @@ exports.run = (client, message, args) => {
   let helpEmbed = new Discord.MessageEmbed()
     .setTitle("Help")
     .setColor("#B1F7AA")
-    .setAuthor(`${message.guild.name} Event`, message.guild.iconURL)
+    .setAuthor(`${message.guild.name} 6v6-Event`, message.guild.iconURL)
     .addField("`=help`", "Shows this help message")
     .addField("`=list`", "Lists active players and spectators")
     .addField(
