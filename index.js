@@ -7,6 +7,7 @@ client.logger = console;
 client.config = require("./config.json");
 client.currentPlayers = [];
 client.currentSpectators = [];
+client.voiceChannels = [];
 client.sessionRunning = false;
 
 fs.readdir("./events/", (err, files) => {

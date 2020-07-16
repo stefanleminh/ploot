@@ -1,7 +1,7 @@
 const addParticipant = (participant, message, array, arrayname) => {
   if (array.includes(participant)) {
     message.channel.send(
-      "Participant " + participant.id + "> already exists in " + arrayname + "!"
+      "Participant <@" + participant.id + "> already exists in " + arrayname + "!"
     );
     return;
   }
@@ -13,6 +13,20 @@ const addParticipant = (participant, message, array, arrayname) => {
 };
 
 exports.addParticipant = addParticipant;
+
+const addVoiceChannel = (channel, message, array, arrayname) => {
+  if (array.includes(participant)) {
+    message.channel.send(
+      "Participant <@" + participant.id + "> already exists in " + arrayname + "!"
+    );
+    return;
+  }
+  array.push(participant);
+  
+  message.channel.send(
+    "Added participant <@" + participant.id + "> to list " + arrayname
+  );
+};
 
 const chunk = (arr, chunkSize) => {
     var R = [];
