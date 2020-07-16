@@ -2,6 +2,10 @@ const functions = require("../modules/functions");
 const Discord = require("discord.js");
 
 exports.run = (client, message, args) => {
+  if(client.voiceChannels.length === 0) {
+    message.channel.send("You have not started a session yet! Please run the =newsession command.")
+    return
+  }
   printList(client.currentPlayers, "Players", "#000088", message);
   printList(client.currentSpectators, "Spectators", "#fe0000", message);
 };

@@ -2,15 +2,19 @@ const Discord = require("discord.js");
 const functions = require('../modules/functions')
 
 exports.run = (client, message, args) => {
+  if(client.voiceChannels.length === 0) {
+    message.channel.send("You have not started a session yet! Please run the =newsession command.")
+    return
+  }
   let randomizedPlayers = shuffle(client.currentPlayers);
   const randomizedPlayerPool = randomizedPlayers.slice(0, 12);
   let teams = createTeams(randomizedPlayerPool);
   let firstTeam = teams[0];
   let secondTeam = teams[1];
   let spectators = client.currentSpectators.concat(randomizedPlayers.slice(12));
-  printTeam("Coochiecookers", firstTeam, "#000088", message);
-  printTeam("Chanqlas", secondTeam, "#fe0000", message);
-  printTeam("Spectators", spectators, "#ffa500", message);
+  printTeam(client.voiceChannels[1].name, firstTeam, "#000088", message);
+  printTeam(client.voiceChannels[2].name, secondTeam, "#fe0000", message);
+  printTeam(client.voiceChannels[0], spectators, "#ffa500", message);
 };
 
 /**
