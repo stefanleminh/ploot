@@ -8,6 +8,8 @@ client.config = require("./config.json");
 client.currentPlayers = [];
 client.currentSpectators = [];
 client.voiceChannels = [];
+client.firstTeam = [];
+client.secondTeam = [];
 client.sessionRunning = false;
 
 fs.readdir("./events/", (err, files) => {

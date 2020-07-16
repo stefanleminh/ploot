@@ -9,12 +9,12 @@ exports.run = (client, message, args) => {
   let randomizedPlayers = shuffle(client.currentPlayers);
   const randomizedPlayerPool = randomizedPlayers.slice(0, 12);
   let teams = createTeams(randomizedPlayerPool);
-  let firstTeam = teams[0];
-  let secondTeam = teams[1];
-  let spectators = client.currentSpectators.concat(randomizedPlayers.slice(12));
-  printTeam(client.voiceChannels[1].name, firstTeam, "#000088", message);
-  printTeam(client.voiceChannels[2].name, secondTeam, "#fe0000", message);
-  printTeam(client.voiceChannels[0], spectators, "#ffa500", message);
+  client.firstTeam = teams[0];
+  client.secondTeam = teams[1];
+  client.currentSpectators = client.currentSpectators.concat(randomizedPlayers.slice(12));
+  printTeam(client.voiceChannels[1].name, client.firstTeam, "#000088", message);
+  printTeam(client.voiceChannels[2].name, client.secondTeam, "#fe0000", message);
+  printTeam(client.voiceChannels[0].name, client.currentSpectators, "#ffa500", message);
 };
 
 /**
