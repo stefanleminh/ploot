@@ -5,5 +5,7 @@ exports.run = (client, message, args) => {
   }
   client.currentPlayers = [];
   client.currentSpectators = [];
+  client.firstTeam = [];
+  client.secondTeam = [];
   message.channel.send("Cleared all lists from participants!");
 };

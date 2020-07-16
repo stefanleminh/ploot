@@ -5,7 +5,11 @@ exports.run = (client, message, args) => {
       }
     client.sessionRunning = false;
     client.currentPlayers = [];
-    client.spectator = [];
+    client.currentSpectators = [];
+    client.voiceChannels = [];
+    client.firstTeam = [];
+    client.secondTeam = [];
+
     message.channel.send(
         "Session ended! Cleared all lists."
     );
