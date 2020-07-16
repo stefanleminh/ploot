@@ -5,7 +5,9 @@ exports.run = (client, message, args) => {
     message.channel.send("Please provide a name to add.");
     return;
   }
-  args.forEach((player) => {
+  let players = message.mentions.users
+
+  players.forEach((player) => {
     functions.addParticipant(player, message, client.currentPlayers, "players");
   });
 };
