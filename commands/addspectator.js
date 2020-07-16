@@ -9,7 +9,9 @@ exports.run = (client, message, args) => {
     message.channel.send("Please provide a name to add.");
     return;
   }
-  args.forEach((spectator) => {
+  let spectators = message.mentions.users
+
+  spectators.forEach((spectator) => {
     functions.addParticipant(spectator, message, client.currentSpectators, "spectators");
   });
 };

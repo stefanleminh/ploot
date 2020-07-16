@@ -5,15 +5,18 @@ exports.run = (client, message, args) => {
     );
     return;
   }
+  client.currentSpectators.forEach(spectator => {
+    const member = message.guild.members.cache.get(spectator.id);
+    member.voice.setChannel(client.voiceChannels[0])
+  })
+
   client.firstTeam.forEach((player) => {
     const member = message.guild.members.cache.get(player.id);
-    console.log("Setting member " + member.name + " to VC " + client.voiceChannels[1])
     member.voice.setChannel(client.voiceChannels[1])
   });
 
   client.secondTeam.forEach((player) => {
     const member = message.guild.members.cache.get(player.id);
-    console.log("Setting member " + member.name + " to VC " + client.voiceChannels[2])
     member.voice.setChannel(client.voiceChannels[2])
   });
 };
