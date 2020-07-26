@@ -29,5 +29,5 @@ exports.run = (client, message, args) => {
     return
   }
   
-  message.channel.send("New session has been created! " + client.voiceChannels[0].name + " is the general/spectator's lobby. " + client.voiceChannels[1].name + " is the first team's lobby. " + client.voiceChannels[2].name + " is the second team's lobby. " + "You can now add users.")
+  message.channel.send("New session has been created! `" + client.voiceChannels[0].name + "` is the general/spectator's lobby. `" + client.voiceChannels[1].name + "` is the first team's lobby. `" + client.voiceChannels[2].name + "` is the second team's lobby. You can now add users.")
 };

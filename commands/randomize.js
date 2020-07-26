@@ -6,11 +6,13 @@ exports.run = (client, message, args) => {
     message.channel.send("You have not started a session yet! Please run the =newsession command.")
     return
   }
+  let guaranteedPlayers = client.lastRoundSpectators
+  let guaranteedPlayersTeams = createTeams(guaranteedPlayers.filter(el => !guaranteedPlayers.includes(el)))
   let randomizedPlayers = shuffle(client.currentPlayers);
   const randomizedPlayerPool = randomizedPlayers.slice(0, 12);
-  let teams = createTeams(randomizedPlayerPool);
-  client.firstTeam = teams[0];
-  client.secondTeam = teams[1];
+  let playerTeams = createTeams(randomizedPlayerPool);
+  client.firstTeam = guaranteedPlayersTeams[0].concat(playerTeams[0].slice(0, 6 - guaranteedPlayersTeams[0].length));
+  client.secondTeam = guaranteedPlayersTeams[1].concat(playerTeams[1].slice(0, 6 - guaranteedPlayersTeams[1].length));
   client.currentSpectators = client.currentSpectators.concat(randomizedPlayers.slice(12));
   printTeam(client.voiceChannels[1].name, client.firstTeam, "#000088", message);
   printTeam(client.voiceChannels[2].name, client.secondTeam, "#fe0000", message);
