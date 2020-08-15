@@ -13,7 +13,7 @@ exports.run = (client, message, args) => {
   
     client.secondTeam.forEach((player) => {
       const member = message.guild.members.cache.get(player.id);
-      member.voice.setChannel(client.voiceChannels[1])
+      member.voice.setChannel(client.voiceChannels[0])
     });
   };
   
