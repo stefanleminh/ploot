@@ -15,6 +15,10 @@ exports.run = (client, message, args) => {
       "`=startmatch`",
       "Moves the users to the designated team channels. The user has to be in a VC to work."
     )
+    .addField(
+      "`=endmatch`",
+      "Moves the users back to the lobby. The user has to be in a VC to work."
+    )
     .addField("`=list`", "Lists active players and spectators.")
     .addField(
       "`=addplayer [@DiscordUser] ...`",
