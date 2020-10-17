@@ -6,6 +6,9 @@ exports.run = (client, message, args) => {
     message.channel.send("You have not started a session yet! Please run the =newsession command.")
     return
   }
+  client.firstTeam = []
+  client.secondTeam = []
+  client.currentSpectators = []
   let guaranteedPlayers = client.lastRoundSpectators
   let guaranteedPlayersTeams = createTeams(guaranteedPlayers.filter(el => !guaranteedPlayers.includes(el)))
   let randomizedPlayers = shuffle(client.currentPlayers);
