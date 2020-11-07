@@ -3,26 +3,11 @@ exports.run = (client, message, args) => {
     message.channel.send("There's already a session running! Please run =endsession first before starting a new session.");
     return;
   }
-  if (args.length != 3) {
-    message.channel.send("Please provide three channel names.");
-    return;
-  }
-  args.forEach((channelName) => {
-    const channel = message.guild.channels.cache.find(channel => channel.name.toLowerCase().includes(channelName.toLowerCase()) && channel.type === "voice");
 
-    if(channel === undefined) {
-      message.channel.send(
-        "Channel " + channelName + " does not exist!"
-      );
-      return;
-    }
-    if(client.voiceChannels.some(channel => channel.name === channelName)) {
-      message.channel.send(
-        "Channel " + channelName + " is already on the list!"
-      );
-    }
-    client.voiceChannels.push(channel);
-  });
+  client.voiceChannels.push(message.guild.channels.cache.get(client.config.lobby))
+  client.voiceChannels.push(message.guild.channels.cache.get(client.config.firstTeamVc))
+  client.voiceChannels.push(message.guild.channels.cache.get(client.config.secondTeamVc))
+  
   if(client.voiceChannels.length != 3) {
     message.channel.send("Unable to add channels to start a session! Please try again or check the help command.")
     client.voiceChannels = [];
