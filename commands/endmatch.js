@@ -5,15 +5,16 @@ exports.run = (client, message, args) => {
       );
       return;
     }
-  
-    client.firstTeam.forEach((player) => {
+
+    client.voiceChannels[1].members.foreach((player) => {
+      const member = message.guild.members.cache.get(player.id);
+      member.voice.setChannel(client.voiceChannels[0])
+    });
+
+    client.voiceChannels[2].members.foreach((player) => {
       const member = message.guild.members.cache.get(player.id);
       member.voice.setChannel(client.voiceChannels[0])
     });
   
-    client.secondTeam.forEach((player) => {
-      const member = message.guild.members.cache.get(player.id);
-      member.voice.setChannel(client.voiceChannels[0])
-    });
   };
   
