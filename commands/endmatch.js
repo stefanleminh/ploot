@@ -6,15 +6,18 @@ exports.run = (client, message, args) => {
       return;
     }
 
-    client.voiceChannels[1].members.foreach((player) => {
-      const member = message.guild.members.cache.get(player.id);
-      member.voice.setChannel(client.voiceChannels[0])
-    });
+    if(client.voiceChannels[1].members.size > 0) {
+      client.voiceChannels[1].members.array().forEach((player) => {
+        player.voice.setChannel(client.voiceChannels[0])
+      })
+    }
+    
+    console.log(client.voiceChannels[2].members.values())
+    if(client.voiceChannels[2].members.size > 0) {
+      client.voiceChannels[2].members.array().forEach((player) => {
+        player.voice.setChannel(client.voiceChannels[0])
+      })
 
-    client.voiceChannels[2].members.foreach((player) => {
-      const member = message.guild.members.cache.get(player.id);
-      member.voice.setChannel(client.voiceChannels[0])
-    });
-  
+    }
   };
   

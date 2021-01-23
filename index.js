@@ -10,6 +10,7 @@ client.currentSpectators = [];
 client.voiceChannels = [];
 client.firstTeam = [];
 client.secondTeam = [];
+client.spectatorTeam = [];
 client.lastRoundSpectators = [];
 client.sessionRunning = false;
 
