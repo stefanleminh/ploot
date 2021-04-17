@@ -1,3 +1,4 @@
+const functions = require('../modules/functions')
 exports.run = (client, message, args) => {
   if (client.voiceChannels.length === 0) {
     message.channel.send(
@@ -5,6 +6,7 @@ exports.run = (client, message, args) => {
     );
     return;
   }
+  functions.purge(client, message);
   client.currentSpectators.forEach(spectator => {
     const member = message.guild.members.cache.get(spectator.id);
     member.voice.setChannel(client.voiceChannels[0])
