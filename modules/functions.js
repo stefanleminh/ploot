@@ -24,7 +24,6 @@ const chunk = (arr, chunkSize) => {
 exports.chunk = chunk;
 
 const purge = (client, message) => {
-  // TODO: Refactor to use the already existing remove function
   const membersInLobby = message.guild.channels.cache.get(client.config.lobby).members.keyArray()
   const purgedPlayers = client.currentPlayers.filter((currentPlayer) => membersInLobby.includes(currentPlayer.id))
   const removedPlayers = client.currentPlayers.filter((currentPlayer) => !membersInLobby.includes(currentPlayer.id))
