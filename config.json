@@ -1,4 +1,7 @@
 {
     "prefix": "=",
-    "token": ""
+    "token": "",
+    "lobby": "",
+    "firstTeamVc": "",
+    "secondTeamVc": ""
 }
