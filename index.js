@@ -12,7 +12,6 @@ client.firstTeam = [];
 client.secondTeam = [];
 client.spectatorTeam = [];
 client.lastRoundSpectators = [];
-client.sessionRunning = false;
 
 fs.readdir("./events/", (err, files) => {
   if (err) return console.error(err);
