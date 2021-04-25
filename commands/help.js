@@ -7,13 +7,13 @@ exports.run = (client, message, args) => {
     .setAuthor(`${message.guild.name} 6v6-Event`, message.guild.iconURL)
     .addField("`=help`", "Shows this help message.")
     .addField(
-      "`=newsession [lobby-channelname] [firstteam-channelname] [secondteam-channelname]`",
-      "Creates a session and lets the bot know what channels to move the users to. The bot will look for channels, that include the provided name (thus the provided name doesn't have to be exact)."
+      "`=newsession`",
+      "Creates a session with the pre-configured channels."
     )
     .addField("`=endsession`", "Ends the session and clears all the data.")
     .addField(
       "`=startmatch`",
-      "Moves the users to the designated team channels. The user has to be in a VC to work."
+      "Moves the users to the designated team channels. The user has to be in a VC to work. Will send a message and not move a user if they are not in the lobby."
     )
     .addField(
       "`=endmatch`",
@@ -36,7 +36,7 @@ exports.run = (client, message, args) => {
       "`=switchmode [@DiscordUser]`",
       "Switches the player form active player to spectator or vise versa."
     )
-    .addField("`=randomize`", "Randomizes and shows the new teams.")
+    .addField("`=randomize`", "Randomizes and shows the new teams. Will purge any users not connected to the lobby.")
     .addField("`=clear`", "Clears active players and spectators list.");
   message.channel.send(helpEmbed);
 };

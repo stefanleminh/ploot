@@ -1,5 +1,7 @@
-exports.run = (client, message, args) => {
-  if(client.voiceChannels.length != 0) {
+const validation = require('../modules/validation')
+
+exports.run = (client, message) => {
+  if(validation.isActiveSession(client)) {
     message.channel.send("There's already a session running! Please run =endsession first before starting a new session.");
     return;
   }
