@@ -1,19 +1,22 @@
 {
-  "name": "OverwatcheesBot",
+  "name": "ploot",
   "version": "1.0.0",
-  "description": "",
+  "description": "An Overwatch bot that manages 6v6-Events or Scrims.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "engines": {
-    "node": "12.x"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stefanleminh/ploot.git"
   },
-  "keywords": [],
   "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/stefanleminh/ploot/issues"
+  },
+  "homepage": "https://github.com/stefanleminh/ploot#readme",
   "dependencies": {
-    "discord.js": "^12.2.0",
-    "enmap": "^5.2.4"
+    "discord.js": "^12.5.3"
   }
 }

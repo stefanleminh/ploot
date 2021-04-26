@@ -2,15 +2,25 @@ const Discord = require("discord.js");
 const functions = require('../modules/functions')
 
 exports.run = (client, message, args) => {
+  if(client.voiceChannels.length === 0) {
+    message.channel.send("You have not started a session yet! Please run the =newsession command.")
+    return
+  }
+  functions.purge(client, message);
+  client.firstTeam = []
+  client.secondTeam = []
+  client.spectatorTeam = []
+  let guaranteedPlayers = client.lastRoundSpectators
+  let guaranteedPlayersTeams = createTeams(guaranteedPlayers.filter(el => !guaranteedPlayers.includes(el)))
   let randomizedPlayers = shuffle(client.currentPlayers);
   const randomizedPlayerPool = randomizedPlayers.slice(0, 12);
-  let teams = createTeams(randomizedPlayerPool);
-  let firstTeam = teams[0];
-  let secondTeam = teams[1];
-  let spectators = client.currentSpectators.concat(randomizedPlayers.slice(12));
-  printTeam("Coochiecookers", firstTeam, "#000088", message);
-  printTeam("Chanqlas", secondTeam, "#fe0000", message);
-  printTeam("Spectators", spectators, "#ffa500", message);
+  let playerTeams = createTeams(randomizedPlayerPool);
+  client.firstTeam = guaranteedPlayersTeams[0].concat(playerTeams[0].slice(0, 6 - guaranteedPlayersTeams[0].length));
+  client.secondTeam = guaranteedPlayersTeams[1].concat(playerTeams[1].slice(0, 6 - guaranteedPlayersTeams[1].length));
+  client.spectatorTeam = client.currentSpectators.concat(randomizedPlayers.slice(12));
+  printTeam(client.voiceChannels[1].name, client.firstTeam, "#000088", message);
+  printTeam(client.voiceChannels[2].name, client.secondTeam, "#fe0000", message);
+  printTeam(client.voiceChannels[0].name, client.spectatorTeam, "#ffa500", message);
 };
 
 /**

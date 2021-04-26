@@ -5,22 +5,38 @@ exports.run = (client, message, args) => {
     .setTitle("Help")
     .setColor("#B1F7AA")
     .setAuthor(`${message.guild.name} 6v6-Event`, message.guild.iconURL)
-    .addField("`=help`", "Shows this help message")
-    .addField("`=list`", "Lists active players and spectators")
+    .addField("`=help`", "Shows this help message.")
     .addField(
-      "`=addplayer [name] ...`",
-      "Adds one or multiple participants to the active players"
+      "`=newsession`",
+      "Creates a session with the pre-configured channels."
+    )
+    .addField("`=endsession`", "Ends the session and clears all the data.")
+    .addField(
+      "`=startmatch`",
+      "Moves the users to the designated team channels. The user has to be in a VC to work. Will send a message and not move a user if they are not in the lobby."
     )
     .addField(
-      "`=addspectator [name] ...`",
-      "Adds one or multiple participants as a spectator"
+      "`=endmatch`",
+      "Moves the users back to the lobby. The user has to be in a VC to work."
     )
-    .addField("`=remove [name] ...`", "Removes one or multiple participants from the session")
+    .addField("`=list`", "Lists active players and spectators.")
     .addField(
-      "`=switchmode [name]`",
-      "Switches the player form active player to spectator or vise versa"
+      "`=addplayer [@DiscordUser] ...`",
+      "Adds one or multiple participants to the active players."
     )
-    .addField("`=randomize`", "Randomizes and shows the new teams")
-    .addField("`=clear`", "Clears active players and spectators list");
+    .addField(
+      "`=addspectator [@DiscordUser] ...`",
+      "Adds one or multiple participants as a spectator."
+    )
+    .addField(
+      "`=remove [@DiscordUser] ...`",
+      "Removes one or multiple participants from the session."
+    )
+    .addField(
+      "`=switchmode [@DiscordUser]`",
+      "Switches the player form active player to spectator or vise versa."
+    )
+    .addField("`=randomize`", "Randomizes and shows the new teams. Will purge any users not connected to the lobby.")
+    .addField("`=clear`", "Clears active players and spectators list.");
   message.channel.send(helpEmbed);
 };
