@@ -12,7 +12,6 @@ exports.run = (client, message, args) => {
       })
     }
     
-    console.log(client.voiceChannels[2].members.values())
     if(client.voiceChannels[2].members.size > 0) {
       client.voiceChannels[2].members.array().forEach((player) => {
         player.voice.setChannel(client.voiceChannels[0])
