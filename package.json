@@ -4,7 +4,10 @@
   "description": "An Overwatch bot that manages 6v6-Events or Scrims.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint \"./**.js\"",
+    "format": "prettier --write ."
   },
   "repository": {
     "type": "git",
@@ -18,5 +21,11 @@
   "homepage": "https://github.com/stefanleminh/ploot#readme",
   "dependencies": {
     "discord.js": "^12.5.3"
+  },
+  "devDependencies": {
+    "eslint": "^7.25.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "prettier": "^2.2.1"
   }
 }
