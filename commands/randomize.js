@@ -1,26 +1,26 @@
-const Discord = require("discord.js");
-const functions = require('../modules/functions')
+const Discord = require('discord.js');
+const functions = require('../modules/functions');
 
 exports.run = (client, message, args) => {
-  if(client.voiceChannels.length === 0) {
-    message.channel.send("You have not started a session yet! Please run the =newsession command.")
-    return
+  if (client.voiceChannels.length === 0) {
+    message.channel.send('You have not started a session yet! Please run the =newsession command.');
+    return;
   }
   functions.purge(client, message);
-  client.firstTeam = []
-  client.secondTeam = []
-  client.spectatorTeam = []
-  let guaranteedPlayers = client.lastRoundSpectators
-  let guaranteedPlayersTeams = createTeams(guaranteedPlayers.filter(el => !guaranteedPlayers.includes(el)))
+  client.firstTeam = [];
+  client.secondTeam = [];
+  client.spectatorTeam = [];
+  let guaranteedPlayers = client.lastRoundSpectators;
+  let guaranteedPlayersTeams = createTeams(guaranteedPlayers.filter((el) => !guaranteedPlayers.includes(el)));
   let randomizedPlayers = shuffle(client.currentPlayers);
   const randomizedPlayerPool = randomizedPlayers.slice(0, 12);
   let playerTeams = createTeams(randomizedPlayerPool);
   client.firstTeam = guaranteedPlayersTeams[0].concat(playerTeams[0].slice(0, 6 - guaranteedPlayersTeams[0].length));
   client.secondTeam = guaranteedPlayersTeams[1].concat(playerTeams[1].slice(0, 6 - guaranteedPlayersTeams[1].length));
   client.spectatorTeam = client.currentSpectators.concat(randomizedPlayers.slice(12));
-  printTeam(client.voiceChannels[1].name, client.firstTeam, "#000088", message);
-  printTeam(client.voiceChannels[2].name, client.secondTeam, "#fe0000", message);
-  printTeam(client.voiceChannels[0].name, client.spectatorTeam, "#ffa500", message);
+  printTeam(client.voiceChannels[1].name, client.firstTeam, '#000088', message);
+  printTeam(client.voiceChannels[2].name, client.secondTeam, '#fe0000', message);
+  printTeam(client.voiceChannels[0].name, client.spectatorTeam, '#ffa500', message);
 };
 
 /**
@@ -60,9 +60,11 @@ function printTeam(title, team, color, message) {
     .setTitle(title)
     .setColor(color)
     .setAuthor(`${message.guild.name} 6v6-Event`, message.guild.iconURL)
-    .addFields((functions.chunk(team, 6)).map(chunk => {
-      return {name: title, value: chunk , inline: true}
-    }))
+    .addFields(
+      functions.chunk(team, 6).map((chunk) => {
+        return { name: title, value: chunk, inline: true };
+      })
+    );
 
   message.channel.send(teamEmbed);
 }
