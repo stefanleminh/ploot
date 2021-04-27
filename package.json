@@ -20,7 +20,8 @@
   },
   "homepage": "https://github.com/stefanleminh/ploot#readme",
   "dependencies": {
-    "discord.js": "^12.5.3"
+    "discord.js": "^12.5.3",
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "eslint": "^7.25.0",

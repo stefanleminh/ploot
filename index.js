@@ -1,8 +1,9 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const fs = require('fs');
+const winston = require('./logging/winston');
 
-client.logger = console;
+client.logger = winston;
 client.config = require('./config.json');
 client.currentPlayers = [];
 client.currentSpectators = [];
@@ -29,7 +30,7 @@ fs.readdir('./commands/', (err, files) => {
     if (!file.endsWith('.js')) return;
     let props = require(`./commands/${file}`);
     let commandName = file.split('.')[0];
-    console.log(`Attempting to load command ${commandName}`);
+    client.logger.info(`Attempting to load command ${commandName}`);
     client.commands.set(commandName, props);
   });
 });
