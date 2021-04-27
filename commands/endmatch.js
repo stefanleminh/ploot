@@ -1,4 +1,6 @@
 const validation = require('../modules/validation');
+const path = require('path');
+const logger = require('../logging/winston')(path.basename(__filename));
 
 exports.run = (client, message) => {
   if (!validation.isActiveSession(client)) {
@@ -9,14 +11,14 @@ exports.run = (client, message) => {
   if (client.voiceChannels[1].members.size > 0) {
     client.voiceChannels[1].members.array().forEach((player) => {
       player.voice.setChannel(client.voiceChannels[0]);
-      client.logger.info('Moved user ' + player.user.username + ' to voice channel ' + client.voiceChannels[0].name);
+      logger.info('Moved user ' + player.user.username + ' to voice channel ' + client.voiceChannels[0].name);
     });
   }
 
   if (client.voiceChannels[2].members.size > 0) {
     client.voiceChannels[2].members.array().forEach((player) => {
       player.voice.setChannel(client.voiceChannels[0]);
-      client.logger.info('Moved user ' + player.user.username + ' to voice channel ' + client.voiceChannels[1].name);
+      logger.info('Moved user ' + player.user.username + ' to voice channel ' + client.voiceChannels[1].name);
     });
   }
 };

@@ -1,11 +1,14 @@
-const addParticipant = (participant, message, array, arrayname, client) => {
+const path = require('path');
+const logger = require('../logging/winston')(path.basename(__filename));
+
+const addParticipant = (participant, message, array, arrayname) => {
   if (array.includes(participant)) {
-    client.logger.debug('Participant ' + participant.username + 'already exists in ' + arrayname + '!');
+    logger.debug('Participant ' + participant.username + 'already exists in ' + arrayname + '!');
     message.channel.send('Participant <@' + participant.id + '> already exists in ' + arrayname + '!');
     return;
   }
   array.push(participant);
-  client.logger.debug('Added participant ' + participant.username + ' to list ' + arrayname);
+  logger.debug('Added participant ' + participant.username + ' to list ' + arrayname);
   message.channel.send('Added participant <@' + participant.id + '> to list ' + arrayname);
 };
 
@@ -26,10 +29,10 @@ const purge = (client, message) => {
   const membersInLobby = message.guild.channels.cache.get(client.config.lobby).members.keyArray();
 
   const remainingPlayers = client.currentPlayers.filter((currentPlayer) => membersInLobby.includes(currentPlayer.id));
-  client.logger.debug('Remaining Players are: ' + remainingPlayers.map((player) => player.username).join(','));
+  logger.debug('Remaining Players are: ' + remainingPlayers.map((player) => player.username).join(','));
 
   const purgedPlayers = client.currentPlayers.filter((currentPlayer) => !membersInLobby.includes(currentPlayer.id));
-  client.logger.debug('Purged Players are: ' + purgedPlayers.map((player) => player.username).join(','));
+  logger.debug('Purged Players are: ' + purgedPlayers.map((player) => player.username).join(','));
 
   client.currentPlayers = remainingPlayers;
   purgedPlayers.forEach((removedPlayer) => {
@@ -39,14 +42,12 @@ const purge = (client, message) => {
   const remainingSpectators = client.currentSpectators.filter((currentSpectator) =>
     membersInLobby.includes(currentSpectator.id)
   );
-  client.logger.debug(
-    'Remaining Spectators are: ' + remainingSpectators.map((spectator) => spectator.username).join(',')
-  );
+  logger.debug('Remaining Spectators are: ' + remainingSpectators.map((spectator) => spectator.username).join(','));
 
   const purgedSpectators = client.currentSpectators.filter(
     (currentSpectator) => !membersInLobby.includes(currentSpectator.id)
   );
-  client.logger.debug('Purged spectators are: ' + purgedSpectators.map((spectator) => spectator.username).join(','));
+  logger.debug('Purged spectators are: ' + purgedSpectators.map((spectator) => spectator.username).join(','));
 
   client.currentSpectators = remainingSpectators;
   purgedSpectators.forEach((removedSpectator) => {

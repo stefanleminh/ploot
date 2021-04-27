@@ -1,5 +1,7 @@
 const validation = require('../modules/validation');
 const clear = require('./clear');
+const path = require('path');
+const logger = require('../logging/winston')(path.basename(__filename));
 
 exports.run = (client, message) => {
   if (!validation.isActiveSession(client)) {
@@ -8,6 +10,6 @@ exports.run = (client, message) => {
   }
   clear.run(client, message);
   client.voiceChannels = [];
-  client.logger.debug('Session ended! Cleared all lists.');
+  logger.debug('Session ended! Cleared all lists.');
   message.channel.send('Session ended! Cleared all lists.');
 };

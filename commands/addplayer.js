@@ -14,6 +14,6 @@ exports.run = (client, message, args) => {
   let players = message.mentions.users;
 
   players.forEach((player) => {
-    functions.addParticipant(player, message, client.currentPlayers, 'players', client);
+    functions.addParticipant(player, message, client.currentPlayers, 'players');
   });
 };
