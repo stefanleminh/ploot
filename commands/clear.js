@@ -10,5 +10,6 @@ exports.run = (client, message) => {
   client.firstTeam = [];
   client.secondTeam = [];
   client.lastRoundSpectators = [];
+  client.logger.debug('Cleared all lists from participants!');
   message.channel.send('Cleared all lists from participants!');
 };

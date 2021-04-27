@@ -11,8 +11,15 @@ exports.run = (client, message) => {
   client.voiceChannels.push(message.guild.channels.cache.get(client.config.lobby));
   client.voiceChannels.push(message.guild.channels.cache.get(client.config.firstTeamVc));
   client.voiceChannels.push(message.guild.channels.cache.get(client.config.secondTeamVc));
-
-  if (client.voiceChannels.length != 3) {
+  client.logger.info(
+    'Adding following channels to the list: ' +
+      message.guild.channels.cache.get(client.config.lobby).name +
+      ', ' +
+      message.guild.channels.cache.get(client.config.firstTeamVc).name +
+      ', ' +
+      message.guild.channels.cache.get(client.config.secondTeamVc).name
+  );
+  if (!validation.isActiveSession(client)) {
     message.channel.send('Unable to add channels to start a session! Please try again or check the help command.');
     client.voiceChannels = [];
     return;

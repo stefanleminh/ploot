@@ -13,6 +13,6 @@ exports.run = (client, message, args) => {
   let spectators = message.mentions.users;
 
   spectators.forEach((spectator) => {
-    functions.addParticipant(spectator, message, client.currentSpectators, 'spectators');
+    functions.addParticipant(spectator, message, client.currentSpectators, 'spectators', client);
   });
 };
