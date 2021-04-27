@@ -1,13 +1,16 @@
 const Discord = require("discord.js");
 const client = new Discord.Client();
-const Enmap = require("enmap");
 const fs = require("fs");
 
 client.logger = console;
 client.config = require("./config.json");
 client.currentPlayers = [];
 client.currentSpectators = [];
-client.sessionRunning = false;
+client.voiceChannels = [];
+client.firstTeam = [];
+client.secondTeam = [];
+client.spectatorTeam = [];
+client.lastRoundSpectators = [];
 
 fs.readdir("./events/", (err, files) => {
   if (err) return console.error(err);
@@ -18,7 +21,7 @@ fs.readdir("./events/", (err, files) => {
   });
 });
 
-client.commands = new Enmap();
+client.commands = new Discord.Collection()
 
 fs.readdir("./commands/", (err, files) => {
   if (err) return console.error(err);
