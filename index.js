@@ -14,7 +14,9 @@ client.spectatorTeam = [];
 client.lastRoundSpectators = [];
 
 fs.readdir('./events/', (err, files) => {
-  if (err) return console.error(err);
+  if (err) {
+    return logger.error(err);
+  }
   files.forEach((file) => {
     const event = require(`./events/${file}`);
     let eventName = file.split('.')[0];
@@ -25,7 +27,9 @@ fs.readdir('./events/', (err, files) => {
 client.commands = new Discord.Collection();
 
 fs.readdir('./commands/', (err, files) => {
-  if (err) return console.error(err);
+  if (err) {
+    return logger.error(err);
+  }
   files.forEach((file) => {
     if (!file.endsWith('.js')) return;
     let props = require(`./commands/${file}`);
