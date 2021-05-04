@@ -9,14 +9,14 @@ module.exports = (client, message) => {
   // Our standard argument/command name definition.
   const args = message.content.slice(client.config.prefix.length).trim().split(/ +/g);
   const command = args.shift().toLowerCase();
-  logger.debug('Received command: ' + command);
+  logger.debug(`Received command: ${command}`);
 
   // Grab the command data from the client.commands collection
   const cmd = client.commands.get(command);
 
   // If that command doesn't exist, silently exit and do nothing
   if (!cmd) {
-    logger.debug('Command not found: ' + command);
+    logger.debug(`Command not found: ${command}`);
     return;
   }
 

@@ -17,15 +17,15 @@ exports.run = (client, message, args) => {
   if (client.currentPlayers.includes(participant)) {
     client.currentSpectators.push(participant);
     client.currentPlayers = client.currentPlayers.filter((element) => element != participant);
-    logger.info('User ' + participant.username + ' is now a spectator');
-    message.channel.send('<@' + participant.id + '> is now spectator.');
+    logger.info(`User ${participant.username} is now a spectator`);
+    message.channel.send(`<@${participant.id}> is now spectator.`);
   } else if (client.currentSpectators.includes(participant)) {
     client.currentPlayers.push(participant);
     client.currentSpectators = client.currentSpectators.filter((element) => element != participant);
-    logger.info('User ' + participant.username + ' is now an active player');
-    message.channel.send('<@' + participant.id + '> is now an active player.');
+    logger.info(`User ${participant.username} is now an active player`);
+    message.channel.send(`<@${participant.id}> is now an active player.`);
   } else {
-    logger.info('User ' + participant.username + ' not found as an active player or spectator');
-    message.channel.send('Participant <@' + participant.id + '> not found as active player or spectator.');
+    logger.info(`User ${participant.username} not found as an active player or spectator`);
+    message.channel.send(`Participant <@${participant.id}> not found as active player or spectator.`);
   }
 };
