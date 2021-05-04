@@ -1,7 +1,7 @@
-const Discord = require('discord.js');
+const Discord = require('discord.js')
 
 exports.run = (client, message, args) => {
-  let helpEmbed = new Discord.MessageEmbed()
+  const helpEmbed = new Discord.MessageEmbed()
     .setTitle('Help')
     .setColor('#B1F7AA')
     .setAuthor(`${message.guild.name} 6v6-Event`, message.guild.iconURL)
@@ -19,6 +19,6 @@ exports.run = (client, message, args) => {
     .addField('`=remove [@DiscordUser] ...`', 'Removes one or multiple participants from the session.')
     .addField('`=switchmode [@DiscordUser]`', 'Switches the player form active player to spectator or vise versa.')
     .addField('`=randomize`', 'Randomizes and shows the new teams. Will purge any users not connected to the lobby.')
-    .addField('`=clear`', 'Clears active players and spectators list.');
-  message.channel.send(helpEmbed);
-};
+    .addField('`=clear`', 'Clears active players and spectators list.')
+  message.channel.send(helpEmbed)
+}
