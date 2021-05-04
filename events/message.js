@@ -21,6 +21,6 @@ module.exports = (client, message) => {
   }
 
   // Run the command
-  logger.info('Running command: [' + command + '] with following args: [' + args + ']');
+  logger.info(`Running command: ${command} with following args: ${args}`);
   cmd.run(client, message, args);
 };
