@@ -1,4 +1,6 @@
 const validation = require('../modules/validation');
+const path = require('path');
+const logger = require('../logging/winston')(path.basename(__filename));
 
 exports.run = (client, message) => {
   if (validation.isActiveSession(client)) {
@@ -11,8 +13,15 @@ exports.run = (client, message) => {
   client.voiceChannels.push(message.guild.channels.cache.get(client.config.lobby));
   client.voiceChannels.push(message.guild.channels.cache.get(client.config.firstTeamVc));
   client.voiceChannels.push(message.guild.channels.cache.get(client.config.secondTeamVc));
-
-  if (client.voiceChannels.length != 3) {
+  logger.info(
+    'Adding following channels to the list: ' +
+      message.guild.channels.cache.get(client.config.lobby).name +
+      ', ' +
+      message.guild.channels.cache.get(client.config.firstTeamVc).name +
+      ', ' +
+      message.guild.channels.cache.get(client.config.secondTeamVc).name
+  );
+  if (!validation.isActiveSession(client)) {
     message.channel.send('Unable to add channels to start a session! Please try again or check the help command.');
     client.voiceChannels = [];
     return;

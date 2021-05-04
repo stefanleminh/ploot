@@ -1,8 +1,9 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const fs = require('fs');
+const path = require('path');
 
-client.logger = console;
+const logger = require('./logging/winston')(path.basename(__filename));
 client.config = require('./config.json');
 client.currentPlayers = [];
 client.currentSpectators = [];
@@ -13,7 +14,9 @@ client.spectatorTeam = [];
 client.lastRoundSpectators = [];
 
 fs.readdir('./events/', (err, files) => {
-  if (err) return console.error(err);
+  if (err) {
+    return logger.error(err);
+  }
   files.forEach((file) => {
     const event = require(`./events/${file}`);
     let eventName = file.split('.')[0];
@@ -24,13 +27,15 @@ fs.readdir('./events/', (err, files) => {
 client.commands = new Discord.Collection();
 
 fs.readdir('./commands/', (err, files) => {
-  if (err) return console.error(err);
+  if (err) {
+    return logger.error(err);
+  }
   files.forEach((file) => {
     if (!file.endsWith('.js')) return;
     let props = require(`./commands/${file}`);
     let commandName = file.split('.')[0];
-    console.log(`Attempting to load command ${commandName}`);
     client.commands.set(commandName, props);
+    logger.info(`Loaded command ${commandName}`);
   });
 });
 
