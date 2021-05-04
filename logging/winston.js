@@ -9,7 +9,7 @@ const logger = (filename) => {
         format: 'YYYY-MM-DD HH:mm:ss'
       }),
       winston.format.label({ label: filename }),
-      winston.format.printf((info) => `[${info.timestamp}] [${info.label}] [${info.level}]: ${info.message}`)
+      winston.format.printf((info) => `[${info.timestamp}] [${info.label}] [${info.level}]: ${info.message} ${info.stack || ''}`)
     )
   })
 }

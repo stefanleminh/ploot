@@ -1,9 +1,10 @@
 const Discord = require('discord.js')
-const client = new Discord.Client()
+const config = require('./config.json')
 const fs = require('fs')
 const path = require('path')
 
 const logger = require('./logging/winston')(path.basename(__filename))
+const client = new Discord.Client()
 client.config = require('./config.json')
 client.currentPlayers = []
 client.currentSpectators = []
@@ -13,30 +14,25 @@ client.secondTeam = []
 client.spectatorTeam = []
 client.lastRoundSpectators = []
 
-fs.readdir('./events/', (err, files) => {
-  if (err) {
-    return logger.error(err)
-  }
-  files.forEach((file) => {
-    const event = require(`./events/${file}`)
-    const eventName = file.split('.')[0]
-    client.on(eventName, event.bind(null, client))
-  })
-})
-
 client.commands = new Discord.Collection()
 
-fs.readdir('./commands/', (err, files) => {
-  if (err) {
-    return logger.error(err)
-  }
-  files.forEach((file) => {
-    if (!file.endsWith('.js')) return
-    const props = require(`./commands/${file}`)
-    const commandName = file.split('.')[0]
-    client.commands.set(commandName, props)
-    logger.info(`Loaded command ${commandName}`)
-  })
-})
+// Take commands
+const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'))
+for (const file of commandFiles) {
+  const command = require('./commands/' + file)
+  client.commands.set(command.name, command)
+  logger.info(`Loaded command ${command.name}`)
+}
 
-client.login(client.config.token)
+const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'))
+
+for (const file of eventFiles) {
+  const event = require(`./events/${file}`)
+  if (event.once) {
+    client.once(event.name, (...args) => event.execute(...args, client))
+  } else {
+    client.on(event.name, (...args) => event.execute(...args, client))
+  }
+}
+
+client.login(config.token)
