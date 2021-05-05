@@ -7,6 +7,7 @@ module.exports = {
   aliases: ['ns'],
   description: 'Creates a session with the pre-configured channels.',
   args: '',
+  requiresActiveSession: false,
   order: 2,
   execute (message, args, client) {
     if (validation.isActiveSession(client)) {

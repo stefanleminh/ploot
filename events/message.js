@@ -38,6 +38,10 @@ module.exports = {
       return message.channel.send(reply)
     }
 
+    if (command.requiresActiveSession) {
+      return message.reply('You have not started a session yet! Please run the =newsession command.')
+    }
+
     // Check if user is in cooldown
     if (!cooldowns.has(command.name)) {
       cooldowns.set(command.name, new Discord.Collection())
@@ -53,7 +57,7 @@ module.exports = {
       if (now < expirationTime) {
       // If user is in cooldown
         const timeLeft = (expirationTime - now) / 1000
-        return message.reply(`please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${command.name}\` command.`)
+        return message.reply(`Please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${command.name}\` command.`)
       }
     } else {
       timestamps.set(message.author.id, now)
@@ -64,7 +68,7 @@ module.exports = {
         command.execute(message, args, client)
       } catch (error) {
         logger.error(error)
-        message.reply('there was an error trying to execute that command!')
+        message.reply('There was an error trying to execute that command!')
       }
     }
   }

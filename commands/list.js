@@ -1,18 +1,14 @@
 const functions = require('../modules/functions')
 const Discord = require('discord.js')
-const validation = require('../modules/validation')
 
 module.exports = {
   name: 'list',
   aliases: ['l'],
   description: 'Lists active players and spectators.',
   args: '',
+  requiresActiveSession: true,
   order: 6,
   execute (message, args, client) {
-    if (!validation.isActiveSession(client)) {
-      message.channel.send('You have not started a session yet! Please run the =newsession command.')
-      return
-    }
     printList(client.currentPlayers, 'Players', '#000088', message)
     printList(client.currentSpectators, 'Spectators', '#fe0000', message)
   }

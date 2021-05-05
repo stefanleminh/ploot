@@ -1,4 +1,3 @@
-const validation = require('../modules/validation')
 const path = require('path')
 const logger = require('../logging/winston')(path.basename(__filename))
 
@@ -7,13 +6,9 @@ module.exports = {
   aliases: ['em'],
   description: 'Moves the users back to the lobby. The user has to be in a VC to work.',
   args: '',
+  requiresActiveSession: true,
   order: 5,
   execute (message, args, client) {
-    if (!validation.isActiveSession(client)) {
-      message.channel.send('You have not started a session yet! Please run the =newsession command.')
-      return
-    }
-
     if (client.voiceChannels[1].members.size > 0) {
       client.voiceChannels[1].members.array().forEach((player) => {
         player.voice.setChannel(client.voiceChannels[0])

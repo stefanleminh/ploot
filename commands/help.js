@@ -5,6 +5,7 @@ module.exports = {
   aliases: ['h'],
   description: 'Shows this help message.',
   args: '',
+  requiresActiveSession: false,
   order: 1,
   execute (message, args, client) {
     const sortedCommands = message.client.commands.sort(({ order: a }, { order: b }) => (a - b))

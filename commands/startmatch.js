@@ -1,4 +1,3 @@
-const validation = require('../modules/validation')
 const path = require('path')
 const logger = require('../logging/winston')(path.basename(__filename))
 
@@ -7,13 +6,9 @@ module.exports = {
   aliases: ['sm'],
   description: 'Moves the users to the designated team channels. The user has to be in a VC to work. Will send a message and not move a user if they are not in the lobby.',
   args: '',
+  requiresActiveSession: true,
   order: 4,
   execute (message, args, client) {
-    if (!validation.isActiveSession(client)) {
-      message.channel.send('You have not started a session yet! Please run the =newsession command.')
-      return
-    }
-
     client.currentSpectators.forEach((spectator) => {
       const member = message.guild.members.cache.get(spectator.id)
       setVoiceChannel(member, client.voiceChannels[0], message, client)

@@ -1,4 +1,3 @@
-const validation = require('../modules/validation')
 const path = require('path')
 const logger = require('../logging/winston')(path.basename(__filename))
 
@@ -7,12 +6,9 @@ module.exports = {
   aliases: ['smo'],
   description: 'Switches the player form active player to spectator or vise versa.',
   args: '[@DiscordUser]',
+  requiresActiveSession: true,
   order: 10,
   execute (message, args, client) {
-    if (!validation.isActiveSession(client)) {
-      message.channel.send('You have not started a session yet! Please run the =newsession command.')
-      return
-    }
     // Switch mode of Player
     if (args.length === 0) {
       message.channel.send('Please provide a name to add.')
