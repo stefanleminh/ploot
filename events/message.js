@@ -1,6 +1,7 @@
 const path = require('path')
 const logger = require('../logging/winston')(path.basename(__filename))
 const Discord = require('discord.js')
+const validation = require('../modules/validation')
 
 // Cooldowns
 const cooldowns = new Discord.Collection()
@@ -38,7 +39,7 @@ module.exports = {
       return message.channel.send(reply)
     }
 
-    if (command.requiresActiveSession) {
+    if (command.requiresActiveSession && !validation.isActiveSession(client)) {
       return message.reply('You have not started a session yet! Please run the =newsession command.')
     }
 
