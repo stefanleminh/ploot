@@ -5,6 +5,9 @@ const logger = require('../logging/winston')(path.basename(__filename))
 module.exports = {
   name: 'startmatch',
   aliases: ['sm'],
+  description: 'Moves the users to the designated team channels. The user has to be in a VC to work. Will send a message and not move a user if they are not in the lobby.',
+  args: '',
+  order: 4,
   execute (message, args, client) {
     if (!validation.isActiveSession(client)) {
       message.channel.send('You have not started a session yet! Please run the =newsession command.')

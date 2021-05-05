@@ -5,6 +5,9 @@ const logger = require('../logging/winston')(path.basename(__filename))
 module.exports = {
   name: 'remove',
   aliases: ['r'],
+  description: 'Removes one or multiple participants from the session.',
+  args: '[@DiscordUser] ...',
+  order: 9,
   execute (message, args, client) {
     if (!validation.isActiveSession(client)) {
       message.channel.send('You have not started a session yet! Please run the =newsession command.')

@@ -5,6 +5,9 @@ const logger = require('../logging/winston')(path.basename(__filename))
 module.exports = {
   name: 'switchmode',
   aliases: ['smo'],
+  description: 'Switches the player form active player to spectator or vise versa.',
+  args: '[@DiscordUser]',
+  order: 10,
   execute (message, args, client) {
     if (!validation.isActiveSession(client)) {
       message.channel.send('You have not started a session yet! Please run the =newsession command.')

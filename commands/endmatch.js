@@ -5,6 +5,9 @@ const logger = require('../logging/winston')(path.basename(__filename))
 module.exports = {
   name: 'endmatch',
   aliases: ['em'],
+  description: 'Moves the users back to the lobby. The user has to be in a VC to work.',
+  args: '',
+  order: 5,
   execute (message, args, client) {
     if (!validation.isActiveSession(client)) {
       message.channel.send('You have not started a session yet! Please run the =newsession command.')

@@ -5,6 +5,9 @@ const logger = require('../logging/winston')(path.basename(__filename))
 module.exports = {
   name: 'clear',
   aliases: ['c'],
+  description: 'Clears active players and spectators list.',
+  args: '',
+  order: 12,
   execute (message, args, client) {
     if (!validation.isActiveSession(client)) {
       message.channel.send('You have not started a session yet! Please run the =newsession command.')

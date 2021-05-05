@@ -5,6 +5,9 @@ const validation = require('../modules/validation')
 module.exports = {
   name: 'list',
   aliases: ['l'],
+  description: 'Lists active players and spectators.',
+  args: '',
+  order: 6,
   execute (message, args, client) {
     if (!validation.isActiveSession(client)) {
       message.channel.send('You have not started a session yet! Please run the =newsession command.')

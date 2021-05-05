@@ -4,6 +4,9 @@ const validation = require('../modules/validation')
 module.exports = {
   name: 'addspectator',
   aliases: ['as'],
+  description: 'Adds one or multiple participants as a spectator.',
+  args: '[@DiscordUser] ...',
+  order: 8,
   execute (message, args, client) {
     if (!validation.isActiveSession(client)) {
       message.channel.send('You have not started a session yet! Please run the =newsession command.')

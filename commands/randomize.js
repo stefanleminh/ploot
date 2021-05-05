@@ -6,6 +6,9 @@ const logger = require('../logging/winston')(path.basename(__filename))
 module.exports = {
   name: 'randomize',
   aliases: ['r'],
+  description: 'Randomizes and shows the new teams. Will purge any users not connected to the lobby.',
+  args: '',
+  order: 11,
   execute (message, args, client) {
     if (client.voiceChannels.length === 0) {
       message.channel.send('You have not started a session yet! Please run the =newsession command.')

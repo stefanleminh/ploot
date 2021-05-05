@@ -5,6 +5,9 @@ const logger = require('../logging/winston')(path.basename(__filename))
 module.exports = {
   name: 'newsession',
   aliases: ['ns'],
+  description: 'Creates a session with the pre-configured channels.',
+  args: '',
+  order: 2,
   execute (message, args, client) {
     if (validation.isActiveSession(client)) {
       message.channel.send(
