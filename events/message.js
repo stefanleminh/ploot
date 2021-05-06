@@ -15,11 +15,11 @@ module.exports = {
     const commandName = args.shift().toLowerCase()
 
     const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName))
-    logger.debug(`Received command: ${command.name}`)
+    logger.debug(`Received command: ${commandName}`)
 
     // If command exist
     if (!command) {
-      logger.debug(`Command not found: ${command.name}`)
+      logger.debug(`Command not found: ${commandName}`)
       return
     }
 

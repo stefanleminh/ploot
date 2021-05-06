@@ -15,7 +15,7 @@ module.exports = {
       .setAuthor(`${message.guild.name} 6v6-Event`, message.guild.iconURL)
 
     sortedCommands.forEach((command) => {
-      helpEmbed.addField(`${client.config.prefix}${command.name} ${command.args}`, `${command.description}`)
+      helpEmbed.addField(`${client.config.prefix}${command.name} ${command.args} (Aliases: ${client.config.prefix}${command.aliases})`, `${command.description}`)
     })
 
     message.channel.send(helpEmbed)
