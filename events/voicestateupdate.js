@@ -18,11 +18,13 @@ module.exports = {
         return
       }
       client.currentPlayers.push(newState.member.user)
+      client.channels.cache.get(client.config.botChannel).send('Added player <@' + newState.member.id + '> as a player.')
       logger.debug('Added participant ' + newState.member.user.username + ' to lobby')
     } else if (newUserChannel === null && oldState.channelID === client.config.lobby) {
       logger.info(`User ${oldState.member.user.username} has left the lobby`)
       client.currentPlayers = client.currentPlayers.filter((player) => player !== oldState.member.user)
       client.currentSpectators = client.currentSpectators.filter((spectator) => spectator !== oldState.member.user)
+      client.channels.cache.get(client.config.botChannel).send('Removed player <@' + oldState.member.id + '> from lobby.')
       logger.debug('Removed participant ' + newState.member.user.username + ' from lobby')
     }
   }

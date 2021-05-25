@@ -1,7 +1,9 @@
 {
   "prefix": "=",
   "token": "",
+  "botChannel": "",
   "lobby": "",
   "firstTeamVc": "",
-  "secondTeamVc": ""
+  "secondTeamVc": "",
+  "loggingLevel": "info"
 }
