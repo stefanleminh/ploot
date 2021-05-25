@@ -3,7 +3,7 @@ const logger = require('../logging/winston')(path.basename(__filename))
 
 module.exports = {
   name: 'remove',
-  aliases: ['r'],
+  aliases: ['rm'],
   description: 'Removes one or multiple participants from the session.',
   args: '[@DiscordUser] ...',
   requiresActiveSession: true,
