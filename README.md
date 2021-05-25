@@ -80,8 +80,8 @@ This is an example of how to list things you need to use the software and how to
 
 ## Usage
 
-Start a new session with `=newsession` - You can now add/remove players or any other functionality that comes with ploot. Add a player or spectator (or multiple!) with `=addplayer @DiscordUser ...` or `=addspectator @DiscordUser ...` respectively or remove them with `=remove @DiscordUser ...`.
-You can then create your teams by using the `=randomizer` command - It will purge any players not present in the lobby. Then you can use `=startmatch` to move every player in the lobby to their designated voice-channel and back to the lobby with `=endmatch`.
+Start a new session with `=newsession` - You can now add/remove players or any other functionality that comes with ploot. Add a player or spectator (or multiple!) with `=addplayer @DiscordUser ...` or `=addspectator @DiscordUser ...` respectively or remove them with `=remove @DiscordUser ...`.  
+You can then create your teams by using the `=randomizer` command - It will purge any players not present in the lobby. Then you can use `=startmatch` to move every player in the lobby to their designated voice-channel and back to the lobby with `=endmatch`.  
 Finally, you can end the session with `=endsession`.
 
 For more commands, check out the `=help` command!
