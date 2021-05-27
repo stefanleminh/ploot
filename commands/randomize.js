@@ -9,7 +9,6 @@ module.exports = {
   description: 'Randomizes and shows the new teams. Will purge any users not connected to the lobby.',
   args: '',
   requiresActiveSession: true,
-  order: 11,
   execute (message, args, client) {
     functions.purge(client, message)
     client.firstTeam = []

@@ -7,7 +7,6 @@ module.exports = {
   description: 'Removes one or multiple participants from the session.',
   args: '[@DiscordUser] ...',
   requiresActiveSession: true,
-  order: 9,
   execute (message, args, client) {
     if (args.length === 0) {
       message.channel.send('Please provide a name to remove.')

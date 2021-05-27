@@ -8,7 +8,6 @@ module.exports = {
   description: 'Ends the session and clears all the data.',
   args: '',
   requiresActiveSession: true,
-  order: 3,
   execute (message, args, client) {
     clear.execute(message, args, client)
     client.voiceChannels = []

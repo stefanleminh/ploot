@@ -7,7 +7,6 @@ module.exports = {
   description: 'Moves the users to the designated team channels. The user has to be in a VC to work. Will send a message and not move a user if they are not in the lobby.',
   args: '',
   requiresActiveSession: true,
-  order: 4,
   execute (message, args, client) {
     client.currentSpectators.forEach((spectator) => {
       const member = message.guild.members.cache.get(spectator.id)
