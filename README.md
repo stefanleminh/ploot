@@ -84,7 +84,21 @@ Start a new session with `=newsession` - You can now add/remove players or any o
 You can then create your teams by using the `=randomizer` command - It will purge any players not present in the lobby. Then you can use `=startmatch` to move every player in the lobby to their designated voice-channel and back to the lobby with `=endmatch`.  
 Finally, you can end the session with `=endsession`.
 
-For more commands, check out the `=help` command!
+|                 | Arguments        | Description                                                                                                                                                 |
+|-----------------|------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| =help (=h)      |                  | Shows the help message                                                                                                                                      |
+| =newsession     |                  | Creates a new session with the preconfigured channels.                                                                                                      |
+| =endsession     |                  | Ends the session and clears all the data.                                                                                                                   |
+| =startmatch     |                  | Moves the userss to the designated team channels. The user has to be in a VC to work. Will send a message and not move a user if they are not in the lobby. |
+| =endmatch       |                  | Moves the users back to the lobby.                                                                                                                          |
+| =list           |                  | Lists active players and spectators.                                                                                                                        |
+| =addplayer      | @DiscordUser ... | Adds one or multiple participants to the active players.                                                                                                    |
+| =addspectator   | @DiscordUser...  | Adds one or multiple participanmts as a spectator.                                                                                                          |
+| =remove (=rm)   | @DiscordUser ... | Removes one or multiple participants from the session.                                                                                                      |
+| =switchmode     | @DiscordUser     | Switches the player from active player to spectator or vice versa.                                                                                          |
+| =randomize (=r) |                  | Randomizes and shows the new teams. Will purge any users not connected to the lobby.                                                                        |
+| =clear          |                  | Clears active players and spectators list.                                                                                                                  |
+| =parselobby     |                  | Adds the lobby to the list of players                                                                                                                       |
 
 <!-- ROADMAP -->
 
