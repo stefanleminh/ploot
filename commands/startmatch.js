@@ -10,17 +10,23 @@ module.exports = {
   execute (message, args, client) {
     client.currentSpectators.forEach((spectator) => {
       const member = message.guild.members.cache.get(spectator.id)
-      setVoiceChannel(member, client.voiceChannels[0], message, client)
+      setTimeout(function () {
+        setVoiceChannel(member, client.voiceChannels[0], message, client)
+      }, 850)
     })
 
     client.firstTeam.forEach((player) => {
       const member = message.guild.members.cache.get(player.id)
-      setVoiceChannel(member, client.voiceChannels[1], message, client)
+      setTimeout(function () {
+        setVoiceChannel(member, client.voiceChannels[1], message, client)
+      }, 850)
     })
 
     client.secondTeam.forEach((player) => {
       const member = message.guild.members.cache.get(player.id)
-      setVoiceChannel(member, client.voiceChannels[2], message, client)
+      setTimeout(function () {
+        setVoiceChannel(member, client.voiceChannels[2], message, client)
+      }, 850)
     })
   }
 }
