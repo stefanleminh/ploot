@@ -11,26 +11,28 @@ module.exports = {
     client.currentSpectators.forEach((spectator) => {
       const member = message.guild.members.cache.get(spectator.id)
       setVoiceChannel(member, client.voiceChannels[0], message, client)
-      syncDelay(850)
     })
 
     client.firstTeam.forEach((player) => {
       const member = message.guild.members.cache.get(player.id)
       setVoiceChannel(member, client.voiceChannels[1], message, client)
-      syncDelay(850)
     })
 
     client.secondTeam.forEach((player) => {
       const member = message.guild.members.cache.get(player.id)
       setVoiceChannel(member, client.voiceChannels[2], message, client)
-      syncDelay(850)
     })
   }
 }
 function setVoiceChannel (member, voiceChannel, message) {
   if (member.voice.channel) {
-    member.voice.setChannel(voiceChannel)
-    logger.info(`Moved user ${member.user.username} to voice channel ${voiceChannel.name}`)
+    if (member.voice.channel.id !== voiceChannel.id) {
+      member.voice.setChannel(voiceChannel)
+      logger.info(`Moved user ${member.user.username} to voice channel ${voiceChannel.name}`)
+      syncDelay(850)
+    } else if (member.voice.channel.id === voiceChannel.id) {
+      logger.info(`User ${member.user.username} is already in the correct vc and will not be moved.`)
+    }
   } else {
     logger.info(`User ${member.user.username} is not connected to the lobby and will not be moved.`)
     message.channel.send(`<@${member.id}> is not connected to the lobby and will not be moved.`)
