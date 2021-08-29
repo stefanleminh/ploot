@@ -31,6 +31,7 @@ module.exports = {
     client.secondTeam = guaranteedPlayersTeams[1].concat(playerTeams[1].slice(0, 6 - guaranteedPlayersTeams[1].length))
     logger.debug('Second team: ' + client.secondTeam.map((player) => player.username).join(', '))
     client.spectatorTeam = client.currentSpectators.concat(randomizedPlayers.slice(12))
+    client.lastRoundSpectators = randomizedPlayers.slice(12)
     logger.debug('Spectators: ' + client.spectatorTeam.map((player) => player.username).join(', '))
     printTeam(client.voiceChannels[1].name, client.firstTeam, '#000088', message)
     printTeam(client.voiceChannels[2].name, client.secondTeam, '#fe0000', message)
