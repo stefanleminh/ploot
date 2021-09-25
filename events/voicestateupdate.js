@@ -5,7 +5,8 @@ const validation = require('../modules/validation')
 module.exports = {
   name: 'voiceStateUpdate',
   execute (oldState, newState, client) {
-    if (!validation.isActiveSession(client)) {
+    const isLobbyUpdate = newState.channelID === client.config.lobby || oldState.channelID === client.config.lobby
+    if (!isLobbyUpdate || !validation.isActiveSession(client)) {
       return
     }
     const newUserChannel = newState.channel
