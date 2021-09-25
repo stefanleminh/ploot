@@ -31,7 +31,7 @@ module.exports = {
 
     // Fill up prefilled teams with remaining player teams
     client.firstTeam = guaranteedPlayersTeams[0].concat(playerTeams[0].slice(0, 6 - guaranteedPlayersTeams[0].length))
-    client.lastRoundSpectators.concat(playerTeams[0].slice(6 - guaranteedPlayersTeams[0].length))
+    client.lastRoundSpectators = playerTeams[0].slice(6 - guaranteedPlayersTeams[0].length)
     logger.debug('First team: ' + client.firstTeam.map((player) => player.username).join(', '))
 
     client.secondTeam = guaranteedPlayersTeams[1].concat(playerTeams[1].slice(0, 6 - guaranteedPlayersTeams[1].length))
