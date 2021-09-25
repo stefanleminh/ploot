@@ -16,9 +16,12 @@ module.exports = {
     client.spectatorTeam = []
 
     const guaranteedPlayers = client.lastRoundSpectators
-    logger.info('Guaranteed player teams are: ' + guaranteedPlayers.map((player) => player.username).join(', '))
-    const guaranteedPlayersTeams = createTeams(guaranteedPlayers.filter((el) => !guaranteedPlayers.includes(el)))
+    logger.info('Guaranteed players are: ' + guaranteedPlayers.map((player) => player.username).join(', '))
+    // Premake teams only with players that spectated last round
+    const guaranteedPlayersTeams = createTeams(guaranteedPlayers)
+    logger.info('Guaranteed player teams are: ' + guaranteedPlayersTeams)
 
+    // Create teams with remaining players
     const randomizedPlayers = shuffle(client.currentPlayers)
     const randomizedPlayerPool = randomizedPlayers.slice(0, 12)
     logger.info(
@@ -26,12 +29,17 @@ module.exports = {
     )
     const playerTeams = createTeams(randomizedPlayerPool)
 
+    // Fill up prefilled teams with remaining player teams
     client.firstTeam = guaranteedPlayersTeams[0].concat(playerTeams[0].slice(0, 6 - guaranteedPlayersTeams[0].length))
+    client.lastRoundSpectators.concat(playerTeams[0].slice(6 - guaranteedPlayersTeams[0].length))
     logger.debug('First team: ' + client.firstTeam.map((player) => player.username).join(', '))
+
     client.secondTeam = guaranteedPlayersTeams[1].concat(playerTeams[1].slice(0, 6 - guaranteedPlayersTeams[1].length))
+    client.lastRoundSpectators.concat(playerTeams[1].slice(6 - guaranteedPlayersTeams[1].length))
     logger.debug('Second team: ' + client.secondTeam.map((player) => player.username).join(', '))
+
     client.spectatorTeam = client.currentSpectators.concat(randomizedPlayers.slice(12))
-    client.lastRoundSpectators = randomizedPlayers.slice(12)
+    client.lastRoundSpectators.concat(randomizedPlayers.slice(12))
     logger.debug('Spectators: ' + client.spectatorTeam.map((player) => player.username).join(', '))
     printTeam(client.voiceChannels[1].name, client.firstTeam, '#000088', message)
     printTeam(client.voiceChannels[2].name, client.secondTeam, '#fe0000', message)
