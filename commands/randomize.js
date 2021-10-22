@@ -10,6 +10,7 @@ module.exports = {
   args: '',
   requiresActiveSession: true,
   execute (message, args, client) {
+    logger.info('==========randomize start==========')
     functions.purge(client, message)
     client.firstTeam = []
     client.secondTeam = []
@@ -19,10 +20,11 @@ module.exports = {
     logger.info('Guaranteed players are: ' + guaranteedPlayers.map((player) => player.username).join(', '))
     // Premake teams only with players that spectated last round
     const guaranteedPlayersTeams = createTeams(guaranteedPlayers)
-    logger.info('Guaranteed player teams are: ' + guaranteedPlayersTeams)
+    logger.debug('First team of guaranteed players: ' + guaranteedPlayersTeams[0].map((player) => player.username).join(', '))
+    logger.debug('Second team of guaranteed players: ' + guaranteedPlayersTeams[1].map((player) => player.username).join(', '))
 
     // Create teams with remaining players
-    const randomizedPlayers = shuffle(client.currentPlayers)
+    const randomizedPlayers = shuffle(client.currentPlayers.filter((player) => !guaranteedPlayers.includes(player)))
     const randomizedPlayerPool = randomizedPlayers.slice(0, 12)
     logger.info(
       'Remaining pool of players consists of: ' + randomizedPlayerPool.map((player) => player.username).join(', ')
@@ -33,17 +35,25 @@ module.exports = {
     client.firstTeam = guaranteedPlayersTeams[0].concat(playerTeams[0].slice(0, 6 - guaranteedPlayersTeams[0].length))
     client.lastRoundSpectators = playerTeams[0].slice(6 - guaranteedPlayersTeams[0].length)
     logger.debug('First team: ' + client.firstTeam.map((player) => player.username).join(', '))
+    logger.debug('Added players from first pool to spectator-list: ' + playerTeams[0].slice(6 - guaranteedPlayersTeams[0].length).map((player) => player.username).join(', '))
 
     client.secondTeam = guaranteedPlayersTeams[1].concat(playerTeams[1].slice(0, 6 - guaranteedPlayersTeams[1].length))
-    client.lastRoundSpectators.concat(playerTeams[1].slice(6 - guaranteedPlayersTeams[1].length))
+    client.lastRoundSpectators = client.lastRoundSpectators.concat(playerTeams[1].slice(6 - guaranteedPlayersTeams[1].length))
     logger.debug('Second team: ' + client.secondTeam.map((player) => player.username).join(', '))
+    logger.debug('Added players from second pool to spectator-list: ' + playerTeams[1].slice(6 - guaranteedPlayersTeams[1].length).map((player) => player.username).join(', '))
 
-    client.spectatorTeam = client.currentSpectators.concat(randomizedPlayers.slice(12))
-    client.lastRoundSpectators.concat(randomizedPlayers.slice(12))
-    logger.debug('Spectators: ' + client.spectatorTeam.map((player) => player.username).join(', '))
+    client.lastRoundSpectators = client.lastRoundSpectators.concat(randomizedPlayers.slice(12))
+    logger.debug('Added players outside of pool to spectator-list: ' + randomizedPlayers.slice(12).map((player) => player.username).join(', '))
+    client.spectatorTeam = client.currentSpectators.concat(client.lastRoundSpectators)
+    logger.debug('Players that are not playing this round: ' + client.lastRoundSpectators.map((player) => player.username).join(', '))
+
+    logger.debug('First team is: ' + client.firstTeam.map((player) => player.username).join(', '))
     printTeam(client.voiceChannels[1].name, client.firstTeam, '#000088', message)
+    logger.debug('Second team is: ' + client.secondTeam.map((player) => player.username).join(', '))
     printTeam(client.voiceChannels[2].name, client.secondTeam, '#fe0000', message)
+    logger.debug('Spectators are: ' + client.spectatorTeam.map((player) => player.username).join(', '))
     printTeam(client.voiceChannels[0].name, client.spectatorTeam, '#ffa500', message)
+    logger.info('==========randomize end==========')
   }
 }
 
