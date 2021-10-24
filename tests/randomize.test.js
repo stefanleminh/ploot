@@ -1,5 +1,5 @@
 /* eslint-env mocha */
-const randomize = require('./randomize')
+const randomize = require('../commands/randomize')
 const functions = require('../modules/functions')
 
 jest.mock('../modules/functions')
