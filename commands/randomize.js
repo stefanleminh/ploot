@@ -16,7 +16,7 @@ module.exports = {
     client.secondTeam = []
     client.spectatorTeam = []
 
-    const guaranteedPlayers = client.lastRoundSpectators
+    const guaranteedPlayers = client.lastRoundSpectators.slice(0, 12)
     logger.info('Guaranteed players are: ' + guaranteedPlayers.map((player) => player.username).join(', '))
     // Premake teams only with players that spectated last round
     const guaranteedPlayersTeams = createTeams(guaranteedPlayers)
