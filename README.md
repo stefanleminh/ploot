@@ -128,4 +128,4 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Credits
 
-- [Icon artist](https://twitter.com/mizururu?lang=en)
+- [Icon artist](https://twitter.com/mizururu_)
