@@ -7,7 +7,6 @@ module.exports = {
   description: 'Lists active players and spectators.',
   args: '',
   requiresActiveSession: true,
-  order: 6,
   execute (message, args, client) {
     printList(client.currentPlayers, 'Players', '#000088', message)
     printList(client.currentSpectators, 'Spectators', '#fe0000', message)

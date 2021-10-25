@@ -7,7 +7,6 @@ module.exports = {
   description: 'Switches the player form active player to spectator or vise versa.',
   args: '[@DiscordUser]',
   requiresActiveSession: true,
-  order: 10,
   execute (message, args, client) {
     // Switch mode of Player
     if (args.length === 0) {

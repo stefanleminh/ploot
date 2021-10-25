@@ -3,11 +3,10 @@ const logger = require('../logging/winston')(path.basename(__filename))
 
 module.exports = {
   name: 'remove',
-  aliases: ['r'],
+  aliases: ['rm'],
   description: 'Removes one or multiple participants from the session.',
   args: '[@DiscordUser] ...',
   requiresActiveSession: true,
-  order: 9,
   execute (message, args, client) {
     if (args.length === 0) {
       message.channel.send('Please provide a name to remove.')

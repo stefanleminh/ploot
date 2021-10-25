@@ -1,8 +1,9 @@
 const winston = require('winston')
+const config = require('../config')
 
 const logger = (filename) => {
   return new winston.createLogger({ // eslint-disable-line
-    level: 'debug',
+    level: config.loggingLevel,
     transports: [new winston.transports.Console()],
     format: winston.format.combine(
       winston.format.timestamp({

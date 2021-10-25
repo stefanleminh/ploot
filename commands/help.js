@@ -6,9 +6,8 @@ module.exports = {
   description: 'Shows this help message.',
   args: '',
   requiresActiveSession: false,
-  order: 1,
   execute (message, args, client) {
-    const sortedCommands = message.client.commands.sort(({ order: a }, { order: b }) => (a - b))
+    const sortedCommands = message.client.commands.sort((a, b) => a.name.localeCompare(b.name))
     const helpEmbed = new Discord.MessageEmbed()
       .setTitle('Help')
       .setColor('#B1F7AA')

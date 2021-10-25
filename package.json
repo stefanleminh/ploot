@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "watch": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "lint": "standard",
     "format": "standard --fix"
   },
@@ -25,7 +25,11 @@
     "winston": "^3.3.3"
   },
   "devDependencies": {
+    "jest": "^27.3.1",
     "nodemon": "^2.0.7",
     "standard": "^16.0.3"
+  },
+  "standard": {
+    "env": ["jest"]
   }
 }
