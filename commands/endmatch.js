@@ -7,7 +7,6 @@ module.exports = {
   description: 'Moves the users back to the lobby. The user has to be in a VC to work.',
   args: '',
   requiresActiveSession: true,
-  order: 5,
   execute (message, args, client) {
     if (client.voiceChannels[1].members.size > 0) {
       client.voiceChannels[1].members.array().forEach((player) => {

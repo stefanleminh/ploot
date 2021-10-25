@@ -7,7 +7,6 @@ module.exports = {
   description: 'Moves the users to the designated team channels. The user has to be in a VC to work. Will send a message and not move a user if they are not in the lobby.',
   args: '',
   requiresActiveSession: true,
-  order: 4,
   execute (message, args, client) {
     client.currentSpectators.forEach((spectator) => {
       const member = message.guild.members.cache.get(spectator.id)
@@ -27,8 +26,12 @@ module.exports = {
 }
 function setVoiceChannel (member, voiceChannel, message) {
   if (member.voice.channel) {
-    member.voice.setChannel(voiceChannel)
-    logger.info(`Moved user ${member.user.username} to voice channel ${voiceChannel.name}`)
+    if (member.voice.channel.id !== voiceChannel.id) {
+      member.voice.setChannel(voiceChannel)
+      logger.info(`Moved user ${member.user.username} to voice channel ${voiceChannel.name}`)
+    } else if (member.voice.channel.id === voiceChannel.id) {
+      logger.info(`User ${member.user.username} is already in the correct vc and will not be moved.`)
+    }
   } else {
     logger.info(`User ${member.user.username} is not connected to the lobby and will not be moved.`)
     message.channel.send(`<@${member.id}> is not connected to the lobby and will not be moved.`)

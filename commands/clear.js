@@ -7,7 +7,6 @@ module.exports = {
   description: 'Clears active players and spectators list.',
   args: '',
   requiresActiveSession: true,
-  order: 12,
   execute (message, args, client) {
     client.currentPlayers = []
     client.currentSpectators = []
