@@ -6,7 +6,6 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("clear")
     .setDescription("Clears active players and spectators list."),
-  aliases: ["c"],
   args: "",
   requiresActiveSession: true,
   async execute(interaction, client) {

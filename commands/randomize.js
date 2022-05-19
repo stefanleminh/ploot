@@ -9,7 +9,6 @@ module.exports = {
     .setDescription(
       "Randomizes and shows the new teams. Will purge any users not connected to the lobby."
     ),
-  aliases: ["r"],
   args: "",
   requiresActiveSession: true,
   async execute(interaction, client) {

@@ -12,7 +12,6 @@ module.exports = {
         .setDescription("The user to remove from the session")
         .setRequired(true)
     ),
-  aliases: ["rm"],
   args: "[@DiscordUser] ...",
   requiresActiveSession: true,
   async execute(interaction, client) {

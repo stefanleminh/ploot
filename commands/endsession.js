@@ -7,7 +7,6 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("endsession")
     .setDescription("Ends the session and clears all the data."),
-  aliases: ["es"],
   args: "",
   requiresActiveSession: true,
   async execute(interaction, client) {

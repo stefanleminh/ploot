@@ -5,7 +5,6 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("list")
     .setDescription("Lists active players and spectators."),
-  aliases: ["l"],
   args: "",
   requiresActiveSession: true,
   async execute(interaction, client) {

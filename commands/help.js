@@ -5,7 +5,6 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("help")
     .setDescription("Shows this help message."),
-  aliases: ["h"],
   args: "",
   requiresActiveSession: false,
   async execute(interaction) {

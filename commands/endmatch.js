@@ -8,7 +8,6 @@ module.exports = {
     .setDescription(
       "Moves the users back to the lobby. The user has to be in a VC to work."
     ),
-  aliases: ["em"],
   args: "",
   requiresActiveSession: true,
   async execute(interaction, client) {

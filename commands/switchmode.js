@@ -14,7 +14,6 @@ module.exports = {
         .setDescription("The user whose status to switch")
         .setRequired(true)
     ),
-  aliases: ["smo"],
   args: "[@DiscordUser]",
   requiresActiveSession: true,
   async execute(interaction, client) {

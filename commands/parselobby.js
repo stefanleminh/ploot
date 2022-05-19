@@ -7,7 +7,6 @@ module.exports = {
     .setDescription(
       "Adds every user in the lobby to the list of active players"
     ),
-  aliases: ["pl"],
   args: "",
   requiresActiveSession: true,
   async execute(interaction, client) {
