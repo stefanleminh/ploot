@@ -13,7 +13,7 @@ module.exports = {
     if (!command) return;
     if (command.requiresActiveSession && !validation.isActiveSession(client)) {
       await interaction.reply(
-        "You have not started a session yet! Please run the =newsession command."
+        "You have not started a session yet! Please run the /newsession command."
       );
       return;
     }
