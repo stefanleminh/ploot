@@ -2,30 +2,20 @@ const path = require('path')
 const logger = require('../logging/winston')(path.basename(__filename))
 const Discord = require('discord.js')
 
-const addParticipant = (participant, message, array, arrayname) => {
+const addParticipant = (participant, interaction, array, arrayname) => {
   if (array.includes(participant)) {
     logger.debug(
-      'Participant ' +
-        participant.username +
-        'already exists in ' +
-        arrayname +
-        '!'
+      `Participant ${participant.username}already exists in ${arrayname}!`
     )
-    message.channel.send(
-      'Participant <@' +
-        participant.id +
-        '> already exists in ' +
-        arrayname +
-        '!'
+    interaction.channel.send(
+      `Participant <@${participant.id}> already exists in ${arrayname}!`
     )
     return
   }
   array.push(participant)
-  logger.debug(
-    'Added participant ' + participant.username + ' to list ' + arrayname
-  )
-  message.channel.send(
-    'Added participant <@' + participant.id + '> to list ' + arrayname
+  logger.debug(`Added participant ${participant.username} to list ${arrayname}`)
+  interaction.channel.send(
+    `Added participant <@${participant.id}> to list ${arrayname}`
   )
 }
 
@@ -50,49 +40,49 @@ const purge = (client, interaction) => {
     interaction.guild.channels.cache.get(client.config.lobby).members.keys()
   )
 
-  const remainingPlayers = client.currentPlayers.filter((currentPlayer) =>
+  const remainingPlayers = client.currentPlayers.filter(currentPlayer =>
     membersInLobby.includes(currentPlayer.id)
   )
   logger.debug(
     'Remaining Players are: ' +
-      remainingPlayers.map((player) => player.username).join(',')
+      remainingPlayers.map(player => player.username).join(',')
   )
 
   const purgedPlayers = client.currentPlayers.filter(
-    (currentPlayer) => !membersInLobby.includes(currentPlayer.id)
+    currentPlayer => !membersInLobby.includes(currentPlayer.id)
   )
   logger.debug(
     'Purged Players are: ' +
-      purgedPlayers.map((player) => player.username).join(',')
+      purgedPlayers.map(player => player.username).join(',')
   )
 
   client.currentPlayers = remainingPlayers
-  purgedPlayers.forEach((removedPlayer) => {
+  purgedPlayers.forEach(removedPlayer => {
     interaction.channel.send(
-      'Purged <@' + removedPlayer.id + '> from list of current players!'
+      `Purged <@${removedPlayer.id}> from list of current players!`
     )
   })
 
   const remainingSpectators = client.currentSpectators.filter(
-    (currentSpectator) => membersInLobby.includes(currentSpectator.id)
+    currentSpectator => membersInLobby.includes(currentSpectator.id)
   )
   logger.debug(
     'Remaining Spectators are: ' +
-      remainingSpectators.map((spectator) => spectator.username).join(',')
+      remainingSpectators.map(spectator => spectator.username).join(',')
   )
 
   const purgedSpectators = client.currentSpectators.filter(
-    (currentSpectator) => !membersInLobby.includes(currentSpectator.id)
+    currentSpectator => !membersInLobby.includes(currentSpectator.id)
   )
   logger.debug(
     'Purged spectators are: ' +
-      purgedSpectators.map((spectator) => spectator.username).join(',')
+      purgedSpectators.map(spectator => spectator.username).join(',')
   )
 
   client.currentSpectators = remainingSpectators
-  purgedSpectators.forEach((removedSpectator) => {
+  purgedSpectators.forEach(removedSpectator => {
     interaction.channel.send(
-      'Purged <@' + removedSpectator.id + '> from list of current spectators!'
+      `Purged <@${removedSpectator.id}> from list of current spectators!`
     )
   })
 }
@@ -108,7 +98,7 @@ const createEmbed = (list, title, color, interaction) => {
       iconURL: interaction.guild.iconURL
     })
     .addFields(
-      chunk(list, 6).map((chunk) => {
+      chunk(list, 6).map(chunk => {
         return { name: title, value: chunk.toString(), inline: true }
       })
     )
