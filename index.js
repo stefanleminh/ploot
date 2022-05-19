@@ -1,39 +1,36 @@
-const Discord = require('discord.js')
-const config = require('./config.json')
-const fs = require('fs')
-const path = require('path')
+const { Client, Intents, Collection } = require("discord.js");
+const config = require("./config.json");
+const fs = require("fs");
 
-const logger = require('./logging/winston')(path.basename(__filename))
-const client = new Discord.Client()
-client.config = require('./config.json')
-client.currentPlayers = []
-client.currentSpectators = []
-client.voiceChannels = []
-client.firstTeam = []
-client.secondTeam = []
-client.spectatorTeam = []
-client.lastRoundSpectators = []
+const path = require("path");
+const logger = require("./logging/winston")(path.basename(__filename));
+const client = new Client({
+  intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_VOICE_STATES],
+});
 
-client.commands = new Discord.Collection()
+client.config = require("./config.json");
+client.currentPlayers = [];
+client.currentSpectators = [];
+client.voiceChannels = [];
+client.firstTeam = [];
+client.secondTeam = [];
+client.spectatorTeam = [];
+client.lastRoundSpectators = [];
 
-// Take commands
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'))
-for (const file of commandFiles) {
-  const command = require('./commands/' + file)
-  client.commands.set(command.name, command)
-  logger.info(`Loaded command ${command.name}`)
-}
+client.commands = new Collection();
 
-const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'))
+const eventFiles = fs
+  .readdirSync("./events")
+  .filter((file) => file.endsWith(".js"));
 
 for (const file of eventFiles) {
-  const event = require(`./events/${file}`)
-  logger.info(`Loaded event ${event.name}`)
+  const event = require(`./events/${file}`);
+  logger.info(`Loaded event ${event.name}`);
   if (event.once) {
-    client.once(event.name, (...args) => event.execute(...args, client))
+    client.once(event.name, (...args) => event.execute(...args, client));
   } else {
-    client.on(event.name, (...args) => event.execute(...args, client))
+    client.on(event.name, (...args) => event.execute(...args, client));
   }
 }
 
-client.login(config.token)
+client.login(config.token);
