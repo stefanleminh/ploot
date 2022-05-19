@@ -1,15 +1,15 @@
-const functions = require("../modules/functions");
-const { SlashCommandBuilder } = require("@discordjs/builders");
+const functions = require('../modules/functions')
+const { SlashCommandBuilder } = require('@discordjs/builders')
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("parselobby")
+    .setName('parselobby')
     .setDescription(
-      "Adds every user in the lobby to the list of active players"
+      'Adds every user in the lobby to the list of active players'
     ),
-  args: "",
+  args: '',
   requiresActiveSession: true,
-  async execute(interaction, client) {
+  async execute (interaction, client) {
     interaction.guild.channels.cache
       .get(client.config.lobby)
       .members.forEach((member) => {
@@ -18,10 +18,10 @@ module.exports = {
             member.user,
             interaction,
             client.currentPlayers,
-            "players"
-          );
+            'players'
+          )
         }
-      });
-    await interaction.reply("I have finished parsing the lobby!");
-  },
-};
+      })
+    await interaction.reply('I have finished parsing the lobby!')
+  }
+}
