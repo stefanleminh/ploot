@@ -10,8 +10,8 @@ module.exports = {
   aliases: ["es"],
   args: "",
   requiresActiveSession: true,
-  async execute(interaction, args, client) {
-    clear.execute(interaction, args, client);
+  async execute(interaction, client) {
+    clear.clearLists(client);
     client.voiceChannels = [];
     logger.debug("Session ended! Cleared all lists.");
     await interaction.reply("I ended the session and cleared all lists.");

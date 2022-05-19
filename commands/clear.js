@@ -10,12 +10,15 @@ module.exports = {
   args: "",
   requiresActiveSession: true,
   async execute(interaction, client) {
+    this.clearLists(client);
+    logger.debug("Cleared all lists from participants!");
+    await interaction.reply("Cleared all lists from participants!");
+  },
+  clearLists(client) {
     client.currentPlayers = [];
     client.currentSpectators = [];
     client.firstTeam = [];
     client.secondTeam = [];
     client.lastRoundSpectators = [];
-    logger.debug("Cleared all lists from participants!");
-    await interaction.reply("Cleared all lists from participants!");
   },
 };

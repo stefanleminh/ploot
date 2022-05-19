@@ -13,7 +13,7 @@ module.exports = {
   requiresActiveSession: true,
   async execute(interaction, client) {
     if (client.voiceChannels[1].members.size > 0) {
-      client.voiceChannels[1].members.array().forEach((player) => {
+      client.voiceChannels[1].members.forEach((player) => {
         player.voice.setChannel(client.voiceChannels[0]);
         logger.info(
           `Moved user ${player.user.username} to voice channel ${client.voiceChannels[0].name}`
@@ -22,13 +22,13 @@ module.exports = {
     }
 
     if (client.voiceChannels[2].members.size > 0) {
-      client.voiceChannels[2].members.array().forEach((player) => {
+      client.voiceChannels[2].members.forEach((player) => {
         player.voice.setChannel(client.voiceChannels[0]);
         logger.info(
           `Moved user ${player.user.username} to voice channel ${client.voiceChannels[1].name}`
         );
       });
     }
-    await interaction.reply("I moved everyone back to the lobby!");
+    await interaction.reply("I moved everyone back to the lobby! GGs");
   },
 };
