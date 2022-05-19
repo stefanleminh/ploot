@@ -1,10 +1,9 @@
 {
-  "prefix": "=",
-  "token": "NzAzMDI5NjgyMzQ5NTM5MzQy.XqIpaQ.dNlj1p79WRvmpCG47AT03FUmY6o",
-  "botChannel": "733365337277464579",
-  "lobby": "733365337277464580",
-  "firstTeamVc": "733377318487195700",
-  "secondTeamVc": "733386806682452099",
-  "loggingLevel": "debug",
-  "testGuildId": "733365337277464576"
+  "token": "",
+  "botChannel": "",
+  "lobby": "",
+  "firstTeamVc": "",
+  "secondTeamVc": "",
+  "loggingLevel": "info",
+  "testGuildId": ""
 }
