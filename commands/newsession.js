@@ -12,7 +12,7 @@ module.exports = {
   async execute (interaction, client) {
     if (validation.isActiveSession(client)) {
       interaction.reply(
-        "There's already a session running! Please run =endsession first before starting a new session."
+        "There's already a session running! Please run /endsession first before starting a new session."
       )
       return
     }
@@ -27,12 +27,13 @@ module.exports = {
       interaction.guild.channels.cache.get(client.config.secondTeamVc)
     )
     logger.info(
-      'Adding following channels to the list: ' +
-        interaction.guild.channels.cache.get(client.config.lobby).name +
-        ', ' +
-        interaction.guild.channels.cache.get(client.config.firstTeamVc).name +
-        ', ' +
+      `Adding following channels to the list: ${
+        interaction.guild.channels.cache.get(client.config.lobby).name
+      }, ${
+        interaction.guild.channels.cache.get(client.config.firstTeamVc).name
+      }, ${
         interaction.guild.channels.cache.get(client.config.secondTeamVc).name
+      }`
     )
     if (!validation.isActiveSession(client)) {
       await interaction.reply(
