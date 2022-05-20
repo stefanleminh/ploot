@@ -76,6 +76,20 @@ This is an example of how to list things you need to use the software and how to
    npm run start
    ```
 
+You then have to create a config.json file in the root directory. It will need the following properties:
+
+```json
+{
+  "token": "",
+  "botChannel": "",
+  "lobby": "",
+  "firstTeamVc": "",
+  "secondTeamVc": "",
+  "loggingLevel": "info",
+  "testGuildId": ""
+}
+```
+
 <!-- USAGE EXAMPLES -->
 
 ## Usage
