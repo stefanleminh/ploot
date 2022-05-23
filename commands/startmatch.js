@@ -9,21 +9,21 @@ module.exports = {
   args: '',
   requiresActiveSession: true,
   async execute (interaction, client) {
-    client.currentSpectators.forEach((spectator) => {
+    client.currentSpectators.forEach(spectator => {
       const member = interaction.guild.members.cache.get(spectator.id)
       setVoiceChannel(member, client.voiceChannels[0], interaction, client)
     })
 
-    client.firstTeam.forEach((player) => {
+    client.firstTeam.forEach(player => {
       const member = interaction.guild.members.cache.get(player.id)
       setVoiceChannel(member, client.voiceChannels[1], interaction, client)
     })
 
-    client.secondTeam.forEach((player) => {
+    client.secondTeam.forEach(player => {
       const member = interaction.guild.members.cache.get(player.id)
       setVoiceChannel(member, client.voiceChannels[2], interaction, client)
     })
-    await interaction.reply("I've moved everyone! GLHF!")
+    await interaction.reply('GLHF!')
   }
 }
 function setVoiceChannel (member, voiceChannel, message) {

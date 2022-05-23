@@ -12,7 +12,7 @@ module.exports = {
   async execute (interaction, client) {
     interaction.guild.channels.cache
       .get(client.config.lobby)
-      .members.forEach((member) => {
+      .members.forEach(member => {
         if (!client.currentSpectators.includes(member.user)) {
           functions.addParticipant(
             member.user,
@@ -22,6 +22,6 @@ module.exports = {
           )
         }
       })
-    await interaction.reply('I have finished parsing the lobby!')
+    await interaction.reply('Parsing!')
   }
 }

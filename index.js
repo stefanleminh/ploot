@@ -1,7 +1,5 @@
 const { Client, Intents, Collection } = require('discord.js')
-const config = require('./config.json')
 const fs = require('fs')
-
 const path = require('path')
 const logger = require('./logging/winston')(path.basename(__filename))
 const client = new Client({
@@ -21,7 +19,7 @@ client.commands = new Collection()
 
 const eventFiles = fs
   .readdirSync('./events')
-  .filter((file) => file.endsWith('.js'))
+  .filter(file => file.endsWith('.js'))
 
 for (const file of eventFiles) {
   const event = require(`./events/${file}`)
@@ -33,4 +31,4 @@ for (const file of eventFiles) {
   }
 }
 
-client.login(config.token)
+client.login(client.config.token)

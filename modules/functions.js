@@ -99,10 +99,13 @@ const createEmbed = (list, title, color, interaction) => {
     })
     .addFields(
       chunk(list, 6).map(chunk => {
-        return { name: title, value: chunk.toString(), inline: true }
+        return {
+          name: title,
+          value: chunk.toString().replace(/,/g, '\n'),
+          inline: true
+        }
       })
     )
-
   return embed
 }
 
