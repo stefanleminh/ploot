@@ -21,7 +21,9 @@
   },
   "homepage": "https://github.com/stefanleminh/ploot#readme",
   "dependencies": {
-    "discord.js": "^12.5.3",
+    "@discordjs/rest": "^0.4.1",
+    "discord-api-types": "^0.32.1",
+    "discord.js": "^13.7.0",
     "winston": "^3.3.3"
   },
   "devDependencies": {
@@ -30,6 +32,8 @@
     "standard": "^16.0.3"
   },
   "standard": {
-    "env": ["jest"]
+    "env": [
+      "jest"
+    ]
   }
 }

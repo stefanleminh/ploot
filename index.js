@@ -1,10 +1,11 @@
-const Discord = require('discord.js')
-const config = require('./config.json')
+const { Client, Intents, Collection } = require('discord.js')
 const fs = require('fs')
 const path = require('path')
-
 const logger = require('./logging/winston')(path.basename(__filename))
-const client = new Discord.Client()
+const client = new Client({
+  intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_VOICE_STATES]
+})
+
 client.config = require('./config.json')
 client.currentPlayers = []
 client.currentSpectators = []
@@ -14,17 +15,11 @@ client.secondTeam = []
 client.spectatorTeam = []
 client.lastRoundSpectators = []
 
-client.commands = new Discord.Collection()
+client.commands = new Collection()
 
-// Take commands
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'))
-for (const file of commandFiles) {
-  const command = require('./commands/' + file)
-  client.commands.set(command.name, command)
-  logger.info(`Loaded command ${command.name}`)
-}
-
-const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'))
+const eventFiles = fs
+  .readdirSync('./events')
+  .filter(file => file.endsWith('.js'))
 
 for (const file of eventFiles) {
   const event = require(`./events/${file}`)
@@ -36,4 +31,4 @@ for (const file of eventFiles) {
   }
 }
 
-client.login(config.token)
+client.login(client.config.token)

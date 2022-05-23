@@ -1,39 +1,48 @@
 const validation = require('../modules/validation')
 const path = require('path')
 const logger = require('../logging/winston')(path.basename(__filename))
+const { SlashCommandBuilder } = require('@discordjs/builders')
 
 module.exports = {
-  name: 'newsession',
-  aliases: ['ns'],
-  description: 'Creates a session with the pre-configured channels.',
+  data: new SlashCommandBuilder()
+    .setName('newsession')
+    .setDescription('Creates a session with the pre-configured channels.'),
   args: '',
   requiresActiveSession: false,
-  execute (message, args, client) {
+  async execute (interaction, client) {
     if (validation.isActiveSession(client)) {
-      message.channel.send(
-        "There's already a session running! Please run =endsession first before starting a new session."
+      interaction.reply(
+        "There's already a session running! Please run /endsession first before starting a new session."
       )
       return
     }
 
-    client.voiceChannels.push(message.guild.channels.cache.get(client.config.lobby))
-    client.voiceChannels.push(message.guild.channels.cache.get(client.config.firstTeamVc))
-    client.voiceChannels.push(message.guild.channels.cache.get(client.config.secondTeamVc))
+    client.voiceChannels.push(
+      interaction.guild.channels.cache.get(client.config.lobby)
+    )
+    client.voiceChannels.push(
+      interaction.guild.channels.cache.get(client.config.firstTeamVc)
+    )
+    client.voiceChannels.push(
+      interaction.guild.channels.cache.get(client.config.secondTeamVc)
+    )
     logger.info(
       'Adding following channels to the list: ' +
-        message.guild.channels.cache.get(client.config.lobby).name +
+        interaction.guild.channels.cache.get(client.config.lobby).name +
         ', ' +
-        message.guild.channels.cache.get(client.config.firstTeamVc).name +
+        interaction.guild.channels.cache.get(client.config.firstTeamVc).name +
         ', ' +
-        message.guild.channels.cache.get(client.config.secondTeamVc).name
+        interaction.guild.channels.cache.get(client.config.secondTeamVc).name
     )
     if (!validation.isActiveSession(client)) {
-      message.channel.send('Unable to add channels to start a session! Please try again or check the help command.')
+      await interaction.reply(
+        'Unable to add channels to start a session! Please try again or check the help command.'
+      )
       client.voiceChannels = []
       return
     }
 
-    message.channel.send(
+    await interaction.reply(
       'New session has been created! `' +
         client.voiceChannels[0].name +
         "` is the general/spectator's lobby. `" +

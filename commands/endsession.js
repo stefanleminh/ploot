@@ -1,17 +1,18 @@
 const clear = require('./clear')
 const path = require('path')
 const logger = require('../logging/winston')(path.basename(__filename))
+const { SlashCommandBuilder } = require('@discordjs/builders')
 
 module.exports = {
-  name: 'endsession',
-  aliases: ['es'],
-  description: 'Ends the session and clears all the data.',
+  data: new SlashCommandBuilder()
+    .setName('endsession')
+    .setDescription('Ends the session and clears all the data.'),
   args: '',
   requiresActiveSession: true,
-  execute (message, args, client) {
-    clear.execute(message, args, client)
+  async execute (interaction, client) {
+    clear.clearLists(client)
     client.voiceChannels = []
     logger.debug('Session ended! Cleared all lists.')
-    message.channel.send('Session ended! Cleared all lists.')
+    await interaction.reply('I ended the session and cleared all lists.')
   }
 }

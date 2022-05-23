@@ -76,29 +76,41 @@ This is an example of how to list things you need to use the software and how to
    npm run start
    ```
 
+You then have to create a config.json file in the root directory. It will need the following properties:
+
+```json
+{
+  "token": "",
+  "botChannel": "",
+  "lobby": "",
+  "firstTeamVc": "",
+  "secondTeamVc": "",
+  "loggingLevel": "info",
+  "testGuildId": ""
+}
+```
+
 <!-- USAGE EXAMPLES -->
 
 ## Usage
 
-Start a new session with `=newsession` - You can now add/remove players or any other functionality that comes with ploot. Ploot will now listen to any user that will join the lobby and add them to the list of players automatically. To manually add a player or spectator (or multiple!) you can use `=addplayer @DiscordUser ...` or `=addspectator @DiscordUser ...` respectively or and to remove them use `=remove @DiscordUser ...`. You can also switch their mode with `=switchmode @DiscordUser`
-You can then create your teams by using the `=randomize` command - It will purge any players not present in the lobby. Then you can use `=startmatch` to move every player in the lobby to their designated voice-channel and back to the lobby with `=endmatch`.  
-Finally, you can end the session with `=endsession`.
+Start a new session with `/newsession` - You can now add/remove players or any other functionality that comes with ploot. Ploot will now listen to any user that will join the lobby and add them to the list of players automatically. You can remove participants by using `/remove @DiscordUser ...`. You can switch their mode with `/switchmode @DiscordUser`
+You can then create your teams by using the `/randomize` command - It will purge any players not present in the lobby. Then you can use `/startmatch` to move every player in the lobby to their designated voice-channel and back to the lobby with `/endmatch`.  
+Finally, you can end the session with `/endsession`.
 
-|                     | Arguments        | Description                                                                                                                                                 |
-| ------------------- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| =help (=h)          |                  | Shows the help message                                                                                                                                      |
-| =newsession (=ns)   |                  | Creates a new session with the preconfigured channels.                                                                                                      |
-| =endsession (=es)   |                  | Ends the session and clears all the data.                                                                                                                   |
-| =startmatch (=sm)   |                  | Moves the userss to the designated team channels. The user has to be in a VC to work. Will send a message and not move a user if they are not in the lobby. |
-| =endmatch (=em)     |                  | Moves the users back to the lobby.                                                                                                                          |
-| =list (=l)          |                  | Lists active players and spectators.                                                                                                                        |
-| =addplayer (=ap)    | @DiscordUser ... | Adds one or multiple participants to the active players.                                                                                                    |
-| =addspectator (=as) | @DiscordUser...  | Adds one or multiple participanmts as a spectator.                                                                                                          |
-| =remove (=rm)       | @DiscordUser ... | Removes one or multiple participants from the session.                                                                                                      |
-| =switchmode (=smo)  | @DiscordUser     | Switches the player from active player to spectator or vice versa.                                                                                          |
-| =randomize (=r)     |                  | Randomizes and shows the new teams. Will purge any users not connected to the lobby.                                                                        |
-| =clear (=c)         |                  | Clears active players and spectators list.                                                                                                                  |
-| =parselobby (=pl)   |                  | Adds the lobby to the list of players                                                                                                                       |
+|             | Arguments    | Description                                                                                                                                                 |
+| ----------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| /help       |              | Shows the help message                                                                                                                                      |
+| /newsession |              | Creates a new session with the preconfigured channels.                                                                                                      |
+| /endsession |              | Ends the session and clears all the data.                                                                                                                   |
+| /startmatch |              | Moves the userss to the designated team channels. The user has to be in a VC to work. Will send a message and not move a user if they are not in the lobby. |
+| /endmatch   |              | Moves the users back to the lobby.                                                                                                                          |
+| /list       |              | Lists active players and spectators.                                                                                                                        |
+| /remove     | @DiscordUser | Removes one or multiple participants from the session.                                                                                                      |
+| /switchmode | @DiscordUser | Switches the player from active player to spectator or vice versa.                                                                                          |
+| /randomize  |              | Randomizes and shows the new teams. Will purge any users not connected to the lobby.                                                                        |
+| /clear      |              | Clears active players and spectators list.                                                                                                                  |
+| /parselobby |              | Adds the lobby to the list of players                                                                                                                       |
 
 <!-- ROADMAP -->
 
