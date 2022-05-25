@@ -12,7 +12,22 @@ module.exports = {
   async execute (interaction, client) {
     clear.clearLists(client)
     client.voiceChannels = []
-    logger.debug('Session ended! Cleared all lists.')
-    await interaction.reply('I ended the session and cleared all lists.')
+    interaction.guild.roles
+      .delete(client.spectatorRoleId)
+      .catch(logger.error('Error deleting spectator role!'))
+
+    interaction.guild.roles
+      .delete(client.firstTeamRoleId)
+      .catch(logger.error('Error deleting role for team one!'))
+
+    interaction.guild.roles
+      .delete(client.secondTeamRoleId)
+      .catch(logger.error('Error deleting role for team two!'))
+
+    logger.debug('Session ended! Cleared all lists and roles.')
+
+    await interaction.reply(
+      'I ended the session and cleared all lists and roles.'
+    )
   }
 }

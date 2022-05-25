@@ -16,6 +16,43 @@ module.exports = {
       )
       return
     }
+    interaction.guild.roles
+      .create({
+        name: 'Spectators',
+        color: '#ffa500',
+        reason: 'Spectator role for event'
+      })
+      .then(role => {
+        logger.info('Setting spectator role id to: ' + role.id)
+        client.spectatorRoleId = role.id
+      })
+      .catch('Error creating spectator role!')
+
+    interaction.guild.roles
+      .create({
+        name: interaction.guild.channels.cache.get(client.config.firstTeamVc)
+          .name,
+        color: '#000088',
+        reason: 'Team role for event'
+      })
+      .then(role => {
+        logger.info('Setting first team role id to: ' + role.id)
+        client.firstTeamRoleId = role.id
+      })
+      .catch('Error creating role for team one!')
+
+    interaction.guild.roles
+      .create({
+        name: interaction.guild.channels.cache.get(client.config.secondTeamVc)
+          .name,
+        color: '#fe0000',
+        reason: 'Team role for event'
+      })
+      .then(role => {
+        logger.info('Setting second team role id to: ' + role.id)
+        client.secondTeamRoleId = role.id
+      })
+      .catch(logger.error('Error creating role for team two!'))
 
     client.voiceChannels.push(
       interaction.guild.channels.cache.get(client.config.lobby)

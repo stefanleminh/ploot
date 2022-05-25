@@ -36,21 +36,27 @@ const client = {
     { username: 'Player9' },
     { username: 'Player10' },
     { username: 'Player11' },
-    { username: 'Player12' }]
+    { username: 'Player12' }
+  ]
 }
 
-test('should randomize teams correctly with 12 players', () => {
+test('should randomize teams correctly with 12 players', async () => {
   functions.purge.mockImplementation(jest.fn())
   functions.chunk.mockReturnValue([])
 
-  randomize.execute(messageMock, {}, client)
+  await randomize.execute(messageMock, {}, client)
 
-  expect(client.firstTeam.concat(client.secondTeam).map(player => player.username).sort()).toEqual(client.currentPlayers.map(player => player.username).sort())
+  expect(
+    client.firstTeam
+      .concat(client.secondTeam)
+      .map(player => player.username)
+      .sort()
+  ).toEqual(client.currentPlayers.map(player => player.username).sort())
   expect(client.lastRoundSpectators.length).toBe(0)
   expect(client.spectatorTeam.length).toBe(0)
 })
 
-test('should randomize teams correctly with 13 players and last and currentRound spectators', () => {
+test('should randomize teams correctly with 13 players and last and currentRound spectators', async () => {
   functions.purge.mockImplementation(jest.fn())
   functions.chunk.mockReturnValue([])
   const messageMock = {
@@ -74,16 +80,19 @@ test('should randomize teams correctly with 13 players and last and currentRound
     { username: 'Player10' },
     { username: 'Player11' },
     { username: 'Player12' },
-    { username: 'Player13' }]
+    { username: 'Player13' }
+  ]
 
-  randomize.execute(messageMock, {}, client)
+  await randomize.execute(messageMock, {}, client)
 
-  expect(client.firstTeam.concat(client.secondTeam)).toContainEqual({ username: 'Player14' })
+  expect(client.firstTeam.concat(client.secondTeam)).toContainEqual({
+    username: 'Player14'
+  })
   expect(client.lastRoundSpectators.length).toBe(2)
   expect(client.spectatorTeam.length).toBe(3)
 })
 
-test('should randomize teams correctly with multiple runs', () => {
+test('should randomize teams correctly with multiple runs', async () => {
   client.lastRoundSpectators = []
   client.currentSpectators = []
   functions.purge.mockImplementation(jest.fn())
@@ -112,22 +121,27 @@ test('should randomize teams correctly with multiple runs', () => {
     { username: 'Player15' },
     { username: 'Player16' },
     { username: 'Player17' },
-    { username: 'Player18' }]
+    { username: 'Player18' }
+  ]
 
-  randomize.execute(messageMock, {}, client)
+  await randomize.execute(messageMock, {}, client)
   let guaranteedPlayers = client.lastRoundSpectators
 
-  randomize.execute(messageMock, {}, client)
-  expect(client.firstTeam.concat(client.secondTeam)).toEqual(expect.arrayContaining(guaranteedPlayers))
+  await randomize.execute(messageMock, {}, client)
+  expect(client.firstTeam.concat(client.secondTeam)).toEqual(
+    expect.arrayContaining(guaranteedPlayers)
+  )
   expect(client.lastRoundSpectators.length).toBe(6)
   guaranteedPlayers = client.lastRoundSpectators
 
-  randomize.execute(messageMock, {}, client)
-  expect(client.firstTeam.concat(client.secondTeam)).toEqual(expect.arrayContaining(guaranteedPlayers))
+  await randomize.execute(messageMock, {}, client)
+  expect(client.firstTeam.concat(client.secondTeam)).toEqual(
+    expect.arrayContaining(guaranteedPlayers)
+  )
   expect(client.lastRoundSpectators.length).toBe(6)
 })
 
-test('should randomize teams even if more than 12 guaranteed players exist', () => {
+test('should randomize teams even if more than 12 guaranteed players exist', async () => {
   client.lastRoundSpectators = []
   client.currentSpectators = []
   functions.purge.mockImplementation(jest.fn())
@@ -165,16 +179,17 @@ test('should randomize teams even if more than 12 guaranteed players exist', () 
     { username: 'Player24' },
     { username: 'Player25' },
     { username: 'Player26' },
-    { username: 'Player27' }]
+    { username: 'Player27' }
+  ]
 
-  randomize.execute(messageMock, {}, client)
+  await randomize.execute(messageMock, {}, client)
 
-  randomize.execute(messageMock, {}, client)
+  await randomize.execute(messageMock, {}, client)
 
   expect(client.firstTeam.length).toBe(6)
   expect(client.secondTeam.length).toBe(6)
 
-  randomize.execute(messageMock, {}, client)
+  await randomize.execute(messageMock, {}, client)
   expect(client.firstTeam.length).toBe(6)
   expect(client.secondTeam.length).toBe(6)
 })

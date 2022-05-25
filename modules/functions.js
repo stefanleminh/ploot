@@ -33,9 +33,6 @@ const chunk = (arr, chunkSize) => {
 exports.chunk = chunk
 
 const purge = (client, interaction) => {
-  console.log(
-    interaction.guild.channels.cache.get(client.config.lobby).members.keys
-  )
   const membersInLobby = Array.from(
     interaction.guild.channels.cache.get(client.config.lobby).members.keys()
   )
