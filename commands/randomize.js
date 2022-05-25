@@ -51,7 +51,7 @@ module.exports = {
           client.lastRoundSpectators.map(player => player.username).join(', ')
       )
     }
-    await Promise.all(createTeams(playerPool, client))
+    createTeams(playerPool, client)
 
     await interaction.guild.members.fetch()
     const firstTeam = interaction.guild.channels.cache
@@ -130,22 +130,15 @@ function shuffle (array) {
 }
 
 function createTeams (players, client) {
-  // const results = []
-  logger.info(`Creating teams with parameters: ${players}, ${client}`)
-  const promises = []
+  logger.info(`Creating teams with players: ${players}`)
   const firstTeam = players.slice(0, players.length / 2)
 
   firstTeam.forEach(member => {
-    promises.push(member.roles.add(client.firstTeamRoleId))
+    member.roles.add(client.firstTeamRoleId)
   })
   const secondTeam = players.slice(players.length / 2, players.length)
 
   secondTeam.forEach(member => {
-    promises.push(member.roles.add(client.secondTeamRoleId))
+    member.roles.add(client.secondTeamRoleId)
   })
-  // results.push(firstTeam)
-  // results.push(secondTeam)
-  console.log('Returning promises')
-  return promises
-  // return results
 }
