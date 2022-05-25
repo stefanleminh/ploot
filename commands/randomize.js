@@ -13,7 +13,6 @@ module.exports = {
   requiresActiveSession: true,
   async execute (interaction, client) {
     logger.info('==========randomize start==========')
-    functions.purge(client, interaction)
 
     let playerPool = client.lastRoundSpectators.slice(0, 12)
     logger.info(
@@ -22,53 +21,31 @@ module.exports = {
     )
 
     if (playerPool.length !== 12) {
-      // fillup
-      const randomizedPlayers = shuffle(
-        Array.from(
-          interaction.guild.channels.cache
-            .get(client.config.lobby)
-            .members.filter(
-              player =>
-                !playerPool.includes(player) &&
-                !player.roles.cache.some(
-                  role => role.id === client.spectatorRoleId
-                )
-            )
-            .values()
-        )
-      )
-      playerPool = playerPool.concat(
-        randomizedPlayers.slice(0, 12 - playerPool.length)
-      )
-      logger.info(
-        'Playerpool is: ' + playerPool.map(player => player.username).join(', ')
-      )
-      client.lastRoundSpectators = randomizedPlayers.slice(
-        12 - playerPool.length
-      )
-      logger.info(
-        'Players that got added to spectators for this round are: ' +
-          client.lastRoundSpectators.map(player => player.username).join(', ')
-      )
+      playerPool = fillPlayerPool(interaction, client, playerPool)
     }
     createTeams(playerPool, client)
 
+    // Update cache with new roles
     await interaction.guild.members.fetch()
+
     const firstTeam = interaction.guild.channels.cache
       .get(client.config.lobby)
       .members.filter(member =>
         member.roles.cache.some(role => role.id === client.firstTeamRoleId)
       )
       .map(guildmember => guildmember.user)
+
     logger.debug(
       'First team is: ' + firstTeam.map(player => player.username).join(', ')
     )
+
     const secondTeam = interaction.guild.channels.cache
       .get(client.config.lobby)
       .members.filter(async member => {
         member.roles.cache.some(role => role.id === client.secondTeamRoleId)
       })
       .map(guildmember => guildmember.user)
+
     logger.debug(
       'Second team is: ' + secondTeam.map(player => player.username).join(', ')
     )
@@ -76,7 +53,12 @@ module.exports = {
     const spectatorTeam = interaction.guild.channels.cache
       .get(client.config.lobby)
       .members.filter(member =>
-        member.roles.cache.some(role => role.id === client.spectatorRoleId)
+        member.roles.cache.every(
+          role =>
+            role.id === client.spectatorRoleId ||
+            (role.id !== client.firstTeamRoleId &&
+              role.id !== client.secondTeamRoleId)
+        )
       )
       .map(guildmember => guildmember.user)
 
@@ -84,23 +66,24 @@ module.exports = {
       'Spectators are: ' +
         spectatorTeam.map(player => player.username).join(', ')
     )
+
     const embeds = []
     embeds.push(
       functions.createEmbed(
         firstTeam,
-        client.voiceChannels[1].name,
+        interaction.guild.channels.cache.get(client.config.firstTeamVc).name,
         '#000088',
         interaction
       ),
       functions.createEmbed(
         secondTeam,
-        client.voiceChannels[2].name,
+        interaction.guild.channels.cache.get(client.config.secondTeamVc).name,
         '#fe0000',
         interaction
       ),
       functions.createEmbed(
         spectatorTeam,
-        client.voiceChannels[0].name,
+        interaction.guild.channels.cache.get(client.config.lobby).name,
         '#ffa500',
         interaction
       )
@@ -108,7 +91,39 @@ module.exports = {
     logger.info('==========randomize end==========')
 
     await interaction.reply({ embeds: embeds })
+
+    return embeds
   }
+}
+
+function fillPlayerPool (interaction, client, playerPool) {
+  let resultPlayerPool = []
+  const randomizedPlayers = shuffle(
+    Array.from(
+      interaction.guild.channels.cache
+        .get(client.config.lobby)
+        .members.filter(
+          player =>
+            !playerPool.includes(player) &&
+            !player.roles.cache.some(role => role.id === client.spectatorRoleId)
+        )
+        .values()
+    )
+  )
+  resultPlayerPool = playerPool.concat(
+    randomizedPlayers.slice(0, 12 - playerPool.length)
+  )
+  logger.info(
+    'Playerpool is: ' +
+      resultPlayerPool.map(player => player.username).join(', ')
+  )
+  // Add rest to spectators
+  client.lastRoundSpectators = randomizedPlayers.slice(12 - playerPool.length)
+  logger.info(
+    'Players that got added to spectators for this round are: ' +
+      client.lastRoundSpectators.map(player => player.username).join(', ')
+  )
+  return resultPlayerPool
 }
 
 /**
