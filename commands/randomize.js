@@ -23,7 +23,7 @@ module.exports = {
     if (playerPool.length !== 12) {
       playerPool = fillPlayerPool(interaction, client, playerPool)
     }
-    createTeams(playerPool, client)
+    await Promise.all(createTeams(playerPool, client))
 
     // Update cache with new roles
     await interaction.guild.members.fetch()
@@ -41,9 +41,9 @@ module.exports = {
 
     const secondTeam = interaction.guild.channels.cache
       .get(client.config.lobby)
-      .members.filter(async member => {
+      .members.filter(member =>
         member.roles.cache.some(role => role.id === client.secondTeamRoleId)
-      })
+      )
       .map(guildmember => guildmember.user)
 
     logger.debug(
@@ -145,15 +145,18 @@ function shuffle (array) {
 }
 
 function createTeams (players, client) {
-  logger.info(`Creating teams with players: ${players}`)
+  logger.info(`Creating teams with parameters: ${players}, ${client}`)
+  const promises = []
   const firstTeam = players.slice(0, players.length / 2)
 
   firstTeam.forEach(member => {
-    member.roles.add(client.firstTeamRoleId)
+    promises.push(member.roles.add(client.firstTeamRoleId))
   })
   const secondTeam = players.slice(players.length / 2, players.length)
 
   secondTeam.forEach(member => {
-    member.roles.add(client.secondTeamRoleId)
+    promises.push(member.roles.add(client.secondTeamRoleId))
   })
+
+  return promises
 }
