@@ -15,9 +15,6 @@ client.spectatorRoleId = ''
 client.firstTeamRoleId = ''
 client.secondTeamRoleId = ''
 client.voiceChannels = []
-client.firstTeam = []
-client.secondTeam = []
-client.spectatorTeam = []
 client.lastRoundSpectators = []
 
 client.commands = new Collection()
