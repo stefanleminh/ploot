@@ -5,19 +5,36 @@ const { SlashCommandBuilder } = require('@discordjs/builders')
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('clear')
-    .setDescription('Clears active players and spectators list.'),
+    .setDescription(
+      'Remove any roles from every participant and clears last round spectators.'
+    ),
   args: '',
   requiresActiveSession: true,
   async execute (interaction, client) {
-    this.clearLists(client)
-    logger.debug('Cleared all lists from participants!')
-    await interaction.reply('Cleared all lists from participants!')
-  },
-  clearLists (client) {
-    client.currentPlayers = []
-    client.currentSpectators = []
-    client.firstTeam = []
-    client.secondTeam = []
+    interaction.guild.roles.cache
+      .get(client.spectatorRoleId)
+      .members.forEach(async member => {
+        await member.roles.remove(
+          interaction.guild.roles.cache.get(client.spectatorRoleId)
+        )
+      })
+    interaction.guild.roles.cache
+      .get(client.firstTeamRoleId)
+      .members.forEach(async member => {
+        await member.roles.remove(
+          interaction.guild.roles.cache.get(client.firstTeamRoleId)
+        )
+      })
+    interaction.guild.roles.cache
+      .get(client.secondTeamRoleId)
+      .members.forEach(async member => {
+        await member.roles.remove(
+          interaction.guild.roles.cache.get(client.secondTeamRoleId)
+        )
+      })
+
     client.lastRoundSpectators = []
+    logger.debug('Cleared data and roles from participants!')
+    await interaction.reply('I cleared all data and roles from participants!')
   }
 }
