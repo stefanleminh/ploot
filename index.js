@@ -14,7 +14,6 @@ client.config = require('./config.json')
 client.spectatorRoleId = ''
 client.firstTeamRoleId = ''
 client.secondTeamRoleId = ''
-client.voiceChannels = []
 client.lastRoundSpectators = []
 
 client.commands = new Collection()
