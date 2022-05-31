@@ -8,22 +8,35 @@ module.exports = {
   args: '',
   requiresActiveSession: true,
   async execute (interaction, client) {
+    const currentPlayers = interaction.guild.channels.cache
+      .get(client.config.lobby)
+      .members.filter(member => {
+        return (
+          member.roles.cache.every(
+            role => role.id !== client.spectatorRoleId
+          ) && !member.user.bot
+        )
+      })
+      .map(guildmember => guildmember.user)
+    const currentSpectators = interaction.guild.channels.cache
+      .get(client.config.lobby)
+      .members.filter(member => {
+        return (
+          member.roles.cache.some(role => role.id === client.spectatorRoleId) &&
+          !member.user.bot
+        )
+      })
+      .map(guildmember => guildmember.user)
     const embeds = []
     embeds.push(
+      functions.createEmbed(currentPlayers, 'Players', '#000088', interaction),
       functions.createEmbed(
-        client.currentPlayers,
-        'Players',
-        '#000088',
-        interaction
-      ),
-      functions.createEmbed(
-        client.currentSpectators,
+        currentSpectators,
         'Spectators',
         '#fe0000',
         interaction
       )
     )
-
     await interaction.reply({
       embeds: embeds
     })
