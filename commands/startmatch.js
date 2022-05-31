@@ -9,30 +9,64 @@ module.exports = {
   args: '',
   requiresActiveSession: true,
   async execute (interaction, client) {
-    client.currentSpectators.forEach(spectator => {
+    await interaction.deferReply()
+    const spectatorTeamVc = interaction.guild.channels.cache.get(
+      client.config.lobby
+    )
+    const spectatorTeam = interaction.guild.channels.cache
+      .get(client.config.lobby)
+      .members.filter(member =>
+        member.roles.cache.every(
+          role =>
+            role.id === client.spectatorRoleId ||
+            (role.id !== client.firstTeamRoleId &&
+              role.id !== client.secondTeamRoleId)
+        )
+      )
+      .map(guildmember => guildmember.user)
+    const firstTeamVc = interaction.guild.channels.cache.get(
+      client.config.firstTeamVc
+    )
+    const firstTeam = interaction.guild.channels.cache
+      .get(client.config.lobby)
+      .members.filter(member =>
+        member.roles.cache.some(role => role.id === client.firstTeamRoleId)
+      )
+      .map(guildmember => guildmember.user)
+    const secondTeamVc = interaction.guild.channels.cache.get(
+      client.config.secondTeamVc
+    )
+    const secondTeam = interaction.guild.channels.cache
+      .get(client.config.lobby)
+      .members.filter(member =>
+        member.roles.cache.some(role => role.id === client.secondTeamRoleId)
+      )
+      .map(guildmember => guildmember.user)
+
+    spectatorTeam.forEach(async spectator => {
       const member = interaction.guild.members.cache.get(spectator.id)
-      setVoiceChannel(member, client.voiceChannels[0], interaction, client)
+      await setVoiceChannel(member, spectatorTeamVc, interaction, client)
     })
 
-    client.firstTeam.forEach(player => {
+    firstTeam.forEach(async player => {
       const member = interaction.guild.members.cache.get(player.id)
-      setVoiceChannel(member, client.voiceChannels[1], interaction, client)
+      await setVoiceChannel(member, firstTeamVc, interaction, client)
     })
 
-    client.secondTeam.forEach(player => {
+    secondTeam.forEach(async player => {
       const member = interaction.guild.members.cache.get(player.id)
-      setVoiceChannel(member, client.voiceChannels[2], interaction, client)
+      await setVoiceChannel(member, secondTeamVc, interaction, client)
     })
-    await interaction.reply('GLHF!')
+    await interaction.editReply('GLHF!')
   }
 }
 function setVoiceChannel (member, voiceChannel, message) {
   if (member.voice.channel) {
     if (member.voice.channel.id !== voiceChannel.id) {
-      member.voice.setChannel(voiceChannel)
       logger.info(
         `Moved user ${member.user.username} to voice channel ${voiceChannel.name}`
       )
+      return member.voice.setChannel(voiceChannel)
     } else if (member.voice.channel.id === voiceChannel.id) {
       logger.info(
         `User ${member.user.username} is already in the correct vc and will not be moved.`
