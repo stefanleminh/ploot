@@ -15,7 +15,7 @@ module.exports = {
     // Take commands
     const commandFiles = fs
       .readdirSync('./commands')
-      .filter((file) => file.endsWith('.js'))
+      .filter(file => file.endsWith('.js'))
     for (const file of commandFiles) {
       const command = require('../commands/' + file)
       commands.push(command.data.toJSON())
@@ -27,14 +27,14 @@ module.exports = {
     const CLIENT_ID = client.user.id
     const rest = new REST({
       version: '9'
-    }).setToken(TOKEN);
-    (async () => {
+    }).setToken(TOKEN)
+    ;(async () => {
       try {
         if (!TEST_GUILD_ID) {
           await rest.put(Routes.applicationCommands(CLIENT_ID), {
             body: commands
           })
-          console.log('Successfully registered application commands globally')
+          logger.info('Successfully registered application commands globally')
         } else {
           await rest.put(
             Routes.applicationGuildCommands(CLIENT_ID, TEST_GUILD_ID),
@@ -42,7 +42,7 @@ module.exports = {
               body: commands
             }
           )
-          console.log(
+          logger.info(
             'Successfully registered application commands for development guild'
           )
         }

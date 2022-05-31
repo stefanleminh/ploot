@@ -18,9 +18,7 @@ module.exports = {
     }
 
     try {
-      logger.info(
-        `Running command: ${command.data.name} with following args: ${interaction.options}`
-      )
+      logger.info(`Running command: ${command.data.name}`)
       await command.execute(interaction, client)
     } catch (error) {
       logger.error(error)
