@@ -6,9 +6,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders')
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('randomize')
-    .setDescription(
-      'Randomizes and shows the new teams. Will purge any users not connected to the lobby.'
-    ),
+    .setDescription('Randomizes and shows the new teams. '),
   args: '',
   requiresActiveSession: true,
   async execute (interaction, client) {
@@ -52,13 +50,14 @@ module.exports = {
 
     const spectatorTeam = interaction.guild.channels.cache
       .get(client.config.lobby)
-      .members.filter(member =>
-        member.roles.cache.every(
-          role =>
-            role.id === client.spectatorRoleId ||
-            (role.id !== client.firstTeamRoleId &&
-              role.id !== client.secondTeamRoleId)
-        )
+      .members.filter(
+        member =>
+          member.roles.cache.every(
+            role =>
+              role.id === client.spectatorRoleId ||
+              (role.id !== client.firstTeamRoleId &&
+                role.id !== client.secondTeamRoleId)
+          ) && !member.user.bot
       )
       .map(guildmember => guildmember.user)
 
@@ -98,24 +97,26 @@ module.exports = {
 
 function fillPlayerPool (interaction, client, playerPool) {
   let resultPlayerPool = []
-  const randomizedPlayers = shuffle(
-    Array.from(
-      interaction.guild.channels.cache
-        .get(client.config.lobby)
-        .members.filter(
-          player =>
-            !playerPool.includes(player) &&
-            !player.roles.cache.some(role => role.id === client.spectatorRoleId)
-        )
-        .values()
-    )
-  )
+  console.log(interaction.guild.channels.cache.get(client.config.lobby).members)
+  const randomizedPlayers = shuffle([
+    ...interaction.guild.channels.cache
+      .get(client.config.lobby)
+      .members.filter(
+        player =>
+          !playerPool.includes(player) &&
+          !player.roles.cache.some(
+            role => role.id === client.spectatorRoleId
+          ) &&
+          !player.user.bot
+      )
+      .values()
+  ])
   resultPlayerPool = playerPool.concat(
     randomizedPlayers.slice(0, 12 - playerPool.length)
   )
   logger.info(
     'Playerpool is: ' +
-      resultPlayerPool.map(player => player.username).join(', ')
+      resultPlayerPool.map(player => player.user.username).join(', ')
   )
   // Add rest to spectators
   client.lastRoundSpectators = randomizedPlayers.slice(12 - playerPool.length)
