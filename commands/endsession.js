@@ -1,4 +1,3 @@
-const clear = require('./clear')
 const path = require('path')
 const logger = require('../logging/winston')(path.basename(__filename))
 const { SlashCommandBuilder } = require('@discordjs/builders')
