@@ -10,24 +10,15 @@ module.exports = {
   args: '',
   requiresActiveSession: true,
   async execute (interaction, client) {
-    clear.clearLists(client)
-    client.voiceChannels = []
-    interaction.guild.roles
-      .delete(client.spectatorRoleId)
-      .catch(logger.error('Error deleting spectator role!'))
+    client.lastRoundSpectators = []
+    await interaction.guild.roles.delete(client.spectatorRoleId)
 
-    interaction.guild.roles
-      .delete(client.firstTeamRoleId)
-      .catch(logger.error('Error deleting role for team one!'))
+    await interaction.guild.roles.delete(client.firstTeamRoleId)
 
-    interaction.guild.roles
-      .delete(client.secondTeamRoleId)
-      .catch(logger.error('Error deleting role for team two!'))
+    await interaction.guild.roles.delete(client.secondTeamRoleId)
 
-    logger.debug('Session ended! Cleared all lists and roles.')
+    logger.debug('Session ended! Cleared all data.')
 
-    await interaction.reply(
-      'I ended the session and cleared all lists and roles.'
-    )
+    await interaction.reply('I ended the session and cleared all data.')
   }
 }
