@@ -47,7 +47,7 @@ module.exports = {
           )
         }
       } catch (error) {
-        if (error) console.error(error)
+        if (error) logger.error(error)
       }
     })()
     // Log that the bot is online.
