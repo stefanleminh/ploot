@@ -27,8 +27,8 @@ module.exports = {
         )
       })
       .map(guildmember => guildmember.user)
-    const embeds = []
-    embeds.push(
+
+    const embeds = [
       functions.createEmbed(currentPlayers, 'Players', '#000088', interaction),
       functions.createEmbed(
         currentSpectators,
@@ -36,7 +36,8 @@ module.exports = {
         '#fe0000',
         interaction
       )
-    )
+    ]
+
     await interaction.reply({
       embeds: embeds
     })

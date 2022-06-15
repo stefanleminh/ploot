@@ -9,21 +9,9 @@ module.exports = {
   args: '',
   requiresActiveSession: true,
   async execute (interaction, client) {
+    const promises = []
     await interaction.deferReply()
-    const spectatorTeamVc = interaction.guild.channels.cache.get(
-      client.config.lobby
-    )
-    const spectatorTeam = interaction.guild.channels.cache
-      .get(client.config.lobby)
-      .members.filter(member =>
-        member.roles.cache.every(
-          role =>
-            role.id === client.spectatorRoleId ||
-            (role.id !== client.firstTeamRoleId &&
-              role.id !== client.secondTeamRoleId)
-        )
-      )
-      .map(guildmember => guildmember.user)
+
     const firstTeamVc = interaction.guild.channels.cache.get(
       client.config.firstTeamVc
     )
@@ -43,20 +31,16 @@ module.exports = {
       )
       .map(guildmember => guildmember.user)
 
-    spectatorTeam.forEach(async spectator => {
-      const member = interaction.guild.members.cache.get(spectator.id)
-      await setVoiceChannel(member, spectatorTeamVc, interaction, client)
+    firstTeam.forEach(player => {
+      const member = interaction.guild.members.cache.get(player.id)
+      promises.push(setVoiceChannel(member, firstTeamVc, interaction, client))
     })
 
-    firstTeam.forEach(async player => {
+    secondTeam.forEach(player => {
       const member = interaction.guild.members.cache.get(player.id)
-      await setVoiceChannel(member, firstTeamVc, interaction, client)
+      promises.push(setVoiceChannel(member, secondTeamVc, interaction, client))
     })
-
-    secondTeam.forEach(async player => {
-      const member = interaction.guild.members.cache.get(player.id)
-      await setVoiceChannel(member, secondTeamVc, interaction, client)
-    })
+    await Promise.all(promises)
     await interaction.editReply('GLHF!')
   }
 }
@@ -64,7 +48,7 @@ function setVoiceChannel (member, voiceChannel, message) {
   if (member.voice.channel) {
     if (member.voice.channel.id !== voiceChannel.id) {
       logger.info(
-        `Moved user ${member.user.username} to voice channel ${voiceChannel.name}`
+        `Moving user ${member.user.username} to voice channel ${voiceChannel.name}`
       )
       return member.voice.setChannel(voiceChannel)
     } else if (member.voice.channel.id === voiceChannel.id) {

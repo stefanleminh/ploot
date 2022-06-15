@@ -9,13 +9,14 @@ module.exports = {
   args: '',
   requiresActiveSession: true,
   async execute (interaction, client) {
+    const promises = []
     client.lastRoundSpectators = []
-    await interaction.guild.roles.delete(client.spectatorRoleId)
-
-    await interaction.guild.roles.delete(client.firstTeamRoleId)
-
-    await interaction.guild.roles.delete(client.secondTeamRoleId)
-
+    promises.push(
+      interaction.guild.roles.delete(client.spectatorRoleId),
+      interaction.guild.roles.delete(client.firstTeamRoleId),
+      interaction.guild.roles.delete(client.secondTeamRoleId)
+    )
+    await Promise.all(promises)
     logger.debug('Session ended! Cleared all data.')
 
     await interaction.reply('I ended the session and cleared all data.')

@@ -11,7 +11,7 @@ module.exports = {
   args: '',
   requiresActiveSession: true,
   async execute (interaction, client) {
-    // TODO: Go through ids instead of array
+    const promises = []
     const spectatorTeamVc = interaction.guild.channels.cache.get(
       client.config.lobby
     )
@@ -23,21 +23,41 @@ module.exports = {
     )
     if (firstTeamVc.members.size > 0) {
       firstTeamVc.members.forEach(async player => {
-        await player.voice.setChannel(spectatorTeamVc)
+        promises.push(player.voice.setChannel(spectatorTeamVc))
         logger.info(
-          `Moved user ${player.user.username} to voice channel ${spectatorTeamVc.name}`
+          `Moving user ${player.user.username} to voice channel ${spectatorTeamVc.name}`
         )
       })
     }
 
     if (secondTeamVc.members.size > 0) {
       secondTeamVc.members.forEach(async player => {
-        await player.voice.setChannel(spectatorTeamVc)
+        promises.push(player.voice.setChannel(spectatorTeamVc))
         logger.info(
-          `Moved user ${player.user.username} to voice channel ${spectatorTeamVc.name}`
+          `Moving user ${player.user.username} to voice channel ${spectatorTeamVc.name}`
         )
       })
     }
+
+    interaction.guild.roles.cache
+      .get(client.firstTeamRoleId)
+      .members.forEach(member => {
+        promises.push(
+          member.roles.remove(
+            interaction.guild.roles.cache.get(client.firstTeamRoleId)
+          )
+        )
+      })
+    interaction.guild.roles.cache
+      .get(client.secondTeamRoleId)
+      .members.forEach(member => {
+        promises.push(
+          member.roles.remove(
+            interaction.guild.roles.cache.get(client.secondTeamRoleId)
+          )
+        )
+      })
+    await Promise.all(promises)
     await interaction.reply('GG!')
   }
 }

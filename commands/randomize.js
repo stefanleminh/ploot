@@ -66,8 +66,7 @@ module.exports = {
         spectatorTeam.map(player => player.username).join(', ')
     )
 
-    const embeds = []
-    embeds.push(
+    const embeds = [
       functions.createEmbed(
         firstTeam,
         interaction.guild.channels.cache.get(client.config.firstTeamVc).name,
@@ -86,12 +85,10 @@ module.exports = {
         '#ffa500',
         interaction
       )
-    )
+    ]
     logger.info('==========randomize end==========')
 
     await interaction.reply({ embeds: embeds })
-
-    return embeds
   }
 }
 

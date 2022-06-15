@@ -36,16 +36,13 @@ module.exports = {
       client.spectatorRoleId
     )
     if (!isSpectator) {
-      guildUser.roles.add(client.spectatorRoleId).then(() => {
-        logger.info(`User ${userParameter.username} is now a spectator`)
-        interaction.reply(`<@${userParameter.id}> is now spectator.`)
-      })
+      await guildUser.roles.add(client.spectatorRoleId)
+      logger.info(`User ${userParameter.username} is now a spectator`)
+      interaction.reply(`<@${userParameter.id}> is now spectator.`)
     } else {
-      guildUser.roles.remove(client.spectatorRoleId).then(() => {
-        logger.info(`User ${userParameter.username} is now an active player`)
-        interaction.reply(`<@${userParameter.id}> is now an active player.`)
-      })
-      await interaction.reply(`<@${userParameter.id}> is now an active player.`)
+      await guildUser.roles.remove(client.spectatorRoleId)
+      logger.info(`User ${userParameter.username} is now an active player`)
+      interaction.reply(`<@${userParameter.id}> is now an active player.`)
     }
   }
 }
