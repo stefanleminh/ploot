@@ -16,6 +16,9 @@ module.exports = {
       interaction.guild.roles.delete(client.firstTeamRoleId),
       interaction.guild.roles.delete(client.secondTeamRoleId)
     )
+    client.spectatorRoleId = ''
+    client.firstTeamRoleId = ''
+    client.secondTeamRoleId = ''
     await Promise.all(promises)
     logger.debug('Session ended! Cleared all data.')
 
