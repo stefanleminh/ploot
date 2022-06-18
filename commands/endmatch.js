@@ -11,6 +11,8 @@ module.exports = {
   args: '',
   requiresActiveSession: true,
   async execute (interaction, client) {
+    await interaction.deferReply()
+
     const promises = []
     const spectatorTeamVc = interaction.guild.channels.cache.get(
       client.config.lobby
@@ -58,6 +60,6 @@ module.exports = {
         )
       })
     await Promise.all(promises)
-    await interaction.reply('GG!')
+    await interaction.editReply('GG!')
   }
 }

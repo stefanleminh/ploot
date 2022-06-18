@@ -8,6 +8,7 @@ module.exports = {
   args: '',
   requiresActiveSession: true,
   async execute (interaction, client) {
+    await interaction.deferReply()
     const currentPlayers = interaction.guild.channels.cache
       .get(client.config.lobby)
       .members.filter(member => {
@@ -38,7 +39,7 @@ module.exports = {
       )
     ]
 
-    await interaction.reply({
+    await interaction.editReply({
       embeds: embeds
     })
   }

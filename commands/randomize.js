@@ -10,13 +10,16 @@ module.exports = {
   args: '',
   requiresActiveSession: true,
   async execute (interaction, client) {
+    await interaction.deferReply()
     logger.info('==========randomize start==========')
 
     let playerPool = client.lastRoundSpectators.slice(0, 12)
-    logger.info(
-      'Guaranteed players are: ' +
-        playerPool.map(player => player.username).join(', ')
-    )
+    if (playerPool.length > 0) {
+      logger.info(
+        'Guaranteed players are: ' +
+          playerPool.map(player => player.user.username).join(', ')
+      )
+    }
 
     if (playerPool.length !== 12) {
       playerPool = fillPlayerPool(interaction, client, playerPool)
@@ -88,13 +91,12 @@ module.exports = {
     ]
     logger.info('==========randomize end==========')
 
-    await interaction.reply({ embeds: embeds })
+    await interaction.editReply({ embeds: embeds })
   }
 }
 
 function fillPlayerPool (interaction, client, playerPool) {
   let resultPlayerPool = []
-  console.log(interaction.guild.channels.cache.get(client.config.lobby).members)
   const randomizedPlayers = shuffle([
     ...interaction.guild.channels.cache
       .get(client.config.lobby)
@@ -119,7 +121,7 @@ function fillPlayerPool (interaction, client, playerPool) {
   client.lastRoundSpectators = randomizedPlayers.slice(12 - playerPool.length)
   logger.info(
     'Players that got added to spectators for this round are: ' +
-      client.lastRoundSpectators.map(player => player.username).join(', ')
+      client.lastRoundSpectators.map(player => player.user.username).join(', ')
   )
   return resultPlayerPool
 }
