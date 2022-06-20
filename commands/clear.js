@@ -11,32 +11,41 @@ module.exports = {
   args: '',
   requiresActiveSession: true,
   async execute (interaction, client) {
+    await interaction.deferReply()
     const promises = []
     interaction.guild.roles.cache
       .get(client.spectatorRoleId)
       .members.forEach(member => {
-        promises.push(member.roles.remove(
-          interaction.guild.roles.cache.get(client.spectatorRoleId)
-        ))
+        promises.push(
+          member.roles.remove(
+            interaction.guild.roles.cache.get(client.spectatorRoleId)
+          )
+        )
       })
     interaction.guild.roles.cache
       .get(client.firstTeamRoleId)
       .members.forEach(member => {
-        promises.push(member.roles.remove(
-          interaction.guild.roles.cache.get(client.firstTeamRoleId)
-        ))
+        promises.push(
+          member.roles.remove(
+            interaction.guild.roles.cache.get(client.firstTeamRoleId)
+          )
+        )
       })
     interaction.guild.roles.cache
       .get(client.secondTeamRoleId)
       .members.forEach(member => {
-        promises.push(member.roles.remove(
-          interaction.guild.roles.cache.get(client.secondTeamRoleId)
-        ))
+        promises.push(
+          member.roles.remove(
+            interaction.guild.roles.cache.get(client.secondTeamRoleId)
+          )
+        )
       })
 
     client.lastRoundSpectators = []
     await Promise.all(promises)
     logger.debug('Cleared data and roles from participants!')
-    await interaction.reply('I cleared all data and roles from participants!')
+    await interaction.editReply(
+      'I cleared all data and roles from participants!'
+    )
   }
 }

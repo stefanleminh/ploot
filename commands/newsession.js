@@ -12,6 +12,7 @@ module.exports = {
   args: '',
   requiresActiveSession: false,
   async execute (interaction, client) {
+    await interaction.deferReply()
     if (validation.isActiveSession(client)) {
       interaction.reply(
         "There's already a session running! Please run /endsession first before starting a new session."
@@ -52,7 +53,7 @@ module.exports = {
       return
     }
 
-    await interaction.reply(
+    await interaction.editReply(
       'New session has been created! `' +
         interaction.guild.channels.cache.get(client.config.lobby).name +
         "` is the general/spectator's lobby. `" +
