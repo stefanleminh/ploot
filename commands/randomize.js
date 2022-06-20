@@ -24,7 +24,8 @@ module.exports = {
     if (playerPool.length !== 12) {
       playerPool = fillPlayerPool(interaction, client, playerPool)
     }
-    await Promise.all(createTeams(playerPool, client))
+    const randomizedPlayerPool = shuffle(playerPool)
+    await Promise.all(createTeams(randomizedPlayerPool, client))
 
     // Update cache with new roles
     await interaction.guild.members.fetch()
