@@ -6,34 +6,45 @@ const { SlashCommandBuilder } = require('@discordjs/builders')
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('newsession')
-    .setDescription('Creates a session with the pre-configured channels.'),
+    .setDescription(
+      'Creates a session and roles with the pre-configured channels.'
+    ),
   args: '',
   requiresActiveSession: false,
   async execute (interaction, client) {
+    await interaction.deferReply()
     if (validation.isActiveSession(client)) {
       interaction.reply(
         "There's already a session running! Please run /endsession first before starting a new session."
       )
       return
     }
+    const spectatorRole = await interaction.guild.roles.create({
+      name: 'Spectators',
+      color: '#ffa500',
+      reason: 'Spectator role for event'
+    })
+    logger.info('Setting spectator role id to: ' + spectatorRole.id)
+    client.spectatorRoleId = spectatorRole.id
 
-    client.voiceChannels.push(
-      interaction.guild.channels.cache.get(client.config.lobby)
-    )
-    client.voiceChannels.push(
-      interaction.guild.channels.cache.get(client.config.firstTeamVc)
-    )
-    client.voiceChannels.push(
-      interaction.guild.channels.cache.get(client.config.secondTeamVc)
-    )
-    logger.info(
-      'Adding following channels to the list: ' +
-        interaction.guild.channels.cache.get(client.config.lobby).name +
-        ', ' +
-        interaction.guild.channels.cache.get(client.config.firstTeamVc).name +
-        ', ' +
-        interaction.guild.channels.cache.get(client.config.secondTeamVc).name
-    )
+    const firstTeamRole = await interaction.guild.roles.create({
+      name: interaction.guild.channels.cache.get(client.config.firstTeamVc)
+        .name,
+      color: '#000088',
+      reason: 'Team role for event'
+    })
+    logger.info('Setting first team role id to: ' + firstTeamRole.id)
+    client.firstTeamRoleId = firstTeamRole.id
+
+    const secondTeamRole = await interaction.guild.roles.create({
+      name: interaction.guild.channels.cache.get(client.config.secondTeamVc)
+        .name,
+      color: '#fe0000',
+      reason: 'Team role for event'
+    })
+    logger.info('Setting second team role id to: ' + secondTeamRole.id)
+    client.secondTeamRoleId = secondTeamRole.id
+
     if (!validation.isActiveSession(client)) {
       await interaction.reply(
         'Unable to add channels to start a session! Please try again or check the help command.'
@@ -42,13 +53,13 @@ module.exports = {
       return
     }
 
-    await interaction.reply(
+    await interaction.editReply(
       'New session has been created! `' +
-        client.voiceChannels[0].name +
+        interaction.guild.channels.cache.get(client.config.lobby).name +
         "` is the general/spectator's lobby. `" +
-        client.voiceChannels[1].name +
+        interaction.guild.channels.cache.get(client.config.firstTeamVc).name +
         "` is the first team's lobby. `" +
-        client.voiceChannels[2].name +
+        interaction.guild.channels.cache.get(client.config.secondTeamVc).name +
         "` is the second team's lobby. You can now add users."
     )
   }

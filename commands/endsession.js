@@ -1,4 +1,3 @@
-const clear = require('./clear')
 const path = require('path')
 const logger = require('../logging/winston')(path.basename(__filename))
 const { SlashCommandBuilder } = require('@discordjs/builders')
@@ -10,9 +9,19 @@ module.exports = {
   args: '',
   requiresActiveSession: true,
   async execute (interaction, client) {
-    clear.clearLists(client)
-    client.voiceChannels = []
-    logger.debug('Session ended! Cleared all lists.')
-    await interaction.reply('I ended the session and cleared all lists.')
+    const promises = []
+    client.lastRoundSpectators = []
+    promises.push(
+      interaction.guild.roles.delete(client.spectatorRoleId),
+      interaction.guild.roles.delete(client.firstTeamRoleId),
+      interaction.guild.roles.delete(client.secondTeamRoleId)
+    )
+    client.spectatorRoleId = ''
+    client.firstTeamRoleId = ''
+    client.secondTeamRoleId = ''
+    await Promise.all(promises)
+    logger.debug('Session ended! Cleared all data.')
+
+    await interaction.reply('I ended the session and cleared all data.')
   }
 }

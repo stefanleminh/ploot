@@ -6,28 +6,60 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName('endmatch')
     .setDescription(
-      'Moves the users back to the lobby. The user has to be in a VC to work.'
+      'Moves the users from the team channels back to the lobby.'
     ),
   args: '',
   requiresActiveSession: true,
   async execute (interaction, client) {
-    if (client.voiceChannels[1].members.size > 0) {
-      client.voiceChannels[1].members.forEach(player => {
-        player.voice.setChannel(client.voiceChannels[0])
+    await interaction.deferReply()
+
+    const promises = []
+    const spectatorTeamVc = interaction.guild.channels.cache.get(
+      client.config.lobby
+    )
+    const firstTeamVc = interaction.guild.channels.cache.get(
+      client.config.firstTeamVc
+    )
+    const secondTeamVc = interaction.guild.channels.cache.get(
+      client.config.secondTeamVc
+    )
+    if (firstTeamVc.members.size > 0) {
+      firstTeamVc.members.forEach(async player => {
+        promises.push(player.voice.setChannel(spectatorTeamVc))
         logger.info(
-          `Moved user ${player.user.username} to voice channel ${client.voiceChannels[0].name}`
+          `Moving user ${player.user.username} to voice channel ${spectatorTeamVc.name}`
         )
       })
     }
 
-    if (client.voiceChannels[2].members.size > 0) {
-      client.voiceChannels[2].members.forEach(player => {
-        player.voice.setChannel(client.voiceChannels[0])
+    if (secondTeamVc.members.size > 0) {
+      secondTeamVc.members.forEach(async player => {
+        promises.push(player.voice.setChannel(spectatorTeamVc))
         logger.info(
-          `Moved user ${player.user.username} to voice channel ${client.voiceChannels[1].name}`
+          `Moving user ${player.user.username} to voice channel ${spectatorTeamVc.name}`
         )
       })
     }
-    await interaction.reply('GGs!')
+
+    interaction.guild.roles.cache
+      .get(client.firstTeamRoleId)
+      .members.forEach(member => {
+        promises.push(
+          member.roles.remove(
+            interaction.guild.roles.cache.get(client.firstTeamRoleId)
+          )
+        )
+      })
+    interaction.guild.roles.cache
+      .get(client.secondTeamRoleId)
+      .members.forEach(member => {
+        promises.push(
+          member.roles.remove(
+            interaction.guild.roles.cache.get(client.secondTeamRoleId)
+          )
+        )
+      })
+    await Promise.all(promises)
+    await interaction.editReply('GG!')
   }
 }

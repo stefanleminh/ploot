@@ -6,9 +6,9 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName('switchmode')
     .setDescription(
-      'Switches the player form active player to spectator or vise versa.'
+      'Switches the player from active player to spectator or vise versa.'
     )
-    .addUserOption((option) =>
+    .addUserOption(option =>
       option
         .setName('user')
         .setDescription('The user whose status to switch')
@@ -17,29 +17,32 @@ module.exports = {
   args: '[@DiscordUser]',
   requiresActiveSession: true,
   async execute (interaction, client) {
-    const participant = interaction.options.getUser('user')
+    const userParameter = interaction.options.getUser('user')
+    const guildUser = await interaction.guild.channels.cache
+      .get(client.config.lobby)
+      .members.get(userParameter.id)
 
-    if (client.currentPlayers.includes(participant)) {
-      client.currentSpectators.push(participant)
-      client.currentPlayers = client.currentPlayers.filter(
-        (element) => element !== participant
-      )
-      logger.info(`User ${participant.username} is now a spectator`)
-      await interaction.reply(`<@${participant.id}> is now spectator.`)
-    } else if (client.currentSpectators.includes(participant)) {
-      client.currentPlayers.push(participant)
-      client.currentSpectators = client.currentSpectators.filter(
-        (element) => element !== participant
-      )
-      logger.info(`User ${participant.username} is now an active player`)
-      await interaction.reply(`<@${participant.id}> is now an active player.`)
-    } else {
+    if (!guildUser) {
       logger.info(
-        `User ${participant.username} not found as an active player or spectator`
+        `User ${userParameter.username} not found as an active player or spectator`
       )
       await interaction.reply(
-        `Participant <@${participant.id}> not found as active player or spectator.`
+        `Participant <@${userParameter.id}> not found as active player or spectator.`
       )
+      return
+    }
+
+    const isSpectator = [...guildUser.roles.cache.keys()].includes(
+      client.spectatorRoleId
+    )
+    if (!isSpectator) {
+      await guildUser.roles.add(client.spectatorRoleId)
+      logger.info(`User ${userParameter.username} is now a spectator`)
+      interaction.reply(`<@${userParameter.id}> is now spectator.`)
+    } else {
+      await guildUser.roles.remove(client.spectatorRoleId)
+      logger.info(`User ${userParameter.username} is now an active player`)
+      interaction.reply(`<@${userParameter.id}> is now an active player.`)
     }
   }
 }

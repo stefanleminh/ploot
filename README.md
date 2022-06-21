@@ -69,24 +69,26 @@ This is an example of how to list things you need to use the software and how to
    ```sh
    npm install
    ```
-3. Enter your configuration in `config.json`
+3. Enter your configuration in `config.json` (refer to [Configuration](#configuration))
 4. Run with
 
    ```sh
    npm run start
    ```
 
-You then have to create a config.json file in the root directory. It will need the following properties:
+#### Configuration
+
+You have to create a config.json file in the root directory. It will need the following properties:
 
 ```json
 {
-  "token": "",
-  "botChannel": "",
-  "lobby": "",
-  "firstTeamVc": "",
-  "secondTeamVc": "",
-  "loggingLevel": "info",
-  "testGuildId": ""
+  "token": "", // Bot-Token
+  "botChannel": "", // TextChannel-ID for the bot to write
+  "lobby": "", // VoiceChannel-ID for the lobby
+  "firstTeamVc": "", //VoiceChannel-ID for the first team
+  "secondTeamVc": "", // VoiceChannel-ID for the second team
+  "loggingLevel": "info", // Logging-Level
+  "testGuildId": "" // Server-ID to employ commands on guild-level (will deploy globally if empty)
 }
 ```
 
@@ -94,23 +96,21 @@ You then have to create a config.json file in the root directory. It will need t
 
 ## Usage
 
-Start a new session with `/newsession` - You can now add/remove players or any other functionality that comes with ploot. Ploot will now listen to any user that will join the lobby and add them to the list of players automatically. You can remove participants by using `/remove @DiscordUser ...`. You can switch their mode with `/switchmode @DiscordUser`
-You can then create your teams by using the `/randomize` command - It will purge any players not present in the lobby. Then you can use `/startmatch` to move every player in the lobby to their designated voice-channel and back to the lobby with `/endmatch`.  
+Start a new session with `/newsession` - Ploot will now create roles for spectators and the teams that are pre-configured in the config. Any player in the lobby will be a player unless you specifically give them the spectator role, either manually or via the `/switchmode` command.
+You can then create your teams by using the `/randomize` command - It will ignore bots and only look at the members connected to the lobby-vc. Then you can use `/startmatch` to move every player in the lobby to their designated voice-channel and back to the lobby with `/endmatch`.  
 Finally, you can end the session with `/endsession`.
 
-|             | Arguments    | Description                                                                                                                                                 |
-| ----------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| /help       |              | Shows the help message                                                                                                                                      |
-| /newsession |              | Creates a new session with the preconfigured channels.                                                                                                      |
-| /endsession |              | Ends the session and clears all the data.                                                                                                                   |
-| /startmatch |              | Moves the userss to the designated team channels. The user has to be in a VC to work. Will send a message and not move a user if they are not in the lobby. |
-| /endmatch   |              | Moves the users back to the lobby.                                                                                                                          |
-| /list       |              | Lists active players and spectators.                                                                                                                        |
-| /remove     | @DiscordUser | Removes one or multiple participants from the session.                                                                                                      |
-| /switchmode | @DiscordUser | Switches the player from active player to spectator or vice versa.                                                                                          |
-| /randomize  |              | Randomizes and shows the new teams. Will purge any users not connected to the lobby.                                                                        |
-| /clear      |              | Clears active players and spectators list.                                                                                                                  |
-| /parselobby |              | Adds the lobby to the list of players                                                                                                                       |
+|             | Arguments    | Description                                                        |
+| ----------- | ------------ | ------------------------------------------------------------------ |
+| /help       |              | Shows the help message                                             |
+| /newsession |              | Creates a new session and roles with the preconfigured channels.   |
+| /endsession |              | Ends the session and clears all the data.                          |
+| /startmatch |              | Moves the users to the designated team channels.                   |
+| /endmatch   |              | Moves the users back to the lobby.                                 |
+| /list       |              | Lists active players and spectators.                               |  |
+| /switchmode | @DiscordUser | Switches the player from active player to spectator or vice versa. |
+| /randomize  |              | Randomizes and shows the new teams.                                |
+| /clear      |              | Clears active players and spectators list.                         |
 
 <!-- ROADMAP -->
 

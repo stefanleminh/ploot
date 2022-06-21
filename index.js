@@ -3,16 +3,17 @@ const fs = require('fs')
 const path = require('path')
 const logger = require('./logging/winston')(path.basename(__filename))
 const client = new Client({
-  intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_VOICE_STATES]
+  intents: [
+    Intents.FLAGS.GUILDS,
+    Intents.FLAGS.GUILD_VOICE_STATES,
+    Intents.FLAGS.GUILD_MEMBERS
+  ]
 })
 
 client.config = require('./config.json')
-client.currentPlayers = []
-client.currentSpectators = []
-client.voiceChannels = []
-client.firstTeam = []
-client.secondTeam = []
-client.spectatorTeam = []
+client.spectatorRoleId = ''
+client.firstTeamRoleId = ''
+client.secondTeamRoleId = ''
 client.lastRoundSpectators = []
 
 client.commands = new Collection()
