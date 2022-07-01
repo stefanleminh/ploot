@@ -10,15 +10,25 @@ module.exports = {
   requiresActiveSession: true,
   async execute (interaction, client) {
     const promises = []
-    client.lastRoundSpectators = []
-    promises.push(
-      interaction.guild.roles.delete(client.spectatorRoleId),
-      interaction.guild.roles.delete(client.firstTeamRoleId),
-      interaction.guild.roles.delete(client.secondTeamRoleId)
+    const spectatorRoleId = await client.spectatorRoleIds.get(
+      interaction.guild.id
     )
-    client.spectatorRoleId = ''
-    client.firstTeamRoleId = ''
-    client.secondTeamRoleId = ''
+    const firstTeamRoleId = await client.firstTeamRoleIds.get(
+      interaction.guild.id
+    )
+    const secondTeamRoleId = await client.secondTeamRoleIds.get(
+      interaction.guild.id
+    )
+    promises.push(
+      interaction.guild.roles.delete(spectatorRoleId),
+      interaction.guild.roles.delete(firstTeamRoleId),
+      interaction.guild.roles.delete(secondTeamRoleId),
+      client.spectatorRoleIds.delete(interaction.guild.id),
+      client.firstTeamRoleIds.delete(interaction.guild.id),
+      client.secondTeamRoleIds.delete(interaction.guild.id),
+      client.lastRoundSpectators.delete(interaction.guild.id)
+    )
+
     await Promise.all(promises)
     logger.debug('Session ended! Cleared all data.')
 

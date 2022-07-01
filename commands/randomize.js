@@ -10,10 +10,21 @@ module.exports = {
   args: '',
   requiresActiveSession: true,
   async execute (interaction, client) {
+    const firstTeamRoleId = await client.firstTeamRoleIds.get(
+      interaction.guild.id
+    )
+    const secondTeamRoleId = await client.secondTeamRoleIds.get(
+      interaction.guild.id
+    )
+    const spectatorRoleId = await client.spectatorRoleIds.get(
+      interaction.guild.id
+    )
     await interaction.deferReply()
     logger.info('==========randomize start==========')
 
-    let playerPool = client.lastRoundSpectators.slice(0, 12)
+    let playerPool = (
+      await client.lastRoundSpectators.get(interaction.guild.id)
+    ).slice(0, 12)
     if (playerPool.length > 0) {
       logger.info(
         'Guaranteed players are: ' +
@@ -22,10 +33,15 @@ module.exports = {
     }
 
     if (playerPool.length !== 12) {
-      playerPool = fillPlayerPool(interaction, client, playerPool)
+      playerPool = await fillPlayerPool(interaction, client, playerPool)
     }
     const randomizedPlayerPool = shuffle(playerPool)
-    await Promise.all(createTeams(randomizedPlayerPool, client))
+    const teamPromises = await createTeams(
+      randomizedPlayerPool,
+      firstTeamRoleId,
+      secondTeamRoleId
+    )
+    await Promise.all(teamPromises)
 
     // Update cache with new roles
     await interaction.guild.members.fetch()
@@ -33,7 +49,7 @@ module.exports = {
     const firstTeam = interaction.guild.channels.cache
       .get(client.config.lobby)
       .members.filter(member =>
-        member.roles.cache.some(role => role.id === client.firstTeamRoleId)
+        member.roles.cache.some(role => role.id === firstTeamRoleId)
       )
       .map(guildmember => guildmember.user)
 
@@ -44,7 +60,7 @@ module.exports = {
     const secondTeam = interaction.guild.channels.cache
       .get(client.config.lobby)
       .members.filter(member =>
-        member.roles.cache.some(role => role.id === client.secondTeamRoleId)
+        member.roles.cache.some(role => role.id === secondTeamRoleId)
       )
       .map(guildmember => guildmember.user)
 
@@ -58,9 +74,8 @@ module.exports = {
         member =>
           member.roles.cache.every(
             role =>
-              role.id === client.spectatorRoleId ||
-              (role.id !== client.firstTeamRoleId &&
-                role.id !== client.secondTeamRoleId)
+              role.id === spectatorRoleId ||
+              (role.id !== firstTeamRoleId && role.id !== secondTeamRoleId)
           ) && !member.user.bot
       )
       .map(guildmember => guildmember.user)
@@ -96,17 +111,18 @@ module.exports = {
   }
 }
 
-function fillPlayerPool (interaction, client, playerPool) {
+async function fillPlayerPool (interaction, client, playerPool) {
   let resultPlayerPool = []
+  const spectatorRoleId = await client.spectatorRoleIds.get(
+    interaction.guild.id
+  )
   const randomizedPlayers = shuffle([
     ...interaction.guild.channels.cache
       .get(client.config.lobby)
       .members.filter(
         player =>
           !playerPool.includes(player) &&
-          !player.roles.cache.some(
-            role => role.id === client.spectatorRoleId
-          ) &&
+          !player.roles.cache.some(role => role.id === spectatorRoleId) &&
           !player.user.bot
       )
       .values()
@@ -119,10 +135,15 @@ function fillPlayerPool (interaction, client, playerPool) {
       resultPlayerPool.map(player => player.user.username).join(', ')
   )
   // Add rest to spectators
-  client.lastRoundSpectators = randomizedPlayers.slice(12 - playerPool.length)
+  await client.lastRoundSpectators.set(
+    interaction.guild.id,
+    randomizedPlayers.slice(12 - playerPool.length)
+  )
   logger.info(
     'Players that got added to spectators for this round are: ' +
-      client.lastRoundSpectators.map(player => player.user.username).join(', ')
+      (await client.lastRoundSpectators.get(interaction.guild.id))
+        .map(player => player.user.username)
+        .join(', ')
   )
   return resultPlayerPool
 }
@@ -145,18 +166,20 @@ function shuffle (array) {
   return result
 }
 
-function createTeams (players, client) {
-  logger.info(`Creating teams with parameters: ${players}, ${client}`)
+async function createTeams (players, firstTeamRoleId, secondTeamRoleId) {
+  logger.info(
+    `Creating teams with parameters: ${players}, ${firstTeamRoleId}, ${secondTeamRoleId}`
+  )
   const promises = []
   const firstTeam = players.slice(0, players.length / 2)
 
   firstTeam.forEach(member => {
-    promises.push(member.roles.add(client.firstTeamRoleId))
+    promises.push(member.roles.add(firstTeamRoleId))
   })
   const secondTeam = players.slice(players.length / 2, players.length)
 
   secondTeam.forEach(member => {
-    promises.push(member.roles.add(client.secondTeamRoleId))
+    promises.push(member.roles.add(secondTeamRoleId))
   })
 
   return promises

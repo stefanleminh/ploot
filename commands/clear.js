@@ -13,35 +13,52 @@ module.exports = {
   async execute (interaction, client) {
     await interaction.deferReply()
     const promises = []
-    interaction.guild.roles.cache
-      .get(client.spectatorRoleId)
-      .members.forEach(member => {
-        promises.push(
-          member.roles.remove(
-            interaction.guild.roles.cache.get(client.spectatorRoleId)
-          )
-        )
-      })
-    interaction.guild.roles.cache
-      .get(client.firstTeamRoleId)
-      .members.forEach(member => {
-        promises.push(
-          member.roles.remove(
-            interaction.guild.roles.cache.get(client.firstTeamRoleId)
-          )
-        )
-      })
-    interaction.guild.roles.cache
-      .get(client.secondTeamRoleId)
-      .members.forEach(member => {
-        promises.push(
-          member.roles.remove(
-            interaction.guild.roles.cache.get(client.secondTeamRoleId)
-          )
-        )
-      })
+    const spectatorRoleId = await client.spectatorRoleIds.get(
+      interaction.guild.id
+    )
+    const firstTeamRoleId = await client.firstTeamRoleIds.get(
+      interaction.guild.id
+    )
+    const secondTeamRoleId = await client.secondTeamRoleIds.get(
+      interaction.guild.id
+    )
 
-    client.lastRoundSpectators = []
+    if (spectatorRoleId) {
+      interaction.guild.roles.cache
+        .get(spectatorRoleId)
+        .members.forEach(member => {
+          promises.push(
+            member.roles.remove(
+              interaction.guild.roles.cache.get(client.spectatorRoleId)
+            )
+          )
+        })
+    }
+
+    if (firstTeamRoleId) {
+      interaction.guild.roles.cache
+        .get(firstTeamRoleId)
+        .members.forEach(member => {
+          promises.push(
+            member.roles.remove(
+              interaction.guild.roles.cache.get(client.firstTeamRoleId)
+            )
+          )
+        })
+    }
+    if (secondTeamRoleId) {
+      interaction.guild.roles.cache
+        .get(secondTeamRoleId)
+        .members.forEach(member => {
+          promises.push(
+            member.roles.remove(
+              interaction.guild.roles.cache.get(client.secondTeamRoleId)
+            )
+          )
+        })
+    }
+
+    await client.lastRoundSpectators.set(interaction.guild.id, [])
     await Promise.all(promises)
     logger.debug('Cleared data and roles from participants!')
     await interaction.editReply(

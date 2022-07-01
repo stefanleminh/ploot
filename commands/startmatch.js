@@ -15,30 +15,36 @@ module.exports = {
     const firstTeamVc = interaction.guild.channels.cache.get(
       client.config.firstTeamVc
     )
+    const firstTeamRoleId = await client.firstTeamRoleIds.get(
+      interaction.guild.id
+    )
     const firstTeam = interaction.guild.channels.cache
       .get(client.config.lobby)
       .members.filter(member =>
-        member.roles.cache.some(role => role.id === client.firstTeamRoleId)
+        member.roles.cache.some(role => role.id === firstTeamRoleId)
       )
       .map(guildmember => guildmember.user)
     const secondTeamVc = interaction.guild.channels.cache.get(
       client.config.secondTeamVc
     )
+    const secondTeamRoleId = await client.secondTeamRoleIds.get(
+      interaction.guild.id
+    )
     const secondTeam = interaction.guild.channels.cache
       .get(client.config.lobby)
       .members.filter(member =>
-        member.roles.cache.some(role => role.id === client.secondTeamRoleId)
+        member.roles.cache.some(role => role.id === secondTeamRoleId)
       )
       .map(guildmember => guildmember.user)
 
     firstTeam.forEach(player => {
       const member = interaction.guild.members.cache.get(player.id)
-      promises.push(setVoiceChannel(member, firstTeamVc, interaction, client))
+      promises.push(setVoiceChannel(member, firstTeamVc, interaction))
     })
 
     secondTeam.forEach(player => {
       const member = interaction.guild.members.cache.get(player.id)
-      promises.push(setVoiceChannel(member, secondTeamVc, interaction, client))
+      promises.push(setVoiceChannel(member, secondTeamVc, interaction))
     })
     await Promise.all(promises)
     await interaction.editReply('GLHF!')

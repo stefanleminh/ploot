@@ -23,8 +23,15 @@ module.exports = {
     const secondTeamVc = interaction.guild.channels.cache.get(
       client.config.secondTeamVc
     )
+    const firstTeamRoleId = await client.firstTeamRoleIds.get(
+      interaction.guild.id
+    )
+    const secondTeamRoleId = await client.secondTeamRoleIds.get(
+      interaction.guild.id
+    )
+
     if (firstTeamVc.members.size > 0) {
-      firstTeamVc.members.forEach(async player => {
+      firstTeamVc.members.forEach(player => {
         promises.push(player.voice.setChannel(spectatorTeamVc))
         logger.info(
           `Moving user ${player.user.username} to voice channel ${spectatorTeamVc.name}`
@@ -33,7 +40,7 @@ module.exports = {
     }
 
     if (secondTeamVc.members.size > 0) {
-      secondTeamVc.members.forEach(async player => {
+      secondTeamVc.members.forEach(player => {
         promises.push(player.voice.setChannel(spectatorTeamVc))
         logger.info(
           `Moving user ${player.user.username} to voice channel ${spectatorTeamVc.name}`
@@ -42,20 +49,21 @@ module.exports = {
     }
 
     interaction.guild.roles.cache
-      .get(client.firstTeamRoleId)
+      .get(firstTeamRoleId)
       .members.forEach(member => {
         promises.push(
           member.roles.remove(
-            interaction.guild.roles.cache.get(client.firstTeamRoleId)
+            interaction.guild.roles.cache.get(firstTeamRoleId)
           )
         )
       })
+
     interaction.guild.roles.cache
-      .get(client.secondTeamRoleId)
+      .get(secondTeamRoleId)
       .members.forEach(member => {
         promises.push(
           member.roles.remove(
-            interaction.guild.roles.cache.get(client.secondTeamRoleId)
+            interaction.guild.roles.cache.get(secondTeamRoleId)
           )
         )
       })

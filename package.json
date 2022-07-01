@@ -24,6 +24,7 @@
     "@discordjs/rest": "^0.4.1",
     "discord-api-types": "^0.32.1",
     "discord.js": "^13.7.0",
+    "keyv": "^4.3.2",
     "winston": "^3.3.3"
   },
   "devDependencies": {

@@ -13,8 +13,8 @@ module.exports = {
   requiresActiveSession: false,
   async execute (interaction, client) {
     await interaction.deferReply()
-    if (validation.isActiveSession(client)) {
-      interaction.reply(
+    if (await validation.isActiveSession(client, interaction.guild.id)) {
+      interaction.editReply(
         "There's already a session running! Please run /endsession first before starting a new session."
       )
       return
@@ -25,7 +25,7 @@ module.exports = {
       reason: 'Spectator role for event'
     })
     logger.info('Setting spectator role id to: ' + spectatorRole.id)
-    client.spectatorRoleId = spectatorRole.id
+    await client.spectatorRoleIds.set(interaction.guild.id, spectatorRole.id)
 
     const firstTeamRole = await interaction.guild.roles.create({
       name: interaction.guild.channels.cache.get(client.config.firstTeamVc)
@@ -34,7 +34,7 @@ module.exports = {
       reason: 'Team role for event'
     })
     logger.info('Setting first team role id to: ' + firstTeamRole.id)
-    client.firstTeamRoleId = firstTeamRole.id
+    await client.firstTeamRoleIds.set(interaction.guild.id, firstTeamRole.id)
 
     const secondTeamRole = await interaction.guild.roles.create({
       name: interaction.guild.channels.cache.get(client.config.secondTeamVc)
@@ -43,15 +43,16 @@ module.exports = {
       reason: 'Team role for event'
     })
     logger.info('Setting second team role id to: ' + secondTeamRole.id)
-    client.secondTeamRoleId = secondTeamRole.id
+    await client.secondTeamRoleIds.set(interaction.guild.id, secondTeamRole.id)
 
     if (!validation.isActiveSession(client)) {
       await interaction.reply(
         'Unable to add channels to start a session! Please try again or check the help command.'
       )
-      client.voiceChannels = []
       return
     }
+
+    await client.lastRoundSpectators.set(interaction.guild.id, [])
 
     await interaction.editReply(
       'New session has been created! `' +
@@ -60,7 +61,11 @@ module.exports = {
         interaction.guild.channels.cache.get(client.config.firstTeamVc).name +
         "` is the first team's lobby. `" +
         interaction.guild.channels.cache.get(client.config.secondTeamVc).name +
-        "` is the second team's lobby. You can now add users."
+        "` is the second team's lobby. <@&" +
+        firstTeamRole.id +
+        '> is the first teams role. <@&' +
+        secondTeamRole.id +
+        '> is the second teams role. '
     )
   }
 }

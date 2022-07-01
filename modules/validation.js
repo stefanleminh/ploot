@@ -1,11 +1,11 @@
 const path = require('path')
 const logger = require('../logging/winston')(path.basename(__filename))
 
-const isActiveSession = client => {
+const isActiveSession = async (client, guildId) => {
   const isActiveSession =
-    client.spectatorRoleId !== '' &&
-    client.firstTeamRoleId !== '' &&
-    client.secondTeamRoleId !== ''
+    (await client.spectatorRoleIds.get(guildId)) !== undefined &&
+    (await client.firstTeamRoleIds.get(guildId)) !== undefined &&
+    (await client.secondTeamRoleIds.get(guildId)) !== undefined
   logger.debug(`Current session is active: [${isActiveSession}]`)
   return isActiveSession
 }
