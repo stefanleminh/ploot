@@ -12,7 +12,9 @@ const client = new Client({
 const Keyv = require('keyv')
 
 client.config = require('./config.json')
-
+client.lobbies = new Keyv()
+client.firstTeamVcs = new Keyv()
+client.secondTeamVcs = new Keyv()
 client.spectatorRoleIds = new Keyv()
 client.firstTeamRoleIds = new Keyv()
 client.secondTeamRoleIds = new Keyv()

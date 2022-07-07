@@ -13,9 +13,25 @@ module.exports = {
   requiresActiveSession: false,
   async execute (interaction, client) {
     await interaction.deferReply()
-    if (await validation.isActiveSession(client, interaction.guild.id)) {
+    const isActiveSession = await validation.isActiveSession(
+      client,
+      interaction.guild.id
+    )
+    // TODO: Either run configure or give an error message if not configured
+    if (isActiveSession) {
       interaction.editReply(
         "There's already a session running! Please run /endsession first before starting a new session."
+      )
+      return
+    }
+
+    const isConfigured = await validation.isConfigured(
+      client,
+      interaction.guild.id
+    )
+    if (!isConfigured) {
+      interaction.editReply(
+        'I am not configured for this server yet! Please run /configure first before starting a new session.'
       )
       return
     }
@@ -27,6 +43,7 @@ module.exports = {
     logger.info('Setting spectator role id to: ' + spectatorRole.id)
     await client.spectatorRoleIds.set(interaction.guild.id, spectatorRole.id)
 
+    // TODO: Get from configuration instead of client
     const firstTeamRole = await interaction.guild.roles.create({
       name: interaction.guild.channels.cache.get(client.config.firstTeamVc)
         .name,
@@ -36,6 +53,7 @@ module.exports = {
     logger.info('Setting first team role id to: ' + firstTeamRole.id)
     await client.firstTeamRoleIds.set(interaction.guild.id, firstTeamRole.id)
 
+    // TODO: Get from configuration instead of client
     const secondTeamRole = await interaction.guild.roles.create({
       name: interaction.guild.channels.cache.get(client.config.secondTeamVc)
         .name,
