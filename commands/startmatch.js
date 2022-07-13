@@ -12,26 +12,25 @@ module.exports = {
     const promises = []
     await interaction.deferReply()
 
-    const firstTeamVc = interaction.guild.channels.cache.get(
-      client.config.firstTeamVc
-    )
+    const lobbyVc = await client.lobbies.get(interaction.guild.id)
+    const firstTeamVc = await client.firstTeamVcs.get(interaction.guild.id)
+    const secondTeamVc = await client.secondTeamVcs.get(interaction.guild.id)
+
     const firstTeamRoleId = await client.firstTeamRoleIds.get(
       interaction.guild.id
     )
     const firstTeam = interaction.guild.channels.cache
-      .get(client.config.lobby)
+      .get(lobbyVc)
       .members.filter(member =>
         member.roles.cache.some(role => role.id === firstTeamRoleId)
       )
       .map(guildmember => guildmember.user)
-    const secondTeamVc = interaction.guild.channels.cache.get(
-      client.config.secondTeamVc
-    )
+
     const secondTeamRoleId = await client.secondTeamRoleIds.get(
       interaction.guild.id
     )
     const secondTeam = interaction.guild.channels.cache
-      .get(client.config.lobby)
+      .get(lobbyVc)
       .members.filter(member =>
         member.roles.cache.some(role => role.id === secondTeamRoleId)
       )

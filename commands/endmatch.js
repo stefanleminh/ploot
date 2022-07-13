@@ -13,16 +13,12 @@ module.exports = {
   async execute (interaction, client) {
     await interaction.deferReply()
 
+    const lobbyVc = await client.lobbies.get(interaction.guild.id)
+    const firstTeamVc = await client.firstTeamVcs.get(interaction.guild.id)
+    const secondTeamVc = await client.secondTeamVcs.get(interaction.guild.id)
+
     const promises = []
-    const spectatorTeamVc = interaction.guild.channels.cache.get(
-      client.config.lobby
-    )
-    const firstTeamVc = interaction.guild.channels.cache.get(
-      client.config.firstTeamVc
-    )
-    const secondTeamVc = interaction.guild.channels.cache.get(
-      client.config.secondTeamVc
-    )
+
     const firstTeamRoleId = await client.firstTeamRoleIds.get(
       interaction.guild.id
     )
@@ -32,18 +28,18 @@ module.exports = {
 
     if (firstTeamVc.members.size > 0) {
       firstTeamVc.members.forEach(player => {
-        promises.push(player.voice.setChannel(spectatorTeamVc))
+        promises.push(player.voice.setChannel(lobbyVc))
         logger.info(
-          `Moving user ${player.user.username} to voice channel ${spectatorTeamVc.name}`
+          `Moving user ${player.user.username} to voice channel ${lobbyVc.name}`
         )
       })
     }
 
     if (secondTeamVc.members.size > 0) {
       secondTeamVc.members.forEach(player => {
-        promises.push(player.voice.setChannel(spectatorTeamVc))
+        promises.push(player.voice.setChannel(lobbyVc))
         logger.info(
-          `Moving user ${player.user.username} to voice channel ${spectatorTeamVc.name}`
+          `Moving user ${player.user.username} to voice channel ${lobbyVc.name}`
         )
       })
     }

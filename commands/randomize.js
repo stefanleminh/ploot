@@ -19,6 +19,9 @@ module.exports = {
     const spectatorRoleId = await client.spectatorRoleIds.get(
       interaction.guild.id
     )
+    const lobbyVc = await client.lobbies.get(interaction.guild.id)
+    const firstTeamVc = await client.firstTeamVcs.get(interaction.guild.id)
+    const secondTeamVc = await client.secondTeamVcs.get(interaction.guild.id)
     await interaction.deferReply()
     logger.info('==========randomize start==========')
 
@@ -33,7 +36,12 @@ module.exports = {
     }
 
     if (playerPool.length !== 12) {
-      playerPool = await fillPlayerPool(interaction, client, playerPool)
+      playerPool = await fillPlayerPool(
+        interaction,
+        client,
+        playerPool,
+        lobbyVc
+      )
     }
     const randomizedPlayerPool = shuffle(playerPool)
     const teamPromises = await createTeams(
@@ -47,7 +55,7 @@ module.exports = {
     await interaction.guild.members.fetch()
 
     const firstTeam = interaction.guild.channels.cache
-      .get(client.config.lobby)
+      .get(lobbyVc)
       .members.filter(member =>
         member.roles.cache.some(role => role.id === firstTeamRoleId)
       )
@@ -58,7 +66,7 @@ module.exports = {
     )
 
     const secondTeam = interaction.guild.channels.cache
-      .get(client.config.lobby)
+      .get(lobbyVc)
       .members.filter(member =>
         member.roles.cache.some(role => role.id === secondTeamRoleId)
       )
@@ -69,7 +77,7 @@ module.exports = {
     )
 
     const spectatorTeam = interaction.guild.channels.cache
-      .get(client.config.lobby)
+      .get(lobbyVc)
       .members.filter(
         member =>
           member.roles.cache.every(
@@ -88,19 +96,19 @@ module.exports = {
     const embeds = [
       functions.createEmbed(
         firstTeam,
-        interaction.guild.channels.cache.get(client.config.firstTeamVc).name,
+        interaction.guild.channels.cache.get(firstTeamVc).name,
         '#000088',
         interaction
       ),
       functions.createEmbed(
         secondTeam,
-        interaction.guild.channels.cache.get(client.config.secondTeamVc).name,
+        interaction.guild.channels.cache.get(secondTeamVc).name,
         '#fe0000',
         interaction
       ),
       functions.createEmbed(
         spectatorTeam,
-        interaction.guild.channels.cache.get(client.config.lobby).name,
+        interaction.guild.channels.cache.get(lobbyVc).name,
         '#ffa500',
         interaction
       )
@@ -111,14 +119,14 @@ module.exports = {
   }
 }
 
-async function fillPlayerPool (interaction, client, playerPool) {
+async function fillPlayerPool (interaction, client, playerPool, lobbyVc) {
   let resultPlayerPool = []
   const spectatorRoleId = await client.spectatorRoleIds.get(
     interaction.guild.id
   )
   const randomizedPlayers = shuffle([
     ...interaction.guild.channels.cache
-      .get(client.config.lobby)
+      .get(lobbyVc)
       .members.filter(
         player =>
           !playerPool.includes(player) &&

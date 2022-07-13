@@ -9,11 +9,14 @@ module.exports = {
   requiresActiveSession: true,
   async execute (interaction, client) {
     await interaction.deferReply()
+
+    const lobbyVc = await client.lobbies.get(interaction.guild.id)
+
     const spectatorRoleId = await client.spectatorRoleIds.get(
       interaction.guild.id
     )
     const currentPlayers = interaction.guild.channels.cache
-      .get(client.config.lobby)
+      .get(lobbyVc)
       .members.filter(member => {
         return (
           member.roles.cache.every(role => role.id !== spectatorRoleId) &&
@@ -22,7 +25,7 @@ module.exports = {
       })
       .map(guildmember => guildmember.user)
     const currentSpectators = interaction.guild.channels.cache
-      .get(client.config.lobby)
+      .get(lobbyVc)
       .members.filter(member => {
         return (
           member.roles.cache.some(role => role.id === spectatorRoleId) &&

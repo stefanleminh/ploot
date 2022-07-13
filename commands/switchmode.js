@@ -18,8 +18,10 @@ module.exports = {
   requiresActiveSession: true,
   async execute (interaction, client) {
     const userParameter = interaction.options.getUser('user')
+    const lobbyVc = await client.lobbies.get(interaction.guild.id)
+
     const guildUser = await interaction.guild.channels.cache
-      .get(client.config.lobby)
+      .get(lobbyVc)
       .members.get(userParameter.id)
 
     if (!guildUser) {

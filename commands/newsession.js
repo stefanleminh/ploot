@@ -35,6 +35,9 @@ module.exports = {
       )
       return
     }
+    const lobbyVc = await client.lobbies.get(interaction.guild.id)
+    const firstTeamVc = await client.firstTeamVcs.get(interaction.guild.id)
+    const secondTeamVc = await client.secondTeamVcs.get(interaction.guild.id)
     const spectatorRole = await interaction.guild.roles.create({
       name: 'Spectators',
       color: '#ffa500',
@@ -45,8 +48,7 @@ module.exports = {
 
     // TODO: Get from configuration instead of client
     const firstTeamRole = await interaction.guild.roles.create({
-      name: interaction.guild.channels.cache.get(client.config.firstTeamVc)
-        .name,
+      name: interaction.guild.channels.cache.get(firstTeamVc).name,
       color: '#000088',
       reason: 'Team role for event'
     })
@@ -55,8 +57,7 @@ module.exports = {
 
     // TODO: Get from configuration instead of client
     const secondTeamRole = await interaction.guild.roles.create({
-      name: interaction.guild.channels.cache.get(client.config.secondTeamVc)
-        .name,
+      name: interaction.guild.channels.cache.get(secondTeamVc).name,
       color: '#fe0000',
       reason: 'Team role for event'
     })
@@ -73,17 +74,7 @@ module.exports = {
     await client.lastRoundSpectators.set(interaction.guild.id, [])
 
     await interaction.editReply(
-      'New session has been created! `' +
-        interaction.guild.channels.cache.get(client.config.lobby).name +
-        "` is the general/spectator's lobby. `" +
-        interaction.guild.channels.cache.get(client.config.firstTeamVc).name +
-        "` is the first team's lobby. `" +
-        interaction.guild.channels.cache.get(client.config.secondTeamVc).name +
-        "` is the second team's lobby. <@&" +
-        firstTeamRole.id +
-        '> is the first teams role. <@&' +
-        secondTeamRole.id +
-        '> is the second teams role. '
+      `New session has been created! <#${lobbyVc}> is the general/spectator's lobby. <#${firstTeamVc}> is the first team's lobby. <#${secondTeamVc}> is the second team's lobby. <@&${firstTeamRole.id}> is the first teams role. <@&${secondTeamRole.id}> is the second teams role. `
     )
   }
 }

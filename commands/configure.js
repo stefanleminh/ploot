@@ -1,6 +1,7 @@
 const functions = require('../modules/functions')
 const { SlashCommandBuilder } = require('@discordjs/builders')
 const {
+  TextInputComponent,
   Modal,
   MessageActionRow,
   MessageSelectMenu,
@@ -17,6 +18,7 @@ module.exports = {
   requiresActiveSession: true,
   async execute (interaction, client) {
     await interaction.deferReply()
+
     const voiceChannels = interaction.guild.channels.cache
       .filter(channel => channel.type === 'GUILD_VOICE')
       .map(channel => ({
@@ -25,17 +27,17 @@ module.exports = {
       }))
     const spectatorVc = new MessageSelectMenu()
       .setCustomId('spectatorVc')
-      .setPlaceholder('Nothing selected')
+      .setPlaceholder('Please specify the lobby VC')
       .addOptions(voiceChannels)
 
     const firstTeamVc = new MessageSelectMenu()
       .setCustomId('firstTeamVc')
-      .setPlaceholder('Nothing selected')
+      .setPlaceholder('Please specify the first team VC')
       .addOptions(voiceChannels)
 
     const secondTeamVc = new MessageSelectMenu()
       .setCustomId('secondTeamVc')
-      .setPlaceholder('Nothing selected')
+      .setPlaceholder('Please specify the second team VC')
       .addOptions(voiceChannels)
 
     const button = new MessageButton()
@@ -59,18 +61,21 @@ module.exports = {
       }
     )
 
-    selectCollector.on('collect', async i => {
+    selectCollector.on('collect', async selectInteraction => {
       let property
-      if (i.customId === 'spectatorVc') {
+      if (selectInteraction.customId === 'spectatorVc') {
         property = client.lobbies
-      } else if (i.customId === 'firstTeamVc') {
+      } else if (selectInteraction.customId === 'firstTeamVc') {
         property = client.firstTeamVcs
-      } else if (i.customId === 'secondTeamVc') {
+      } else if (selectInteraction.customId === 'secondTeamVc') {
         property = client.secondTeamVcs
       }
-      await property.set(i.guild.id, i.values[0])
-      i.reply({
-        content: `Set ${i.customId} to <#${i.values[0]}>.`,
+      await property.set(
+        selectInteraction.guild.id,
+        selectInteraction.values[0]
+      )
+      selectInteraction.reply({
+        content: `Set ${selectInteraction.customId} to <#${selectInteraction.values[0]}>.`,
         ephemeral: true
       })
     })
@@ -79,7 +84,10 @@ module.exports = {
       { filter, componentType: 'BUTTON' }
     )
     buttonCollector.on('collect', async i => {
-      await interaction.deleteReply()
+      await interaction.editReply({
+        content: 'I am ready to go!',
+        components: []
+      })
     })
     await interaction.editReply({
       content: 'Please configure me!',
