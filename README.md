@@ -96,13 +96,17 @@ You have to create a config.json file in the root directory. It will need the fo
 
 ## Usage
 
-Start a new session with `/newsession` - Ploot will now create roles for spectators and the teams that are pre-configured in the config. Any player in the lobby will be a player unless you specifically give them the spectator role, either manually or via the `/switchmode` command.
-You can then create your teams by using the `/randomize` command - It will ignore bots and only look at the members connected to the lobby-vc. Then you can use `/startmatch` to move every player in the lobby to their designated voice-channel and back to the lobby with `/endmatch`.  
-Finally, you can end the session with `/endsession`.
+1. Configure the bot with `/configure`. Currently you will have to set the lobby VC, first team's VC and second team's VC.
+1. Start a new session with `/newsession` - Ploot will now create roles for spectators and the teams that are pre-configured in the config.
+   - Any player in the lobby will be a player unless you specifically give them the spectator role, either manually or via the `/switchmode` command.
+1. You can then create your teams by using the `/randomize` command - It will ignore bots and only look at the members connected to the lobby-vc.
+1. Then you can use `/startmatch` to move every player in the lobby to their designated voice-channel and back to the lobby with `/endmatch`.
+1. Finally, you can end the session with `/endsession`.
 
 |             | Arguments    | Description                                                        |
 | ----------- | ------------ | ------------------------------------------------------------------ |
 | /help       |              | Shows the help message                                             |
+| /configure  |              | Configures the bot                                                 |
 | /newsession |              | Creates a new session and roles with the preconfigured channels.   |
 | /endsession |              | Ends the session and clears all the data.                          |
 | /startmatch |              | Moves the users to the designated team channels.                   |
