@@ -83,10 +83,6 @@ You have to create a config.json file in the root directory. It will need the fo
 ```json
 {
   "token": "", // Bot-Token
-  "botChannel": "", // TextChannel-ID for the bot to write
-  "lobby": "", // VoiceChannel-ID for the lobby
-  "firstTeamVc": "", //VoiceChannel-ID for the first team
-  "secondTeamVc": "", // VoiceChannel-ID for the second team
   "loggingLevel": "info", // Logging-Level
   "testGuildId": "" // Server-ID to employ commands on guild-level (will deploy globally if empty)
 }
