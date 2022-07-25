@@ -1,8 +1,5 @@
-const functions = require('../modules/functions')
 const { SlashCommandBuilder } = require('@discordjs/builders')
 const {
-  TextInputComponent,
-  Modal,
   MessageActionRow,
   MessageSelectMenu,
   MessageButton
@@ -73,6 +70,9 @@ module.exports = {
       await property.set(
         selectInteraction.guild.id,
         selectInteraction.values[0]
+      )
+      logger.info(
+        `Set ${selectInteraction.customId} to ${selectInteraction.values[0]}.`
       )
       selectInteraction.reply({
         content: `Set ${selectInteraction.customId} to <#${selectInteraction.values[0]}>.`,
