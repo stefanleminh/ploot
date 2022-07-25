@@ -92,7 +92,7 @@ You have to create a config.json file in the root directory. It will need the fo
 
 ## Usage
 
-1. Configure the bot with `/configure`. Currently you will have to set the lobby VC, first team's VC and second team's VC.
+1. Configure the bot with `/configure`. Currently you will have to set the lobby VC, first team's VC and second team's VC. This will only have to be done once when ploot joins the server unless you want to change the configuration.
 1. Start a new session with `/newsession` - Ploot will now create roles for spectators and the teams that are pre-configured in the config.
    - Any player in the lobby will be a player unless you specifically give them the spectator role, either manually or via the `/switchmode` command.
 1. You can then create your teams by using the `/randomize` command - It will ignore bots and only look at the members connected to the lobby-vc.
