@@ -26,22 +26,26 @@ module.exports = {
       interaction.guild.id
     )
 
-    if (firstTeamVc.members.size > 0) {
-      firstTeamVc.members.forEach(player => {
-        promises.push(player.voice.setChannel(lobbyVc))
-        logger.info(
-          `Moving user ${player.user.username} to voice channel ${lobbyVc.name}`
-        )
-      })
+    if (interaction.guild.channels.cache.get(firstTeamVc).members.size > 0) {
+      interaction.guild.channels.cache
+        .get(firstTeamVc)
+        .members.forEach(player => {
+          promises.push(player.voice.setChannel(lobbyVc))
+          logger.info(
+            `Moving user ${player.user.username} to voice channel ${lobbyVc.name}`
+          )
+        })
     }
 
-    if (secondTeamVc.members.size > 0) {
-      secondTeamVc.members.forEach(player => {
-        promises.push(player.voice.setChannel(lobbyVc))
-        logger.info(
-          `Moving user ${player.user.username} to voice channel ${lobbyVc.name}`
-        )
-      })
+    if (interaction.guild.channels.cache.get(secondTeamVc).members.size > 0) {
+      interaction.guild.channels.cache
+        .get(secondTeamVc)
+        .members.forEach(player => {
+          promises.push(player.voice.setChannel(lobbyVc))
+          logger.info(
+            `Moving user ${player.user.username} to voice channel ${lobbyVc.name}`
+          )
+        })
     }
 
     interaction.guild.roles.cache
