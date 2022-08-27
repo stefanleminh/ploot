@@ -10,7 +10,10 @@ module.exports = {
     const command = client.commands.get(interaction.commandName)
 
     if (!command) return
-    if (command.requiresActiveSession && !validation.isActiveSession(client)) {
+    if (
+      command.requiresActiveSession &&
+      !validation.isActiveSession(client, interaction.guild.id)
+    ) {
       await interaction.reply(
         'You have not started a session yet! Please run the /newsession command.'
       )

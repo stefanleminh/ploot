@@ -1,6 +1,7 @@
 const path = require('path')
 const logger = require('../logging/winston')(path.basename(__filename))
 const { SlashCommandBuilder } = require('@discordjs/builders')
+const functions = require('../modules/functions')
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -35,30 +36,11 @@ module.exports = {
         })
     }
 
-    if (firstTeamRoleId) {
-      interaction.guild.roles.cache
-        .get(firstTeamRoleId)
-        .members.forEach(member => {
-          promises.push(
-            member.roles.remove(
-              interaction.guild.roles.cache.get(client.firstTeamRoleId)
-            )
-          )
-        })
-    }
-    if (secondTeamRoleId) {
-      interaction.guild.roles.cache
-        .get(secondTeamRoleId)
-        .members.forEach(member => {
-          promises.push(
-            member.roles.remove(
-              interaction.guild.roles.cache.get(client.secondTeamRoleId)
-            )
-          )
-        })
-    }
+    promises.concat(
+      functions.clearTeamRoles(interaction, firstTeamRoleId, secondTeamRoleId)
+    )
 
-    await client.lastRoundSpectators.set(interaction.guild.id, [])
+    await client.lastRoundSpectatorIds.set(interaction.guild.id, [])
     await Promise.all(promises)
     logger.debug('Cleared data and roles from participants!')
     await interaction.editReply(

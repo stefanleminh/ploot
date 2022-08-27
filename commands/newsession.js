@@ -35,9 +35,9 @@ module.exports = {
       )
       return
     }
-    const lobbyVc = await client.lobbies.get(interaction.guild.id)
-    const firstTeamVc = await client.firstTeamVcs.get(interaction.guild.id)
-    const secondTeamVc = await client.secondTeamVcs.get(interaction.guild.id)
+    const lobbyVcId = await client.lobbies.get(interaction.guild.id)
+    const firstTeamVcId = await client.firstTeamVcs.get(interaction.guild.id)
+    const secondTeamVcId = await client.secondTeamVcs.get(interaction.guild.id)
     const spectatorRole = await interaction.guild.roles.create({
       name: 'Spectators',
       color: '#ffa500',
@@ -46,18 +46,16 @@ module.exports = {
     logger.info('Setting spectator role id to: ' + spectatorRole.id)
     await client.spectatorRoleIds.set(interaction.guild.id, spectatorRole.id)
 
-    // TODO: Get from configuration instead of client
     const firstTeamRole = await interaction.guild.roles.create({
-      name: interaction.guild.channels.cache.get(firstTeamVc).name,
+      name: interaction.guild.channels.cache.get(firstTeamVcId).name,
       color: '#000088',
       reason: 'Team role for event'
     })
     logger.info('Setting first team role id to: ' + firstTeamRole.id)
     await client.firstTeamRoleIds.set(interaction.guild.id, firstTeamRole.id)
 
-    // TODO: Get from configuration instead of client
     const secondTeamRole = await interaction.guild.roles.create({
-      name: interaction.guild.channels.cache.get(secondTeamVc).name,
+      name: interaction.guild.channels.cache.get(secondTeamVcId).name,
       color: '#fe0000',
       reason: 'Team role for event'
     })
@@ -71,10 +69,10 @@ module.exports = {
       return
     }
 
-    await client.lastRoundSpectators.set(interaction.guild.id, [])
+    await client.lastRoundSpectatorIds.set(interaction.guild.id, [])
 
     await interaction.editReply(
-      `New session has been created! <#${lobbyVc}> is the general/spectator's lobby. <#${firstTeamVc}> is the first team's lobby. <#${secondTeamVc}> is the second team's lobby. <@&${firstTeamRole.id}> is the first teams role. <@&${secondTeamRole.id}> is the second teams role. `
+      `New session has been created! <#${lobbyVcId}> is the general/spectator's lobby. <#${firstTeamVcId}> is the first team's lobby. <#${secondTeamVcId}> is the second team's lobby. <@&${spectatorRole.id}> is the role for dedicated spectators. <@&${firstTeamRole.id}> is the first teams role. <@&${secondTeamRole.id}> is the second teams role. `
     )
   }
 }

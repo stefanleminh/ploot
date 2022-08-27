@@ -18,7 +18,7 @@ client.secondTeamVcs = new Keyv()
 client.spectatorRoleIds = new Keyv()
 client.firstTeamRoleIds = new Keyv()
 client.secondTeamRoleIds = new Keyv()
-client.lastRoundSpectators = new Keyv()
+client.lastRoundSpectatorIds = new Keyv()
 
 client.commands = new Collection()
 

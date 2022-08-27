@@ -26,7 +26,7 @@ module.exports = {
       client.spectatorRoleIds.delete(interaction.guild.id),
       client.firstTeamRoleIds.delete(interaction.guild.id),
       client.secondTeamRoleIds.delete(interaction.guild.id),
-      client.lastRoundSpectators.delete(interaction.guild.id)
+      client.lastRoundSpectatorIds.delete(interaction.guild.id)
     )
 
     await Promise.all(promises)

@@ -67,13 +67,15 @@ module.exports = {
       } else if (selectInteraction.customId === 'secondTeamVc') {
         property = client.secondTeamVcs
       }
+
       await property.set(
         selectInteraction.guild.id,
         selectInteraction.values[0]
       )
-      logger.info(
-        `Set ${selectInteraction.customId} to ${selectInteraction.values[0]}.`
-      )
+      const channelName = await interaction.guild.channels.cache.get(
+        selectInteraction.values[0]
+      ).name
+      logger.info(`Set ${selectInteraction.customId} to ${channelName}.`)
       selectInteraction.reply({
         content: `Set ${selectInteraction.customId} to <#${selectInteraction.values[0]}>.`,
         ephemeral: true

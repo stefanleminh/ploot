@@ -12,15 +12,15 @@ module.exports = {
     const promises = []
     await interaction.deferReply()
 
-    const lobbyVc = await client.lobbies.get(interaction.guild.id)
-    const firstTeamVc = await client.firstTeamVcs.get(interaction.guild.id)
-    const secondTeamVc = await client.secondTeamVcs.get(interaction.guild.id)
+    const lobbyVcId = await client.lobbies.get(interaction.guild.id)
+    const firstTeamVcId = await client.firstTeamVcs.get(interaction.guild.id)
+    const secondTeamVcId = await client.secondTeamVcs.get(interaction.guild.id)
 
     const firstTeamRoleId = await client.firstTeamRoleIds.get(
       interaction.guild.id
     )
     const firstTeam = interaction.guild.channels.cache
-      .get(lobbyVc)
+      .get(lobbyVcId)
       .members.filter(member =>
         member.roles.cache.some(role => role.id === firstTeamRoleId)
       )
@@ -30,7 +30,7 @@ module.exports = {
       interaction.guild.id
     )
     const secondTeam = interaction.guild.channels.cache
-      .get(lobbyVc)
+      .get(lobbyVcId)
       .members.filter(member =>
         member.roles.cache.some(role => role.id === secondTeamRoleId)
       )
@@ -38,22 +38,25 @@ module.exports = {
 
     firstTeam.forEach(player => {
       const member = interaction.guild.members.cache.get(player.id)
-      promises.push(setVoiceChannel(member, firstTeamVc, interaction))
+      promises.push(setVoiceChannel(member, firstTeamVcId, interaction))
     })
 
     secondTeam.forEach(player => {
       const member = interaction.guild.members.cache.get(player.id)
-      promises.push(setVoiceChannel(member, secondTeamVc, interaction))
+      promises.push(setVoiceChannel(member, secondTeamVcId, interaction))
     })
     await Promise.all(promises)
     await interaction.editReply('GLHF!')
   }
 }
-function setVoiceChannel (member, voiceChannel, message) {
+function setVoiceChannel (member, voiceChannel, interaction) {
+  console.log(member)
   if (member.voice.channel) {
     if (member.voice.channel.id !== voiceChannel.id) {
       logger.info(
-        `Moving user ${member.user.username} to voice channel ${voiceChannel.name}`
+        `Moving user ${member.user.username} to voice channel ${
+          interaction.guild.channels.cache.get(voiceChannel).name
+        }`
       )
       return member.voice.setChannel(voiceChannel)
     } else if (member.voice.channel.id === voiceChannel.id) {
@@ -65,8 +68,8 @@ function setVoiceChannel (member, voiceChannel, message) {
     logger.info(
       `User ${member.user.username} is not connected to the lobby and will not be moved.`
     )
-    message.channel.send(
-      `<@${member.id}> is not connected to the lobby and will not be moved.`
+    interaction.channel.send(
+      `<@${member.user.id}> is not connected to the lobby and will not be moved.`
     )
   }
 }
