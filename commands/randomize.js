@@ -35,7 +35,7 @@ module.exports = {
     logger.info('==========randomize start==========')
     let playerPool = lastRoundSpectatorIds
       .map(id => interaction.guild.members.cache.get(id))
-      ?.slice(0, MAX_AMOUNT_OF_PLAYERS)
+      ?.slice(0, MAX_AMOUNT_OF_PLAYERS + 1)
     if (playerPool.length > 0) {
       logger.info(
         `Guaranteed players are: ${playerPool
