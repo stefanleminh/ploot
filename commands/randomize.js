@@ -2,7 +2,7 @@ const functions = require('../modules/functions')
 const path = require('path')
 const logger = require('../logging/winston')(path.basename(__filename))
 const { SlashCommandBuilder } = require('@discordjs/builders')
-const MAX_AMOUNT_OF_PLAYERS = 12
+const MAX_AMOUNT_OF_PLAYERS = 10
 
 module.exports = {
   data: new SlashCommandBuilder()
