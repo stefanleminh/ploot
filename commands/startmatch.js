@@ -50,7 +50,6 @@ module.exports = {
   }
 }
 function setVoiceChannel (member, voiceChannel, interaction) {
-  console.log(member)
   if (member.voice.channel) {
     if (member.voice.channel.id !== voiceChannel.id) {
       logger.info(

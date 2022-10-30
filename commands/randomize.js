@@ -75,12 +75,7 @@ module.exports = {
       )
     }
     const randomizedPlayerPool = shuffle(playerPool)
-    const teamPromises = await createTeams(
-      randomizedPlayerPool,
-      firstTeamRoleId,
-      secondTeamRoleId
-    )
-    await Promise.all(teamPromises)
+    await createTeams(randomizedPlayerPool, firstTeamRoleId, secondTeamRoleId)
 
     // Update cache with new roles
     await interaction.guild.members.fetch()
@@ -213,17 +208,21 @@ async function createTeams (players, firstTeamRoleId, secondTeamRoleId) {
   logger.info(
     `Creating teams with parameters: ${players}, ${firstTeamRoleId}, ${secondTeamRoleId}`
   )
-  const promises = []
+  const firstTeamPromises = []
   const firstTeam = players.slice(0, players.length / 2)
 
   firstTeam.forEach(member => {
-    promises.push(member.roles.add(firstTeamRoleId))
+    firstTeamPromises.push(member.roles.add(firstTeamRoleId))
   })
+  await Promise.all(firstTeamPromises)
+
+  const secondTeamPromises = []
   const secondTeam = players.slice(players.length / 2, players.length)
 
   secondTeam.forEach(member => {
-    promises.push(member.roles.add(secondTeamRoleId))
+    secondTeamPromises.push(member.roles.add(secondTeamRoleId))
   })
+  await Promise.all(secondTeamPromises)
 
-  return promises
+  return Promise.resolve()
 }
