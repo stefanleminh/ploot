@@ -217,7 +217,10 @@ async function createTeams (players, firstTeamRoleId, secondTeamRoleId) {
   await Promise.all(firstTeamPromises)
 
   const secondTeamPromises = []
-  const secondTeam = players.slice(players.length / 2, players.length)
+  const secondTeam = players.slice(
+    players.length / 2,
+    MAX_AMOUNT_OF_PLAYERS + 1
+  )
 
   secondTeam.forEach(member => {
     secondTeamPromises.push(member.roles.add(secondTeamRoleId))
