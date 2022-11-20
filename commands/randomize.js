@@ -2,7 +2,7 @@ const functions = require('../modules/functions')
 const path = require('path')
 const logger = require('../logging/winston')(path.basename(__filename))
 const { SlashCommandBuilder } = require('@discordjs/builders')
-const MAX_AMOUNT_OF_PLAYERS = 10
+const MAX_AMOUNT_OF_PLAYERS = 1
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -28,12 +28,17 @@ module.exports = {
     const lobbyVcId = await client.lobbies.get(interaction.guild.id)
     const firstTeamVcId = await client.firstTeamVcs.get(interaction.guild.id)
     const secondTeamVcId = await client.secondTeamVcs.get(interaction.guild.id)
+    // Filter out whoever is not in VC
     const lastRoundSpectatorIds = await client.lastRoundSpectatorIds.get(
       interaction.guild.id
     )
+    const lastRoundSpectatorIdsInLobby = interaction.guild.channels.cache
+      .get(lobbyVcId)
+      .members.filter(member => lastRoundSpectatorIds.includes(member.id))
+      .map(member => member.id)
 
     logger.info('==========randomize start==========')
-    let playerPool = lastRoundSpectatorIds
+    let playerPool = lastRoundSpectatorIdsInLobby
       .map(id => interaction.guild.members.cache.get(id))
       ?.slice(0, MAX_AMOUNT_OF_PLAYERS + 1)
     if (playerPool.length > 0) {
