@@ -22,7 +22,7 @@ module.exports = {
       interaction.guild.id
     )
 
-    Promise.all(
+    await Promise.all(
       functions.clearTeamRoles(interaction, firstTeamRoleId, secondTeamRoleId)
     )
     const lobbyVcId = await client.lobbies.get(interaction.guild.id)
