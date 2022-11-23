@@ -1,3 +1,5 @@
+import { Properties } from "../types/properties"
+
 const path = require('path')
 const logger = require('../logging/winston')(path.basename(__filename))
 const { SlashCommandBuilder } = require('@discordjs/builders')
@@ -8,40 +10,38 @@ module.exports = {
     .setDescription('Moves the users to the designated team channels. '),
   args: '',
   requiresActiveSession: true,
-  async execute (interaction, client) {
-    const promises = []
+  async execute (interaction: any, client: any, properties: Properties) {
+    const promises: any = []
     await interaction.deferReply()
 
-    const lobbyVcId = await client.lobbies.get(interaction.guild.id)
-    const firstTeamVcId = await client.firstTeamVcs.get(interaction.guild.id)
-    const secondTeamVcId = await client.secondTeamVcs.get(interaction.guild.id)
+    const lobbyVcId = await properties.lobbies.get(interaction.guild.id)
+    const firstTeamVcId = await properties.firstTeamVcs.get(interaction.guild.id)
+    const secondTeamVcId = await properties.secondTeamVcs.get(interaction.guild.id)
 
-    const firstTeamRoleId = await client.firstTeamRoleIds.get(
+    const firstTeamRoleId = await properties.firstTeamRoleIds.get(
       interaction.guild.id
     )
     const firstTeam = interaction.guild.channels.cache
       .get(lobbyVcId)
-      .members.filter(member =>
-        member.roles.cache.some(role => role.id === firstTeamRoleId)
+      .members.filter((member: any) => member.roles.cache.some((role: any) => role.id === firstTeamRoleId)
       )
-      .map(guildmember => guildmember.user)
+      .map((guildmember: any) => guildmember.user)
 
-    const secondTeamRoleId = await client.secondTeamRoleIds.get(
+    const secondTeamRoleId = await properties.secondTeamRoleIds.get(
       interaction.guild.id
     )
     const secondTeam = interaction.guild.channels.cache
       .get(lobbyVcId)
-      .members.filter(member =>
-        member.roles.cache.some(role => role.id === secondTeamRoleId)
+      .members.filter((member: any) => member.roles.cache.some((role: any) => role.id === secondTeamRoleId)
       )
-      .map(guildmember => guildmember.user)
+      .map((guildmember: any) => guildmember.user)
 
-    firstTeam.forEach(player => {
+    firstTeam.forEach((player: any) => {
       const member = interaction.guild.members.cache.get(player.id)
       promises.push(setVoiceChannel(member, firstTeamVcId, interaction))
     })
 
-    secondTeam.forEach(player => {
+    secondTeam.forEach((player: any) => {
       const member = interaction.guild.members.cache.get(player.id)
       promises.push(setVoiceChannel(member, secondTeamVcId, interaction))
     })
@@ -49,7 +49,7 @@ module.exports = {
     await interaction.editReply('GLHF!')
   }
 }
-function setVoiceChannel (member, voiceChannel, interaction) {
+function setVoiceChannel (member: any, voiceChannel: any, interaction: any) {
   if (member.voice.channel) {
     if (member.voice.channel.id !== voiceChannel.id) {
       logger.info(

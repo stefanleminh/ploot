@@ -1,11 +1,13 @@
+import { Properties } from "../types/properties"
+
 const path = require('path')
 const logger = require('../logging/winston')(path.basename(__filename))
 
-const isActiveSession = async (client, guildId) => {
+const isActiveSession = async (properties: Properties, guildId: any) => {
   const isActiveSession =
-    (await client.spectatorRoleIds.get(guildId)) !== undefined &&
-    (await client.firstTeamRoleIds.get(guildId)) !== undefined &&
-    (await client.secondTeamRoleIds.get(guildId)) !== undefined
+    (await properties.spectatorRoleIds.get(guildId)) !== undefined &&
+    (await properties.firstTeamRoleIds.get(guildId)) !== undefined &&
+    (await properties.secondTeamRoleIds.get(guildId)) !== undefined
   logger.debug(
     `Current session for Guild ${guildId} is active: [${isActiveSession}]`
   )
@@ -13,11 +15,11 @@ const isActiveSession = async (client, guildId) => {
 }
 exports.isActiveSession = isActiveSession
 
-const isConfigured = async (client, guildId) => {
+const isConfigured = async (properties: Properties, guildId: any) => {
   const isConfigured =
-    (await client.lobbies.get(guildId)) !== undefined &&
-    (await client.firstTeamVcs.get(guildId)) !== undefined &&
-    (await client.secondTeamVcs.get(guildId)) !== undefined
+    (await properties.lobbies.get(guildId)) !== undefined &&
+    (await properties.firstTeamVcs.get(guildId)) !== undefined &&
+    (await properties.secondTeamVcs.get(guildId)) !== undefined
   logger.debug(
     `Current session for Guild ${guildId} is configured: [${isConfigured}]`
   )

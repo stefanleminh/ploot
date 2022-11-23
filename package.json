@@ -4,11 +4,12 @@
   "description": "An Overwatch bot that manages 6v6-Events or Scrims.",
   "main": "index.js",
   "scripts": {
-    "start": "node src/index.js",
-    "watch": "nodemon src/index.js",
+    "start": "node index.ts",
+    "watch": "nodemon index.ts",
     "test": "jest",
     "lint": "ts-standard",
     "format": "ts-standard --fix",
+    "build": "tsc",
     "ts-migrate": "ts-migrate"
   },
   "repository": {

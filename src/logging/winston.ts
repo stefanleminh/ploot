@@ -2,7 +2,7 @@
 const winston = require('winston')
 const config = require('../../config')
 
-const logger = filename => {
+const logger = (filename: any) => {
   return new winston.createLogger({
     level: config.loggingLevel,
     transports: [
@@ -15,12 +15,11 @@ const logger = filename => {
       }),
       winston.format.label({ label: filename }),
       winston.format.printf(
-        info =>
-          `[${info.timestamp}] [${info.label}] [${info.level}]: ${
-            info.message
-          } ${info.stack || ''}`
+        (info: any) => `[${info.timestamp}] [${info.label}] [${info.level}]: ${
+          info.message
+        } ${info.stack || ''}`
       )
     )
-  })
+  });
 }
 module.exports = logger

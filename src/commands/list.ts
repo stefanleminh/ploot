@@ -1,3 +1,5 @@
+import { Properties } from "../types/properties"
+
 const functions = require('../modules/functions')
 const { SlashCommandBuilder } = require('@discordjs/builders')
 
@@ -7,32 +9,28 @@ module.exports = {
     .setDescription('Lists active players and spectators.'),
   args: '',
   requiresActiveSession: true,
-  async execute (interaction, client) {
+  async execute (interaction: any, client: any, properties: Properties) {
     await interaction.deferReply()
 
-    const lobbyVc = await client.lobbies.get(interaction.guild.id)
+    const lobbyVc = await properties.lobbies.get(interaction.guild.id)
 
-    const spectatorRoleId = await client.spectatorRoleIds.get(
+    const spectatorRoleId = await properties.spectatorRoleIds.get(
       interaction.guild.id
     )
     const currentPlayers = interaction.guild.channels.cache
       .get(lobbyVc)
-      .members.filter(member => {
-        return (
-          member.roles.cache.every(role => role.id !== spectatorRoleId) &&
-          !member.user.bot
-        )
+      .members.filter((member: any) => {
+        return member.roles.cache.every((role: any) => role.id !== spectatorRoleId) &&
+        !member.user.bot;
       })
-      .map(guildmember => guildmember.user)
+      .map((guildmember: any) => guildmember.user)
     const currentSpectators = interaction.guild.channels.cache
       .get(lobbyVc)
-      .members.filter(member => {
-        return (
-          member.roles.cache.some(role => role.id === spectatorRoleId) &&
-          !member.user.bot
-        )
+      .members.filter((member: any) => {
+        return member.roles.cache.some((role: any) => role.id === spectatorRoleId) &&
+        !member.user.bot;
       })
-      .map(guildmember => guildmember.user)
+      .map((guildmember: any) => guildmember.user)
 
     const embeds = [
       functions.createEmbed(currentPlayers, 'Players', '#000088', interaction),

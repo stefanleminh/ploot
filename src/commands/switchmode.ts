@@ -1,3 +1,5 @@
+import { Properties } from "../types/properties"
+
 const path = require('path')
 const logger = require('../logging/winston')(path.basename(__filename))
 const { SlashCommandBuilder } = require('@discordjs/builders')
@@ -8,17 +10,16 @@ module.exports = {
     .setDescription(
       'Switches the player from active player to spectator or vise versa.'
     )
-    .addUserOption(option =>
-      option
-        .setName('user')
-        .setDescription('The user whose status to switch')
-        .setRequired(true)
+    .addUserOption((option: any) => option
+    .setName('user')
+    .setDescription('The user whose status to switch')
+    .setRequired(true)
     ),
   args: '[@DiscordUser]',
   requiresActiveSession: true,
-  async execute (interaction, client) {
+  async execute (interaction: any, client: any, properties: Properties) {
     const userParameter = interaction.options.getUser('user')
-    const lobbyVc = await client.lobbies.get(interaction.guild.id)
+    const lobbyVc = await properties.lobbies.get(interaction.guild.id)
 
     const guildUser = await interaction.guild.channels.cache
       .get(lobbyVc)
@@ -34,7 +35,7 @@ module.exports = {
       return
     }
 
-    const spectatorRoleId = await client.spectatorRoleIds.get(
+    const spectatorRoleId = await properties.spectatorRoleIds.get(
       interaction.guild.id
     )
     const isSpectator = [...guildUser.roles.cache.keys()].includes(

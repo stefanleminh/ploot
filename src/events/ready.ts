@@ -1,3 +1,6 @@
+import { Client } from "discord.js"
+import { Properties } from "../types/properties"
+
 const path = require('path')
 const logger = require('../logging/winston')(path.basename(__filename))
 const { REST } = require('@discordjs/rest')
@@ -10,21 +13,21 @@ const fs = require('fs')
 module.exports = {
   name: 'ready',
   once: true,
-  execute (client) {
+  execute (client: Client, properties: Properties) {
     const commands = []
     // Take commands
     const commandFiles = fs
       .readdirSync('./src/commands')
-      .filter(file => file.endsWith('.js'))
+      .filter((file: any) => file.endsWith('.js'))
     for (const file of commandFiles) {
       const command = require('../commands/' + file)
       commands.push(command.data.toJSON())
-      client.commands.set(command.data.name, command)
+      properties.commands.set(command.data.name, command)
       logger.info(`Loaded command ${command.data.name}`)
     }
 
     // Registering the commands in the client
-    const CLIENT_ID = client.user.id
+    const CLIENT_ID = client.user!.id
     const rest = new REST({
       version: '9'
     }).setToken(TOKEN)
@@ -52,8 +55,8 @@ module.exports = {
     })()
     // Log that the bot is online.
     logger.info(
-      `${client.user.tag}, ready to serve ${client.users.cache.size} users in ${client.guilds.cache.size} servers.`
+      `${client.user!.tag}, ready to serve ${client.users.cache.size} users in ${client.guilds.cache.size} servers.`
     )
-    client.user.setActivity(' everyone 👀', { type: 'WATCHING' })
+    client.user!.setActivity(' everyone 👀', { type: 'WATCHING' })
   }
 }

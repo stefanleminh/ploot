@@ -1,3 +1,5 @@
+import { Properties } from "../types/properties"
+
 const path = require('path')
 const logger = require('../logging/winston')(path.basename(__filename))
 const { SlashCommandBuilder } = require('@discordjs/builders')
@@ -8,25 +10,25 @@ module.exports = {
     .setDescription('Ends the session and clears all the data.'),
   args: '',
   requiresActiveSession: true,
-  async execute (interaction, client) {
+  async execute (interaction: any, client: any, properties: Properties) {
     const promises = []
-    const spectatorRoleId = await client.spectatorRoleIds.get(
+    const spectatorRoleId = await properties.spectatorRoleIds.get(
       interaction.guild.id
     )
-    const firstTeamRoleId = await client.firstTeamRoleIds.get(
+    const firstTeamRoleId = await properties.firstTeamRoleIds.get(
       interaction.guild.id
     )
-    const secondTeamRoleId = await client.secondTeamRoleIds.get(
+    const secondTeamRoleId = await properties.secondTeamRoleIds.get(
       interaction.guild.id
     )
     promises.push(
       interaction.guild.roles.delete(spectatorRoleId),
       interaction.guild.roles.delete(firstTeamRoleId),
       interaction.guild.roles.delete(secondTeamRoleId),
-      client.spectatorRoleIds.delete(interaction.guild.id),
-      client.firstTeamRoleIds.delete(interaction.guild.id),
-      client.secondTeamRoleIds.delete(interaction.guild.id),
-      client.lastRoundSpectatorIds.delete(interaction.guild.id)
+      properties.spectatorRoleIds.delete(interaction.guild.id),
+      properties.firstTeamRoleIds.delete(interaction.guild.id),
+      properties.secondTeamRoleIds.delete(interaction.guild.id),
+      properties.lastRoundSpectatorIds.delete(interaction.guild.id)
     )
 
     await Promise.all(promises)

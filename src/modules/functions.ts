@@ -1,8 +1,10 @@
+import { Properties } from "../types/properties"
+
 const path = require('path')
 const logger = require('../logging/winston')(path.basename(__filename))
 const Discord = require('discord.js')
 
-const addParticipant = (participant, interaction, array, arrayname) => {
+const addParticipant = (participant: any, interaction: any, array: any, arrayname: any) => {
   if (array.includes(participant)) {
     logger.debug(
       `Participant ${participant.username}already exists in ${arrayname}!`
@@ -21,7 +23,7 @@ const addParticipant = (participant, interaction, array, arrayname) => {
 
 exports.addParticipant = addParticipant
 
-const chunk = (arr, chunkSize) => {
+const chunk = (arr: any, chunkSize: any) => {
   const R = []
   for (let i = 0, len = arr.length; i < len; i += chunkSize) {
     R.push(arr.slice(i, i + chunkSize))
@@ -32,52 +34,51 @@ const chunk = (arr, chunkSize) => {
 
 exports.chunk = chunk
 
-const purge = (client, interaction) => {
+const purge = (properties: Properties, interaction: any) => {
   const membersInLobby = Array.from(
-    interaction.guild.channels.cache.get(client.config.lobby).members.keys()
+    interaction.guild.channels.cache.get(properties.config.lobby).members.keys()
   )
 
-  const remainingPlayers = client.currentPlayers.filter(currentPlayer =>
-    membersInLobby.includes(currentPlayer.id)
+  const remainingPlayers = properties.currentPlayers.filter((currentPlayer: any) => membersInLobby.includes(currentPlayer.id)
   )
   logger.debug(
     'Remaining Players are: ' +
-      remainingPlayers.map(player => player.username).join(',')
+      remainingPlayers.map((player: any) => player.username).join(',')
   )
 
-  const purgedPlayers = client.currentPlayers.filter(
-    currentPlayer => !membersInLobby.includes(currentPlayer.id)
+  const purgedPlayers = properties.currentPlayers.filter(
+    (currentPlayer: any) => !membersInLobby.includes(currentPlayer.id)
   )
   logger.debug(
     'Purged Players are: ' +
-      purgedPlayers.map(player => player.username).join(',')
+      purgedPlayers.map((player: any) => player.username).join(',')
   )
 
-  client.currentPlayers = remainingPlayers
-  purgedPlayers.forEach(removedPlayer => {
+  properties.currentPlayers = remainingPlayers
+  purgedPlayers.forEach((removedPlayer: any) => {
     interaction.channel.send(
       `Purged <@${removedPlayer.id}> from list of current players!`
     )
   })
 
-  const remainingSpectators = client.currentSpectators.filter(
-    currentSpectator => membersInLobby.includes(currentSpectator.id)
+  const remainingSpectators = properties.currentSpectators.filter(
+    (currentSpectator: any) => membersInLobby.includes(currentSpectator.id)
   )
   logger.debug(
     'Remaining Spectators are: ' +
-      remainingSpectators.map(spectator => spectator.username).join(',')
+      remainingSpectators.map((spectator: any) => spectator.username).join(',')
   )
 
-  const purgedSpectators = client.currentSpectators.filter(
-    currentSpectator => !membersInLobby.includes(currentSpectator.id)
+  const purgedSpectators = properties.currentSpectators.filter(
+    (currentSpectator: any) => !membersInLobby.includes(currentSpectator.id)
   )
   logger.debug(
     'Purged spectators are: ' +
-      purgedSpectators.map(spectator => spectator.username).join(',')
+      purgedSpectators.map((spectator: any) => spectator.username).join(',')
   )
 
-  client.currentSpectators = remainingSpectators
-  purgedSpectators.forEach(removedSpectator => {
+  properties.currentSpectators = remainingSpectators
+  purgedSpectators.forEach((removedSpectator: any) => {
     interaction.channel.send(
       `Purged <@${removedSpectator.id}> from list of current spectators!`
     )
@@ -86,7 +87,7 @@ const purge = (client, interaction) => {
 
 exports.purge = purge
 
-const createEmbed = (list, title, color, interaction) => {
+const createEmbed = (list: any, title: any, color: any, interaction: any) => {
   const embed = new Discord.MessageEmbed()
     .setTitle(title)
     .setColor(color)
@@ -100,7 +101,7 @@ const createEmbed = (list, title, color, interaction) => {
           name: title,
           value: chunk.toString().replace(/,/g, '\n'),
           inline: true
-        }
+        };
       })
     )
   return embed
@@ -108,12 +109,12 @@ const createEmbed = (list, title, color, interaction) => {
 
 exports.createEmbed = createEmbed
 
-const clearTeamRoles = (interaction, firstTeamRoleId, secondTeamRoleId) => {
-  const promises = []
+const clearTeamRoles = (interaction: any, firstTeamRoleId: any, secondTeamRoleId: any) => {
+  const promises: any = []
   if (firstTeamRoleId) {
     interaction.guild.roles.cache
       .get(firstTeamRoleId)
-      .members.forEach(member => {
+      .members.forEach((member: any) => {
         promises.push(
           member.roles.remove(
             interaction.guild.roles.cache.get(firstTeamRoleId)
@@ -124,7 +125,7 @@ const clearTeamRoles = (interaction, firstTeamRoleId, secondTeamRoleId) => {
   if (secondTeamRoleId) {
     interaction.guild.roles.cache
       .get(secondTeamRoleId)
-      .members.forEach(member => {
+      .members.forEach((member: any) => {
         promises.push(
           member.roles.remove(
             interaction.guild.roles.cache.get(secondTeamRoleId)

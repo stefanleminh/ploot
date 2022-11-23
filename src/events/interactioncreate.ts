@@ -1,10 +1,10 @@
 const path = require('path')
-const logger = require('../logging/winston')(path.basename(__filename))
+const log = require('../logging/winston')(path.basename(__filename))
 const validation = require('../modules/validation')
 
 module.exports = {
   name: 'interactionCreate',
-  async execute (interaction, client) {
+  async execute (interaction: any, client: any) {
     if (!interaction.isCommand()) return
 
     const command = client.commands.get(interaction.commandName)
@@ -21,10 +21,10 @@ module.exports = {
     }
 
     try {
-      logger.info(`Running command: ${command.data.name}`)
+      log.info(`Running command: ${command.data.name}`)
       await command.execute(interaction, client)
     } catch (error) {
-      logger.error(error)
+      log.error(error)
       await interaction.reply({
         content: 'There was an error while executing this command!',
         ephemeral: true

@@ -1,4 +1,5 @@
-import { Client, CommandInteraction, Interaction } from "discord.js"
+import { Client, CollectorFilter, CommandInteraction, SelectMenuInteraction } from "discord.js"
+import { Properties } from "../types/properties"
 
 const { SlashCommandBuilder } = require('@discordjs/builders')
 const {
@@ -15,7 +16,7 @@ module.exports = {
     .setDescription('Configures the server'),
   args: '',
   requiresActiveSession: true,
-  async execute (interaction: CommandInteraction, client: Client) {
+  async execute (interaction: CommandInteraction, client: any, properties: Properties) {
     await interaction.deferReply()
 
     const voiceChannels = interaction.guild!.channels.cache
@@ -49,7 +50,7 @@ module.exports = {
     const secondTeamSelect = new MessageActionRow().addComponents(secondTeamVc)
     const submitRow = new MessageActionRow().addComponents(button)
 
-    const filter = (i:CommandInteraction) => {
+    const filter: CollectorFilter<any> = i => {
       return i.user.id === interaction.user.id
     }
 
@@ -61,22 +62,25 @@ module.exports = {
     )
 
     selectCollector.on('collect', async selectInteraction => {
+      if(selectInteraction.guild === null || selectInteraction.guild === undefined) {
+        throw new Error("Interaction is not part of a guild!")
+      }
       let property
       if (selectInteraction.customId === 'spectatorVc') {
-        property = client.lobbies
+        property = properties.lobbies
       } else if (selectInteraction.customId === 'firstTeamVc') {
-        property = client.firstTeamVcs
+        property = properties.firstTeamVcs
       } else if (selectInteraction.customId === 'secondTeamVc') {
-        property = client.secondTeamVcs
+        property = properties.secondTeamVcs
       }
 
       await property.set(
         selectInteraction.guild.id,
         selectInteraction.values[0]
       )
-      const channelName = await interaction.guild.channels.cache.get(
+      const channelName = await interaction.guild!.channels.cache.get(
         selectInteraction.values[0]
-      ).name
+      )!.name
       logger.info(`Set ${selectInteraction.customId} to ${channelName}.`)
       selectInteraction.reply({
         content: `Set ${selectInteraction.customId} to <#${selectInteraction.values[0]}>.`,
@@ -84,7 +88,7 @@ module.exports = {
       })
     })
 
-    const buttonCollector = interaction.channel.createMessageComponentCollector(
+    const buttonCollector = interaction.channel!.createMessageComponentCollector(
       { filter, componentType: 'BUTTON' }
     )
     buttonCollector.on('collect', async i => {
