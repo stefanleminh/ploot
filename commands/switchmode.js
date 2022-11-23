@@ -18,8 +18,10 @@ module.exports = {
   requiresActiveSession: true,
   async execute (interaction, client) {
     const userParameter = interaction.options.getUser('user')
+    const lobbyVc = await client.lobbies.get(interaction.guild.id)
+
     const guildUser = await interaction.guild.channels.cache
-      .get(client.config.lobby)
+      .get(lobbyVc)
       .members.get(userParameter.id)
 
     if (!guildUser) {
@@ -32,15 +34,18 @@ module.exports = {
       return
     }
 
+    const spectatorRoleId = await client.spectatorRoleIds.get(
+      interaction.guild.id
+    )
     const isSpectator = [...guildUser.roles.cache.keys()].includes(
-      client.spectatorRoleId
+      spectatorRoleId
     )
     if (!isSpectator) {
-      await guildUser.roles.add(client.spectatorRoleId)
+      await guildUser.roles.add(spectatorRoleId)
       logger.info(`User ${userParameter.username} is now a spectator`)
       interaction.reply(`<@${userParameter.id}> is now spectator.`)
     } else {
-      await guildUser.roles.remove(client.spectatorRoleId)
+      await guildUser.roles.remove(spectatorRoleId)
       logger.info(`User ${userParameter.username} is now an active player`)
       interaction.reply(`<@${userParameter.id}> is now an active player.`)
     }

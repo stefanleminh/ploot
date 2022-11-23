@@ -9,12 +9,16 @@ const client = new Client({
     Intents.FLAGS.GUILD_MEMBERS
   ]
 })
+const Keyv = require('keyv')
 
 client.config = require('./config.json')
-client.spectatorRoleId = ''
-client.firstTeamRoleId = ''
-client.secondTeamRoleId = ''
-client.lastRoundSpectators = []
+client.lobbies = new Keyv()
+client.firstTeamVcs = new Keyv()
+client.secondTeamVcs = new Keyv()
+client.spectatorRoleIds = new Keyv()
+client.firstTeamRoleIds = new Keyv()
+client.secondTeamRoleIds = new Keyv()
+client.lastRoundSpectatorIds = new Keyv()
 
 client.commands = new Collection()
 

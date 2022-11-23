@@ -107,3 +107,32 @@ const createEmbed = (list, title, color, interaction) => {
 }
 
 exports.createEmbed = createEmbed
+
+const clearTeamRoles = (interaction, firstTeamRoleId, secondTeamRoleId) => {
+  const promises = []
+  if (firstTeamRoleId) {
+    interaction.guild.roles.cache
+      .get(firstTeamRoleId)
+      .members.forEach(member => {
+        promises.push(
+          member.roles.remove(
+            interaction.guild.roles.cache.get(firstTeamRoleId)
+          )
+        )
+      })
+  }
+  if (secondTeamRoleId) {
+    interaction.guild.roles.cache
+      .get(secondTeamRoleId)
+      .members.forEach(member => {
+        promises.push(
+          member.roles.remove(
+            interaction.guild.roles.cache.get(secondTeamRoleId)
+          )
+        )
+      })
+  }
+  return promises
+}
+
+exports.clearTeamRoles = clearTeamRoles

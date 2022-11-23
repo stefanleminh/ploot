@@ -1,6 +1,7 @@
 const path = require('path')
 const logger = require('../logging/winston')(path.basename(__filename))
 const { SlashCommandBuilder } = require('@discordjs/builders')
+const functions = require('../modules/functions')
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -13,52 +14,42 @@ module.exports = {
   async execute (interaction, client) {
     await interaction.deferReply()
 
+    const lobbyVc = await client.lobbies.get(interaction.guild.id)
+    const firstTeamVc = await client.firstTeamVcs.get(interaction.guild.id)
+    const secondTeamVc = await client.secondTeamVcs.get(interaction.guild.id)
+
     const promises = []
-    const spectatorTeamVc = interaction.guild.channels.cache.get(
-      client.config.lobby
+
+    const firstTeamRoleId = await client.firstTeamRoleIds.get(
+      interaction.guild.id
     )
-    const firstTeamVc = interaction.guild.channels.cache.get(
-      client.config.firstTeamVc
+    const secondTeamRoleId = await client.secondTeamRoleIds.get(
+      interaction.guild.id
     )
-    const secondTeamVc = interaction.guild.channels.cache.get(
-      client.config.secondTeamVc
-    )
-    if (firstTeamVc.members.size > 0) {
-      firstTeamVc.members.forEach(async player => {
-        promises.push(player.voice.setChannel(spectatorTeamVc))
-        logger.info(
-          `Moving user ${player.user.username} to voice channel ${spectatorTeamVc.name}`
-        )
-      })
+
+    if (interaction.guild.channels.cache.get(firstTeamVc).members.size > 0) {
+      interaction.guild.channels.cache
+        .get(firstTeamVc)
+        .members.forEach(player => {
+          promises.push(player.voice.setChannel(lobbyVc))
+          logger.info(
+            `Moving user ${player.user.username} to voice channel ${lobbyVc.name}`
+          )
+        })
     }
 
-    if (secondTeamVc.members.size > 0) {
-      secondTeamVc.members.forEach(async player => {
-        promises.push(player.voice.setChannel(spectatorTeamVc))
-        logger.info(
-          `Moving user ${player.user.username} to voice channel ${spectatorTeamVc.name}`
-        )
-      })
+    if (interaction.guild.channels.cache.get(secondTeamVc).members.size > 0) {
+      interaction.guild.channels.cache
+        .get(secondTeamVc)
+        .members.forEach(player => {
+          promises.push(player.voice.setChannel(lobbyVc))
+          logger.info(
+            `Moving user ${player.user.username} to voice channel ${lobbyVc.name}`
+          )
+        })
     }
 
-    interaction.guild.roles.cache
-      .get(client.firstTeamRoleId)
-      .members.forEach(member => {
-        promises.push(
-          member.roles.remove(
-            interaction.guild.roles.cache.get(client.firstTeamRoleId)
-          )
-        )
-      })
-    interaction.guild.roles.cache
-      .get(client.secondTeamRoleId)
-      .members.forEach(member => {
-        promises.push(
-          member.roles.remove(
-            interaction.guild.roles.cache.get(client.secondTeamRoleId)
-          )
-        )
-      })
+    functions.clearTeamRoles(interaction, firstTeamRoleId, secondTeamRoleId)
     await Promise.all(promises)
     await interaction.editReply('GG!')
   }

@@ -116,3 +116,4 @@ dist
 
 config.json
 .idea/
+logs/
