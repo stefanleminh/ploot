@@ -1,13 +1,13 @@
 /* eslint-disable */
 const winston = require('winston')
-const config = require('../config')
+const config = require('../../config')
 
 const logger = filename => {
   return new winston.createLogger({
     level: config.loggingLevel,
     transports: [
       new winston.transports.Console(),
-      new winston.transports.File({ filename: 'logs/logs.log' })
+      new winston.transports.File({ filename: '../logs/logs.log' })
     ],
     format: winston.format.combine(
       winston.format.timestamp({

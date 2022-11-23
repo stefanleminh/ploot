@@ -2,7 +2,7 @@ const path = require('path')
 const logger = require('../logging/winston')(path.basename(__filename))
 const { REST } = require('@discordjs/rest')
 const { Routes } = require('discord-api-types/v9')
-const config = require('../config.json')
+const config = require('../../config.json')
 const TOKEN = config.token
 const TEST_GUILD_ID = config.testGuildId
 const fs = require('fs')
@@ -14,7 +14,7 @@ module.exports = {
     const commands = []
     // Take commands
     const commandFiles = fs
-      .readdirSync('./commands')
+      .readdirSync('./src/commands')
       .filter(file => file.endsWith('.js'))
     for (const file of commandFiles) {
       const command = require('../commands/' + file)

@@ -1,7 +1,7 @@
 const { Client, Intents, Collection } = require('discord.js')
 const fs = require('fs')
 const path = require('path')
-const logger = require('./logging/winston')(path.basename(__filename))
+const logger = require('./src/logging/winston')(path.basename(__filename))
 const client = new Client({
   intents: [
     Intents.FLAGS.GUILDS,
@@ -23,11 +23,11 @@ client.lastRoundSpectatorIds = new Keyv()
 client.commands = new Collection()
 
 const eventFiles = fs
-  .readdirSync('./events')
+  .readdirSync('./src/events')
   .filter(file => file.endsWith('.js'))
 
 for (const file of eventFiles) {
-  const event = require(`./events/${file}`)
+  const event = require(`./src/events/${file}`)
   logger.info(`Loaded event ${event.name}`)
   if (event.once) {
     client.once(event.name, (...args) => event.execute(...args, client))
