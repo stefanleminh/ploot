@@ -1,3 +1,5 @@
+import { Interaction } from "discord.js"
+
 const path = require('path')
 const logger = require('../logging/winston')(path.basename(__filename))
 const { SlashCommandBuilder } = require('@discordjs/builders')
@@ -11,7 +13,7 @@ module.exports = {
     ),
   args: '',
   requiresActiveSession: true,
-  async execute (interaction, client) {
+  async execute (interaction: Interaction, client) {
     await interaction.deferReply()
     const promises = []
     const spectatorRoleId = await client.spectatorRoleIds.get(

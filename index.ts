@@ -24,15 +24,15 @@ client.commands = new Collection()
 
 const eventFiles = fs
   .readdirSync('./src/events')
-  .filter(file => file.endsWith('.js'))
+  .filter((file: string) => file.endsWith('.js'))
 
 for (const file of eventFiles) {
   const event = require(`./src/events/${file}`)
   logger.info(`Loaded event ${event.name}`)
   if (event.once) {
-    client.once(event.name, (...args) => event.execute(...args, client))
+    client.once(event.name, (...args: any) => event.execute(...args, client))
   } else {
-    client.on(event.name, (...args) => event.execute(...args, client))
+    client.on(event.name, (...args: any) => event.execute(...args, client))
   }
 }
 

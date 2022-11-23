@@ -1,3 +1,5 @@
+import { Client, CommandInteraction, Interaction } from "discord.js"
+
 const { SlashCommandBuilder } = require('@discordjs/builders')
 const {
   MessageActionRow,
@@ -13,10 +15,10 @@ module.exports = {
     .setDescription('Configures the server'),
   args: '',
   requiresActiveSession: true,
-  async execute (interaction, client) {
+  async execute (interaction: CommandInteraction, client: Client) {
     await interaction.deferReply()
 
-    const voiceChannels = interaction.guild.channels.cache
+    const voiceChannels = interaction.guild!.channels.cache
       .filter(channel => channel.type === 'GUILD_VOICE')
       .map(channel => ({
         label: channel.name,
@@ -47,11 +49,11 @@ module.exports = {
     const secondTeamSelect = new MessageActionRow().addComponents(secondTeamVc)
     const submitRow = new MessageActionRow().addComponents(button)
 
-    const filter = i => {
+    const filter = (i:CommandInteraction) => {
       return i.user.id === interaction.user.id
     }
 
-    const selectCollector = interaction.channel.createMessageComponentCollector(
+    const selectCollector = interaction.channel!.createMessageComponentCollector(
       {
         filter,
         componentType: 'SELECT_MENU'
