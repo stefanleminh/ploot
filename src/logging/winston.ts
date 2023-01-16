@@ -2,7 +2,7 @@
 const winston = require('winston')
 const config = require('../../config')
 
-const logger = (filename: any) => {
+export function logging (filename: any) {
   return new winston.createLogger({
     level: config.loggingLevel,
     transports: [
@@ -22,4 +22,3 @@ const logger = (filename: any) => {
     )
   });
 }
-module.exports = logger
