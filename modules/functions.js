@@ -114,6 +114,11 @@ const clearTeamRoles = (interaction, firstTeamRoleId, secondTeamRoleId) => {
     interaction.guild.roles.cache
       .get(firstTeamRoleId)
       .members.forEach(member => {
+        logger.info(
+          `Removing role ${
+            interaction.guild.roles.cache.get(firstTeamRoleId).name
+          } from member ${member.user.username}`
+        )
         promises.push(
           member.roles.remove(
             interaction.guild.roles.cache.get(firstTeamRoleId)
@@ -125,6 +130,11 @@ const clearTeamRoles = (interaction, firstTeamRoleId, secondTeamRoleId) => {
     interaction.guild.roles.cache
       .get(secondTeamRoleId)
       .members.forEach(member => {
+        logger.info(
+          `Removing role ${
+            interaction.guild.roles.cache.get(firstTeamRoleId).name
+          } from member ${member.user.username}`
+        )
         promises.push(
           member.roles.remove(
             interaction.guild.roles.cache.get(secondTeamRoleId)
