@@ -1,11 +1,11 @@
-import { Client } from "discord.js"
-import { Properties } from "../types/properties"
+import { Client } from 'discord.js'
+import { Properties } from '../types/properties'
 
 import path from 'path'
-import {logging} from '../logging/winston'
+import { logging } from '../logging/winston'
+import { REST } from '@discordjs/rest'
+import { Routes } from 'discord-api-types/v9'
 const logger = logging(path.basename(__filename))
-import {REST} from '@discordjs/rest'
-import {Routes} from 'discord-api-types/v9'
 const config = require('../../config.json')
 const TOKEN = config.token
 const TEST_GUILD_ID = config.testGuildId

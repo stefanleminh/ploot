@@ -1,8 +1,8 @@
-import { Properties } from "../types/properties"
+import { Properties } from '../types/properties'
 
 import path from 'path'
-import {logging} from '../logging/winston'
-import { Interaction, CommandInteraction } from 'discord.js';
+import { logging } from '../logging/winston'
+import { Interaction, CommandInteraction } from 'discord.js'
 const logger = logging(path.basename(__filename))
 const { SlashCommandBuilder } = require('@discordjs/builders')
 
@@ -13,7 +13,7 @@ module.exports = {
   args: '',
   requiresActiveSession: true,
   async execute (interaction: CommandInteraction, properties: Properties) {
-    if(!interaction.guild) return
+    if (interaction.guild == null) return
     const promises = []
     const spectatorRoleId = await properties.spectatorRoleIds.get(
       interaction.guild.id

@@ -1,7 +1,8 @@
-import { Properties } from "../types/properties"
+import { Properties } from '../types/properties'
 
 import path from 'path'
-import {logging} from '../logging/winston'
+import { logging } from '../logging/winston'
+import { CommandInteraction, Collection, GuildMember } from 'discord.js'
 const logger = logging(path.basename(__filename))
 const { SlashCommandBuilder } = require('@discordjs/builders')
 const functions = require('../modules/functions')
@@ -14,7 +15,8 @@ module.exports = {
     ),
   args: '',
   requiresActiveSession: true,
-  async execute (interaction: any, properties: Properties) {
+  async execute (interaction: CommandInteraction, properties: Properties) {
+    if (interaction.guild == null) return
     await interaction.deferReply()
 
     const lobbyVc = await properties.lobbies.get(interaction.guild.id)
@@ -29,27 +31,24 @@ module.exports = {
     const secondTeamRoleId = await properties.secondTeamRoleIds.get(
       interaction.guild.id
     )
-
-    if (interaction.guild.channels.cache.get(firstTeamVc).members.size > 0) {
-      interaction.guild.channels.cache
-        .get(firstTeamVc)
-        .members.forEach((player: any) => {
-          promises.push(player.voice.setChannel(lobbyVc))
-          logger.info(
+    const firstTeamVcMembers = interaction.guild.channels.cache.get(firstTeamVc)!.members as Collection<string, GuildMember>
+    if (firstTeamVcMembers.size > 0) {
+      firstTeamVcMembers.forEach((player: any) => {
+        promises.push(player.voice.setChannel(lobbyVc))
+        logger.info(
             `Moving user ${player.user.username} to voice channel ${lobbyVc.name}`
-          )
-        })
+        )
+      })
     }
 
-    if (interaction.guild.channels.cache.get(secondTeamVc).members.size > 0) {
-      interaction.guild.channels.cache
-        .get(secondTeamVc)
-        .members.forEach((player: any) => {
-          promises.push(player.voice.setChannel(lobbyVc))
-          logger.info(
+    const secondTeamVcMembers = interaction.guild.channels.cache.get(secondTeamVc)!.members as Collection<string, GuildMember>
+    if (secondTeamVcMembers.size > 0) {
+      secondTeamVcMembers.forEach((player: any) => {
+        promises.push(player.voice.setChannel(lobbyVc))
+        logger.info(
             `Moving user ${player.user.username} to voice channel ${lobbyVc.name}`
-          )
-        })
+        )
+      })
     }
 
     functions.clearTeamRoles(interaction, firstTeamRoleId, secondTeamRoleId)

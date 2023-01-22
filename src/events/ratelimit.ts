@@ -1,5 +1,5 @@
 import path from 'path'
-import {logging} from '../logging/winston'
+import { logging } from '../logging/winston'
 const logger = logging(path.basename(__filename))
 
 module.exports = {

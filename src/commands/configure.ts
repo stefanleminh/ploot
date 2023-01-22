@@ -1,14 +1,10 @@
-import { Client, CollectorFilter, CommandInteraction, SelectMenuInteraction } from "discord.js"
-import { Properties } from "../types/properties"
-
-const { SlashCommandBuilder } = require('@discordjs/builders')
-const {
-  MessageActionRow,
-  MessageSelectMenu,
-  MessageButton
-} = require('discord.js')
+import { CollectorFilter, CommandInteraction, MessageActionRow, MessageSelectMenu, MessageButton } from 'discord.js'
+import { Properties } from '../types/properties'
 import path from 'path'
-import {logging} from '../logging/winston'
+import { logging } from '../logging/winston'
+
+import { SlashCommandBuilder } from '@discordjs/builders'
+
 const logger = logging(path.basename(__filename))
 
 module.exports = {
@@ -18,9 +14,10 @@ module.exports = {
   args: '',
   requiresActiveSession: true,
   async execute (interaction: CommandInteraction, properties: Properties) {
+    if (interaction.guild == null) return
     await interaction.deferReply()
 
-    const voiceChannels = interaction.guild!.channels.cache
+    const voiceChannels = interaction.guild.channels.cache
       .filter(channel => channel.type === 'GUILD_VOICE')
       .map(channel => ({
         label: channel.name,
@@ -63,8 +60,8 @@ module.exports = {
     )
 
     selectCollector.on('collect', async selectInteraction => {
-      if(selectInteraction.guild === null || selectInteraction.guild === undefined) {
-        throw new Error("Interaction is not part of a guild!")
+      if (selectInteraction.guild === null || selectInteraction.guild === undefined) {
+        throw new Error('Interaction is not part of a guild!')
       }
       let property
       if (selectInteraction.customId === 'spectatorVc') {
@@ -79,11 +76,11 @@ module.exports = {
         selectInteraction.guild.id,
         selectInteraction.values[0]
       )
-      const channelName = await interaction.guild!.channels.cache.get(
+      const channelName = interaction.guild!.channels.cache.get(
         selectInteraction.values[0]
       )!.name
       logger.info(`Set ${selectInteraction.customId} to ${channelName}.`)
-      selectInteraction.reply({
+      await selectInteraction.reply({
         content: `Set ${selectInteraction.customId} to <#${selectInteraction.values[0]}>.`,
         ephemeral: true
       })

@@ -1,8 +1,9 @@
-import { Properties } from "../types/properties"
+import { Properties } from '../types/properties'
+import path from 'path'
+import { logging } from '../logging/winston'
+import { CommandInteraction, Collection, Guild, GuildMember } from 'discord.js'
 
 const functions = require('../modules/functions')
-import path from 'path'
-import {logging} from '../logging/winston'
 const logger = logging(path.basename(__filename))
 const { SlashCommandBuilder } = require('@discordjs/builders')
 const MAX_AMOUNT_OF_PLAYERS = 10
@@ -13,7 +14,8 @@ module.exports = {
     .setDescription('Randomizes and shows the new teams. '),
   args: '',
   requiresActiveSession: true,
-  async execute (interaction: any, properties: Properties) {
+  async execute (interaction: CommandInteraction, properties: Properties) {
+    if (interaction.guild == null) return
     await interaction.deferReply()
     const firstTeamRoleId = await properties.firstTeamRoleIds.get(
       interaction.guild.id
@@ -35,14 +37,15 @@ module.exports = {
     const lastRoundSpectatorIds = await properties.lastRoundSpectatorIds.get(
       interaction.guild.id
     )
-    const lastRoundSpectatorIdsInLobby = interaction.guild.channels.cache
-      .get(lobbyVcId)
-      .members.filter((member: any) => lastRoundSpectatorIds.includes(member.id))
+    const lobbyVcMembers = interaction.guild.channels.cache
+      .get(lobbyVcId)!
+      .members as Collection<string, GuildMember>
+    const lastRoundSpectatorIdsInLobby = lobbyVcMembers.filter((member: any) => lastRoundSpectatorIds.includes(member.id))
       .map((member: any) => member.id)
 
     logger.info('==========randomize start==========')
     let playerPool = lastRoundSpectatorIdsInLobby
-      .map((id: any) => interaction.guild.members.cache.get(id))
+      .map((id: any) => interaction.guild!.members.cache.get(id))
       ?.slice(0, MAX_AMOUNT_OF_PLAYERS + 1)
     if (playerPool.length > 0) {
       logger.info(
@@ -53,13 +56,11 @@ module.exports = {
     }
     if (playerPool.length === MAX_AMOUNT_OF_PLAYERS) {
       const playerPoolIds = playerPool.map((player: any) => player.user.id)
-      const availablePlayers = interaction.guild.channels.cache
-        .get(lobbyVcId)
-        .members.filter(
-          (player: any) => !playerPool.includes(player) &&
+      const availablePlayers = lobbyVcMembers.filter(
+        (player: any) => !playerPool.includes(player) &&
           !player.roles.cache.some((role: any) => role.id === spectatorRoleId) &&
           !player.user.bot
-        )
+      )
       const remainingLastRoundSpectators = availablePlayers.filter(
         (id: any) => !playerPoolIds.includes(id)
       )
@@ -89,34 +90,28 @@ module.exports = {
     // Update cache with new roles
     await interaction.guild.members.fetch()
 
-    const firstTeam = interaction.guild.channels.cache
-      .get(lobbyVcId)
-      .members.filter((member: any) => member.roles.cache.some((role: any) => role.id === firstTeamRoleId)
-      )
+    const firstTeam = lobbyVcMembers.filter((member: any) => member.roles.cache.some((role: any) => role.id === firstTeamRoleId)
+    )
       .map((guildmember: any) => guildmember.user)
 
     logger.debug(
       'First team is: ' + firstTeam.map((player: any) => player.username).join(', ')
     )
 
-    const secondTeam = interaction.guild.channels.cache
-      .get(lobbyVcId)
-      .members.filter((member: any) => member.roles.cache.some((role: any) => role.id === secondTeamRoleId)
-      )
+    const secondTeam = lobbyVcMembers.filter((member: any) => member.roles.cache.some((role: any) => role.id === secondTeamRoleId)
+    )
       .map((guildmember: any) => guildmember.user)
 
     logger.debug(
       'Second team is: ' + secondTeam.map((player: any) => player.username).join(', ')
     )
 
-    const spectatorTeam = interaction.guild.channels.cache
-      .get(lobbyVcId)
-      .members.filter(
-        (member: any) => member.roles.cache.every(
-          (role: any) => role.id === spectatorRoleId ||
+    const spectatorTeam = lobbyVcMembers.filter(
+      (member: any) => member.roles.cache.every(
+        (role: any) => role.id === spectatorRoleId ||
           (role.id !== firstTeamRoleId && role.id !== secondTeamRoleId)
-        ) && !member.user.bot
-      )
+      ) && !member.user.bot
+    )
       .map((guildmember: any) => guildmember.user)
 
     logger.debug(
@@ -127,26 +122,26 @@ module.exports = {
     const embeds = [
       functions.createEmbed(
         firstTeam,
-        interaction.guild.channels.cache.get(firstTeamVcId).name,
+        interaction.guild.channels.cache.get(firstTeamVcId)!.name,
         '#000088',
         interaction
       ),
       functions.createEmbed(
         secondTeam,
-        interaction.guild.channels.cache.get(secondTeamVcId).name,
+        interaction.guild.channels.cache.get(secondTeamVcId)!.name,
         '#fe0000',
         interaction
       ),
       functions.createEmbed(
         spectatorTeam,
-        interaction.guild.channels.cache.get(lobbyVcId).name,
+        interaction.guild.channels.cache.get(lobbyVcId)!.name,
         '#ffa500',
         interaction
       )
     ]
     logger.info('==========randomize end==========')
 
-    await interaction.editReply({ embeds: embeds })
+    await interaction.editReply({ embeds })
   }
 }
 

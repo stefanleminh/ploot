@@ -1,11 +1,10 @@
-import { CommandInteraction, GuildMember, Interaction } from "discord.js"
-import { Properties } from "../types/properties"
-
+import { CommandInteraction, GuildMember } from 'discord.js'
+import { Properties } from '../types/properties'
+import { SlashCommandBuilder } from '@discordjs/builders'
 import path from 'path'
-import {logging} from '../logging/winston'
+import * as functions from '../modules/functions'
+import { logging } from '../logging/winston'
 const logger = logging(path.basename(__filename))
-const { SlashCommandBuilder } = require('@discordjs/builders')
-const functions = require('../modules/functions')
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -16,11 +15,12 @@ module.exports = {
   args: '',
   requiresActiveSession: true,
   async execute (interaction: CommandInteraction, properties: Properties) {
-    if(interaction.guild === null || interaction.guild === undefined) {
-      throw new Error("Interaction is not part of a guild!")
+    if (interaction.guild == null) return
+    if (interaction.guild === null || interaction.guild === undefined) {
+      throw new Error('Interaction is not part of a guild!')
     }
     await interaction.deferReply()
-    const promises: Promise<GuildMember>[] = []
+    const promises: Array<Promise<GuildMember>> = []
     const spectatorRoleId = await properties.spectatorRoleIds.get(
       interaction.guild.id
     )
@@ -31,7 +31,7 @@ module.exports = {
       interaction.guild.id
     )
 
-    if (spectatorRoleId) {
+    if (spectatorRoleId !== undefined) {
       interaction.guild.roles.cache
         .get(spectatorRoleId)!
         .members.forEach(member => {

@@ -1,4 +1,5 @@
-import { Properties } from "../types/properties"
+import { Properties } from '../types/properties'
+import { CommandInteraction, Collection, GuildMember } from 'discord.js'
 
 const functions = require('../modules/functions')
 const { SlashCommandBuilder } = require('@discordjs/builders')
@@ -9,7 +10,8 @@ module.exports = {
     .setDescription('Lists active players and spectators.'),
   args: '',
   requiresActiveSession: true,
-  async execute (interaction: any, properties: Properties) {
+  async execute (interaction: CommandInteraction, properties: Properties) {
+    if (interaction.guild == null) return
     await interaction.deferReply()
 
     const lobbyVc = await properties.lobbies.get(interaction.guild.id)
@@ -17,19 +19,17 @@ module.exports = {
     const spectatorRoleId = await properties.spectatorRoleIds.get(
       interaction.guild.id
     )
-    const currentPlayers = interaction.guild.channels.cache
-      .get(lobbyVc)
-      .members.filter((member: any) => {
-        return member.roles.cache.every((role: any) => role.id !== spectatorRoleId) &&
-        !member.user.bot;
-      })
+    const lobbyVcMembers = interaction.guild.channels.cache
+      .get(lobbyVc)!.members as Collection<string, GuildMember>
+    const currentPlayers = lobbyVcMembers.filter((member: any) => {
+      return member.roles.cache.every((role: any) => role.id !== spectatorRoleId) &&
+        !member.user.bot
+    })
       .map((guildmember: any) => guildmember.user)
-    const currentSpectators = interaction.guild.channels.cache
-      .get(lobbyVc)
-      .members.filter((member: any) => {
-        return member.roles.cache.some((role: any) => role.id === spectatorRoleId) &&
-        !member.user.bot;
-      })
+    const currentSpectators = lobbyVcMembers.filter((member: any) => {
+      return member.roles.cache.some((role: any) => role.id === spectatorRoleId) &&
+        !member.user.bot
+    })
       .map((guildmember: any) => guildmember.user)
 
     const embeds = [
@@ -43,7 +43,7 @@ module.exports = {
     ]
 
     await interaction.editReply({
-      embeds: embeds
+      embeds
     })
   }
 }

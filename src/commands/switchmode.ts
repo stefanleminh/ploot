@@ -1,7 +1,8 @@
-import { Properties } from "../types/properties"
+import { Properties } from '../types/properties'
 
 import path from 'path'
-import {logging} from '../logging/winston'
+import { logging } from '../logging/winston'
+import { CommandInteraction, Collection, GuildMember } from 'discord.js'
 const logger = logging(path.basename(__filename))
 const { SlashCommandBuilder } = require('@discordjs/builders')
 
@@ -12,21 +13,23 @@ module.exports = {
       'Switches the player from active player to spectator or vise versa.'
     )
     .addUserOption((option: any) => option
-    .setName('user')
-    .setDescription('The user whose status to switch')
-    .setRequired(true)
+      .setName('user')
+      .setDescription('The user whose status to switch')
+      .setRequired(true)
     ),
   args: '[@DiscordUser]',
   requiresActiveSession: true,
-  async execute (interaction: any, properties: Properties) {
+  async execute (interaction: CommandInteraction, properties: Properties) {
+    if (interaction.guild == null) return
     const userParameter = interaction.options.getUser('user')
+    if (userParameter == null) return
     const lobbyVc = await properties.lobbies.get(interaction.guild.id)
 
-    const guildUser = await interaction.guild.channels.cache
-      .get(lobbyVc)
-      .members.get(userParameter.id)
+    const lobbyVcMembers = interaction.guild.channels.cache
+      .get(lobbyVc)!.members as Collection<string, GuildMember>
+    const guildUser = await lobbyVcMembers.get(userParameter.id)
 
-    if (!guildUser) {
+    if (guildUser == null) {
       logger.info(
         `User ${userParameter.username} not found as an active player or spectator`
       )

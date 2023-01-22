@@ -1,11 +1,10 @@
-import { Properties } from "../types/properties"
-
+import { Properties } from '../types/properties'
+import Discord from 'discord.js'
 import path from 'path'
-import {logging} from '../logging/winston'
+import { logging } from '../logging/winston'
 const logger = logging(path.basename(__filename))
-const Discord = require('discord.js')
 
-const addParticipant = (participant: any, interaction: any, array: any, arrayname: any) => {
+export function(participant: any, interaction: any, array: any, arrayname: any): void {
   if (array.includes(participant)) {
     logger.debug(
       `Participant ${participant.username}already exists in ${arrayname}!`
@@ -22,9 +21,7 @@ const addParticipant = (participant: any, interaction: any, array: any, arraynam
   )
 }
 
-exports.addParticipant = addParticipant
-
-const chunk = (arr: any, chunkSize: any) => {
+export function chunk(arr: any, chunkSize: any) {
   const R = []
   for (let i = 0, len = arr.length; i < len; i += chunkSize) {
     R.push(arr.slice(i, i + chunkSize))
@@ -33,9 +30,7 @@ const chunk = (arr: any, chunkSize: any) => {
   return R
 }
 
-exports.chunk = chunk
-
-const purge = (properties: Properties, interaction: any) => {
+export function purge (properties: Properties, interaction: any) {
   const membersInLobby = Array.from(
     interaction.guild.channels.cache.get(properties.config.lobby).members.keys()
   )
@@ -86,9 +81,7 @@ const purge = (properties: Properties, interaction: any) => {
   })
 }
 
-exports.purge = purge
-
-const createEmbed = (list: any, title: any, color: any, interaction: any) => {
+export function createEmbed (list: any, title: any, color: any, interaction: any)  {
   const embed = new Discord.MessageEmbed()
     .setTitle(title)
     .setColor(color)
@@ -102,19 +95,46 @@ const createEmbed = (list: any, title: any, color: any, interaction: any) => {
           name: title,
           value: chunk.toString().replace(/,/g, '\n'),
           inline: true
-        };
+        }
       })
     )
   return embed
 }
 
-exports.createEmbed = createEmbed
+// const clearTeamRoles = (interaction: any, firstTeamRoleId: any, secondTeamRoleId: any) => {
+//   const promises: any = []
+//   if (firstTeamRoleId) {
+//     interaction.guild.roles.cache
+//       .get(firstTeamRoleId)
+//       .members.forEach((member: any) => {
+//         promises.push(
+//           member.roles.remove(
+//             interaction.guild.roles.cache.get(firstTeamRoleId)
+//           )
+//         )
+//       })
+//   }
+//   if (secondTeamRoleId) {
+//     interaction.guild.roles.cache
+//       .get(secondTeamRoleId)
+//       .members.forEach((member: any) => {
+//         promises.push(
+//           member.roles.remove(
+//             interaction.guild.roles.cache.get(secondTeamRoleId)
+//           )
+//         )
+//       })
+//   }
+//   return promises
+// }
 
-const clearTeamRoles = (interaction: any, firstTeamRoleId: any, secondTeamRoleId: any) => {
+// exports.clearTeamRoles = clearTeamRoles
+export function clearTeamRoles (interaction: Discord.CommandInteraction<Discord.CacheType>, firstTeamRoleId: any, secondTeamRoleId: any): Array<Promise<Discord.GuildMember>> {
+  if(!interaction.guild) return [];
   const promises: any = []
   if (firstTeamRoleId) {
     interaction.guild.roles.cache
-      .get(firstTeamRoleId)
+      .get(firstTeamRoleId)!
       .members.forEach((member: any) => {
         promises.push(
           member.roles.remove(
@@ -136,5 +156,3 @@ const clearTeamRoles = (interaction: any, firstTeamRoleId: any, secondTeamRoleId
   }
   return promises
 }
-
-exports.clearTeamRoles = clearTeamRoles

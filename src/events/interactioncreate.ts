@@ -1,10 +1,10 @@
 import path from 'path'
-import {logging} from '../logging/winston'
-const logger = logging(path.basename(__filename))
-const validation = require('../modules/validation')
-import '../modules/validation'
-import { Client, Interaction } from 'discord.js';
+import { logging } from '../logging/winston'
+import * as validation from '../modules/validation'
+import { Client, Interaction } from 'discord.js'
 import { Properties } from 'src/types/properties'
+
+const logger = logging(path.basename(__filename))
 
 module.exports = {
   name: 'interactionCreate',
@@ -16,7 +16,7 @@ module.exports = {
     if (!command) return
     if (
       command.requiresActiveSession &&
-      !validation.isActiveSession(properties, interaction.guild?.id)
+      !validation.isActiveSession(properties, interaction.guild!.id)
     ) {
       await interaction.reply(
         'You have not started a session yet! Please run the /newsession command.'
@@ -25,7 +25,7 @@ module.exports = {
     }
 
     try {
-      logger.info(`Running command: ${command.data.name}`)
+      logger.info(`Running command: ${command.data.name as string}`)
       await command.execute(interaction, properties)
     } catch (error) {
       logger.error(error)

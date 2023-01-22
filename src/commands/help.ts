@@ -1,3 +1,5 @@
+import { CommandInteraction } from 'discord.js'
+import { Properties } from '../types/properties'
 const Discord = require('discord.js')
 const { SlashCommandBuilder } = require('@discordjs/builders')
 
@@ -7,8 +9,9 @@ module.exports = {
     .setDescription('Shows this help message.'),
   args: '',
   requiresActiveSession: false,
-  async execute (interaction: any) {
-    const sortedCommands = interaction.client.commands.sort((a: any, b: any) =>
+  async execute (interaction: CommandInteraction, properties: Properties) {
+    if (interaction.guild == null) return
+    const sortedCommands = properties.commands.sort((a: any, b: any) =>
       a.data.name.localeCompare(b.data.name)
     )
     const helpEmbed = new Discord.MessageEmbed()

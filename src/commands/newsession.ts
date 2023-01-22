@@ -1,8 +1,9 @@
-import { Properties } from "../types/properties"
+import { Properties } from '../types/properties'
+import path from 'path'
+import { logging } from '../logging/winston'
+import { CommandInteraction } from 'discord.js'
 
 const validation = require('../modules/validation')
-import path from 'path'
-import {logging} from '../logging/winston'
 const logger = logging(path.basename(__filename))
 const { SlashCommandBuilder } = require('@discordjs/builders')
 
@@ -14,7 +15,8 @@ module.exports = {
     ),
   args: '',
   requiresActiveSession: false,
-  async execute (interaction: any, properties: Properties) {
+  async execute (interaction: CommandInteraction, properties: Properties) {
+    if (interaction.guild == null) return
     await interaction.deferReply()
     const isActiveSession = await validation.isActiveSession(
       properties,
@@ -50,7 +52,7 @@ module.exports = {
     await properties.spectatorRoleIds.set(interaction.guild.id, spectatorRole.id)
 
     const firstTeamRole = await interaction.guild.roles.create({
-      name: interaction.guild.channels.cache.get(firstTeamVcId).name,
+      name: interaction.guild.channels.cache.get(firstTeamVcId)!.name,
       color: '#000088',
       reason: 'Team role for event'
     })
@@ -58,7 +60,7 @@ module.exports = {
     await properties.firstTeamRoleIds.set(interaction.guild.id, firstTeamRole.id)
 
     const secondTeamRole = await interaction.guild.roles.create({
-      name: interaction.guild.channels.cache.get(secondTeamVcId).name,
+      name: interaction.guild.channels.cache.get(secondTeamVcId)!.name,
       color: '#fe0000',
       reason: 'Team role for event'
     })

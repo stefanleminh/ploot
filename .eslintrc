@@ -5,6 +5,13 @@
   },
 
   "parserOptions": {
-    "ecmaVersion": 8
+    "ecmaVersion": 8,
+    "project": "./tsconfig.json"
+  },
+  "extends": "standard-with-typescript",
+  "rules": {
+    "@typescript-eslint/no-non-null-assertion": "warn",
+    "@typescript-eslint/strict-boolean-expressions": "warn",
+    "@typescript-eslint/restrict-template-expressions": "warn"
   }
 }

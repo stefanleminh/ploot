@@ -1,7 +1,10 @@
 import { Client, Intents, Collection } from 'discord.js'
 import fs from 'fs'
 import path from 'path'
-import {logging} from './logging/winston'
+import { logging } from './logging/winston'
+import Keyv from 'keyv'
+import { Properties } from './types/properties'
+import config from '../config.json'
 const logger = logging(path.basename(__filename))
 const client = new Client({
   intents: [
@@ -10,13 +13,10 @@ const client = new Client({
     Intents.FLAGS.GUILD_MEMBERS
   ]
 })
-import Keyv from 'keyv'
-import { Properties } from './types/properties';
-import config from "../config.json"
 
 const properties: Properties = {
   commands: new Collection(),
-  config: config,
+  config,
   lobbies: new Keyv(),
   firstTeamVcs: new Keyv(),
   secondTeamVcs: new Keyv(),
@@ -26,8 +26,7 @@ const properties: Properties = {
   lastRoundSpectatorIds: new Keyv(),
   currentSpectators: undefined,
   currentPlayers: undefined
-};
-
+}
 
 const eventFiles = fs
   .readdirSync('./src/events')
@@ -40,8 +39,6 @@ for (const file of eventFiles) {
   } else {
     client.on(event.name, (...args: any) => event.execute(...args, client, properties))
   }
-  
 }
 
 client.login(properties.config.token)
-
