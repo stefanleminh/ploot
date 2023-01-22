@@ -2,7 +2,8 @@ import { Client } from "discord.js"
 import { Properties } from "../types/properties"
 
 import path from 'path'
-const logger = require('../logging/winston')(path.basename(__filename))
+import {logging} from '../logging/winston'
+const logger = logging(path.basename(__filename))
 import {REST} from '@discordjs/rest'
 import {Routes} from 'discord-api-types/v9'
 const config = require('../../config.json')
@@ -18,7 +19,7 @@ module.exports = {
     // Take commands
     const commandFiles = fs
       .readdirSync('./src/commands')
-      .filter((file: any) => file.endsWith('.js'))
+      .filter((file: any) => file.endsWith('.ts'))
     for (const file of commandFiles) {
       const command = require('../commands/' + file)
       commands.push(command.data.toJSON())

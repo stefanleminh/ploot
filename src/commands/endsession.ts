@@ -1,7 +1,9 @@
 import { Properties } from "../types/properties"
 
-const path = require('path')
-const logger = require('../logging/winston')(path.basename(__filename))
+import path from 'path'
+import {logging} from '../logging/winston'
+import { Interaction, CommandInteraction } from 'discord.js';
+const logger = logging(path.basename(__filename))
 const { SlashCommandBuilder } = require('@discordjs/builders')
 
 module.exports = {
@@ -10,7 +12,8 @@ module.exports = {
     .setDescription('Ends the session and clears all the data.'),
   args: '',
   requiresActiveSession: true,
-  async execute (interaction: any, client: any, properties: Properties) {
+  async execute (interaction: CommandInteraction, properties: Properties) {
+    if(!interaction.guild) return
     const promises = []
     const spectatorRoleId = await properties.spectatorRoleIds.get(
       interaction.guild.id

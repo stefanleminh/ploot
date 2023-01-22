@@ -1,7 +1,8 @@
 import { Properties } from "../types/properties"
 
-const path = require('path')
-const logger = require('../logging/winston')(path.basename(__filename))
+import path from 'path'
+import {logging} from '../logging/winston'
+const logger = logging(path.basename(__filename))
 const { SlashCommandBuilder } = require('@discordjs/builders')
 
 module.exports = {
@@ -17,7 +18,7 @@ module.exports = {
     ),
   args: '[@DiscordUser]',
   requiresActiveSession: true,
-  async execute (interaction: any, client: any, properties: Properties) {
+  async execute (interaction: any, properties: Properties) {
     const userParameter = interaction.options.getUser('user')
     const lobbyVc = await properties.lobbies.get(interaction.guild.id)
 

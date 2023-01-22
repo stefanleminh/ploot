@@ -9,7 +9,7 @@ module.exports = {
     .setDescription('Lists active players and spectators.'),
   args: '',
   requiresActiveSession: true,
-  async execute (interaction: any, client: any, properties: Properties) {
+  async execute (interaction: any, properties: Properties) {
     await interaction.deferReply()
 
     const lobbyVc = await properties.lobbies.get(interaction.guild.id)

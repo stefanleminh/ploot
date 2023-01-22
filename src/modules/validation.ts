@@ -1,7 +1,8 @@
 import { Properties } from "../types/properties"
 
-const path = require('path')
-const logger = require('../logging/winston')(path.basename(__filename))
+import path from 'path'
+import {logging} from '../logging/winston'
+const logger = logging(path.basename(__filename))
 
 const isActiveSession = async (properties: Properties, guildId: any) => {
   const isActiveSession =

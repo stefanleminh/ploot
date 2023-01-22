@@ -7,8 +7,9 @@ const {
   MessageSelectMenu,
   MessageButton
 } = require('discord.js')
-const path = require('path')
-const logger = require('../logging/winston')(path.basename(__filename))
+import path from 'path'
+import {logging} from '../logging/winston'
+const logger = logging(path.basename(__filename))
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -16,7 +17,7 @@ module.exports = {
     .setDescription('Configures the server'),
   args: '',
   requiresActiveSession: true,
-  async execute (interaction: CommandInteraction, client: any, properties: Properties) {
+  async execute (interaction: CommandInteraction, properties: Properties) {
     await interaction.deferReply()
 
     const voiceChannels = interaction.guild!.channels.cache

@@ -1,8 +1,9 @@
 import { CommandInteraction, GuildMember, Interaction } from "discord.js"
 import { Properties } from "../types/properties"
 
-const path = require('path')
-const logger = require('../logging/winston')(path.basename(__filename))
+import path from 'path'
+import {logging} from '../logging/winston'
+const logger = logging(path.basename(__filename))
 const { SlashCommandBuilder } = require('@discordjs/builders')
 const functions = require('../modules/functions')
 
@@ -14,7 +15,7 @@ module.exports = {
     ),
   args: '',
   requiresActiveSession: true,
-  async execute (interaction: CommandInteraction, client: any, properties: Properties) {
+  async execute (interaction: CommandInteraction, properties: Properties) {
     if(interaction.guild === null || interaction.guild === undefined) {
       throw new Error("Interaction is not part of a guild!")
     }

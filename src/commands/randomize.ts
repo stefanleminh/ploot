@@ -1,8 +1,9 @@
 import { Properties } from "../types/properties"
 
 const functions = require('../modules/functions')
-const path = require('path')
-const logger = require('../logging/winston')(path.basename(__filename))
+import path from 'path'
+import {logging} from '../logging/winston'
+const logger = logging(path.basename(__filename))
 const { SlashCommandBuilder } = require('@discordjs/builders')
 const MAX_AMOUNT_OF_PLAYERS = 10
 
@@ -12,7 +13,7 @@ module.exports = {
     .setDescription('Randomizes and shows the new teams. '),
   args: '',
   requiresActiveSession: true,
-  async execute (interaction: any, client: any, properties: Properties) {
+  async execute (interaction: any, properties: Properties) {
     await interaction.deferReply()
     const firstTeamRoleId = await properties.firstTeamRoleIds.get(
       interaction.guild.id

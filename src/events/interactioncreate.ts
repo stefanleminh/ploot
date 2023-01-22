@@ -1,18 +1,22 @@
-const path = require('path')
-const log = require('../logging/winston')(path.basename(__filename))
+import path from 'path'
+import {logging} from '../logging/winston'
+const logger = logging(path.basename(__filename))
 const validation = require('../modules/validation')
+import '../modules/validation'
+import { Client, Interaction } from 'discord.js';
+import { Properties } from 'src/types/properties'
 
 module.exports = {
   name: 'interactionCreate',
-  async execute (interaction: any, client: any) {
+  async execute (interaction: Interaction, client: Client, properties: Properties) {
     if (!interaction.isCommand()) return
 
-    const command = client.commands.get(interaction.commandName)
+    const command = properties.commands.get(interaction.commandName)
 
     if (!command) return
     if (
       command.requiresActiveSession &&
-      !validation.isActiveSession(client, interaction.guild.id)
+      !validation.isActiveSession(properties, interaction.guild?.id)
     ) {
       await interaction.reply(
         'You have not started a session yet! Please run the /newsession command.'
@@ -21,10 +25,10 @@ module.exports = {
     }
 
     try {
-      log.info(`Running command: ${command.data.name}`)
-      await command.execute(interaction, client)
+      logger.info(`Running command: ${command.data.name}`)
+      await command.execute(interaction, properties)
     } catch (error) {
-      log.error(error)
+      logger.error(error)
       await interaction.reply({
         content: 'There was an error while executing this command!',
         ephemeral: true
