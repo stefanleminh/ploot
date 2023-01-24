@@ -1,5 +1,5 @@
-import { CollectorFilter, CommandInteraction, MessageActionRow, MessageSelectMenu, MessageButton } from 'discord.js'
-import { Properties } from '../types/properties'
+import { type CollectorFilter, type CommandInteraction, MessageActionRow, MessageSelectMenu, MessageButton } from 'discord.js'
+import { type Properties } from '../types/properties'
 import path from 'path'
 import { logging } from '../logging/winston'
 

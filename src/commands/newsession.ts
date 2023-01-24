@@ -1,7 +1,7 @@
-import { Properties } from '../types/properties'
+import { type Properties } from '../types/properties'
 import path from 'path'
 import { logging } from '../logging/winston'
-import { CommandInteraction } from 'discord.js'
+import { type CommandInteraction } from 'discord.js'
 import { isActiveSession, isConfigured } from '../modules/validation'
 import { SlashCommandBuilder } from '@discordjs/builders'
 const logger = logging(path.basename(__filename))

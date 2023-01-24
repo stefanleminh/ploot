@@ -3,7 +3,7 @@ import fs from 'fs'
 import path from 'path'
 import { logging } from './logging/winston'
 import Keyv from 'keyv'
-import { Properties } from './types/properties'
+import { type Properties } from './types/properties'
 import config from '../config.json'
 const logger = logging(path.basename(__filename))
 const client = new Client({

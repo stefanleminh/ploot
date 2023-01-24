@@ -1,4 +1,4 @@
-import { RateLimitData } from 'discord.js'
+import { type RateLimitData } from 'discord.js'
 import path from 'path'
 import { logging } from '../logging/winston'
 const logger = logging(path.basename(__filename))

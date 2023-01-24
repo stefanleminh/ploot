@@ -1,7 +1,7 @@
 import path from 'path'
 import { logging } from '../logging/winston'
-import { Client, Interaction } from 'discord.js'
-import { Properties } from 'src/types/properties'
+import { type Client, type Interaction } from 'discord.js'
+import { type Properties } from 'src/types/properties'
 import { isActiveSession } from '../modules/validation'
 
 const logger = logging(path.basename(__filename))

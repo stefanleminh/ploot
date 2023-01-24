@@ -1,5 +1,5 @@
-import { CommandInteraction, GuildMember } from 'discord.js'
-import { Properties } from '../types/properties'
+import { type CommandInteraction, type GuildMember } from 'discord.js'
+import { type Properties } from '../types/properties'
 import { SlashCommandBuilder } from '@discordjs/builders'
 import path from 'path'
 import { logging } from '../logging/winston'

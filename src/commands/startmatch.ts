@@ -1,8 +1,8 @@
-import { Properties } from '../types/properties'
+import { type Properties } from '../types/properties'
 
 import path from 'path'
 import { logging } from '../logging/winston'
-import { CommandInteraction, Collection, GuildMember, VoiceChannel, Role, User } from 'discord.js'
+import { type CommandInteraction, type Collection, type GuildMember, type VoiceChannel, type Role, type User } from 'discord.js'
 import { SlashCommandBuilder } from '@discordjs/builders'
 const logger = logging(path.basename(__filename))
 

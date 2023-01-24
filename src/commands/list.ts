@@ -1,5 +1,5 @@
-import { Properties } from '../types/properties'
-import { CommandInteraction, Collection, GuildMember, Role } from 'discord.js'
+import { type Properties } from '../types/properties'
+import { type CommandInteraction, type Collection, type GuildMember, type Role } from 'discord.js'
 
 import { SlashCommandBuilder } from '@discordjs/builders'
 import { createEmbed } from '../modules/functions'

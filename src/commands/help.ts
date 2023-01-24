@@ -1,7 +1,7 @@
-import Discord, { CommandInteraction } from 'discord.js'
-import { Properties } from '../types/properties'
+import Discord, { type CommandInteraction } from 'discord.js'
+import { type Properties } from '../types/properties'
 import { SlashCommandBuilder } from '@discordjs/builders'
-import { Command } from '../types/command'
+import { type Command } from '../types/command'
 
 module.exports = {
   data: new SlashCommandBuilder()

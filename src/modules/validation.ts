@@ -1,4 +1,4 @@
-import { Properties } from '../types/properties'
+import { type Properties } from '../types/properties'
 
 import path from 'path'
 import { logging } from '../logging/winston'
