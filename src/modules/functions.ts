@@ -1,4 +1,4 @@
-import Discord, { CommandInteraction, GuildMember, HexColorString, User } from 'discord.js'
+import Discord, { type CommandInteraction, type GuildMember, type HexColorString, type User } from 'discord.js'
 
 export function chunk (arr: User[], chunkSize: number): User[][] {
   const R = []
