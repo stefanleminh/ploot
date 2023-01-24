@@ -2,9 +2,9 @@ import { Properties } from '../types/properties'
 
 import path from 'path'
 import { logging } from '../logging/winston'
-import { Interaction, CommandInteraction } from 'discord.js'
+import { CommandInteraction } from 'discord.js'
+import { SlashCommandBuilder } from '@discordjs/builders'
 const logger = logging(path.basename(__filename))
-const { SlashCommandBuilder } = require('@discordjs/builders')
 
 module.exports = {
   data: new SlashCommandBuilder()

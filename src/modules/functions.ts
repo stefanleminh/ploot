@@ -1,10 +1,11 @@
 import { Properties } from '../types/properties'
-import Discord from 'discord.js'
+import Discord, { CommandInteraction, Collection, GuildMember } from 'discord.js'
 import path from 'path'
 import { logging } from '../logging/winston'
+
 const logger = logging(path.basename(__filename))
 
-export function(participant: any, interaction: any, array: any, arrayname: any): void {
+export function addParticipant (participant: any, interaction: any, array: any, arrayname: any): void {
   if (array.includes(participant)) {
     logger.debug(
       `Participant ${participant.username}already exists in ${arrayname}!`
@@ -21,7 +22,7 @@ export function(participant: any, interaction: any, array: any, arrayname: any):
   )
 }
 
-export function chunk(arr: any, chunkSize: any) {
+export function chunk (arr: any, chunkSize: number): any[] {
   const R = []
   for (let i = 0, len = arr.length; i < len; i += chunkSize) {
     R.push(arr.slice(i, i + chunkSize))
@@ -30,29 +31,27 @@ export function chunk(arr: any, chunkSize: any) {
   return R
 }
 
-export function purge (properties: Properties, interaction: any) {
+export function purge (properties: Properties, interaction: CommandInteraction): void {
   const membersInLobby = Array.from(
-    interaction.guild.channels.cache.get(properties.config.lobby).members.keys()
+    (interaction.guild!.channels.cache.get(properties.config.lobby)!.members as Collection<string, GuildMember>).keys()
   )
 
   const remainingPlayers = properties.currentPlayers.filter((currentPlayer: any) => membersInLobby.includes(currentPlayer.id)
   )
   logger.debug(
-    'Remaining Players are: ' +
-      remainingPlayers.map((player: any) => player.username).join(',')
+    `Remaining Players are: ${remainingPlayers.map((player: GuildMember) => player.user.username).join(',')}`
   )
 
   const purgedPlayers = properties.currentPlayers.filter(
     (currentPlayer: any) => !membersInLobby.includes(currentPlayer.id)
   )
   logger.debug(
-    'Purged Players are: ' +
-      purgedPlayers.map((player: any) => player.username).join(',')
+    `Purged Players are: ${purgedPlayers.map((player: GuildMember) => player.user.username).join(',')}`
   )
 
   properties.currentPlayers = remainingPlayers
-  purgedPlayers.forEach((removedPlayer: any) => {
-    interaction.channel.send(
+  purgedPlayers.forEach(async (removedPlayer: any) => {
+    await interaction.channel!.send(
       `Purged <@${removedPlayer.id}> from list of current players!`
     )
   })
@@ -61,27 +60,25 @@ export function purge (properties: Properties, interaction: any) {
     (currentSpectator: any) => membersInLobby.includes(currentSpectator.id)
   )
   logger.debug(
-    'Remaining Spectators are: ' +
-      remainingSpectators.map((spectator: any) => spectator.username).join(',')
+    `Remaining Spectators are: ${remainingSpectators.map((spectator: any) => spectator.username).join(',')}`
   )
 
   const purgedSpectators = properties.currentSpectators.filter(
     (currentSpectator: any) => !membersInLobby.includes(currentSpectator.id)
   )
   logger.debug(
-    'Purged spectators are: ' +
-      purgedSpectators.map((spectator: any) => spectator.username).join(',')
+    `Purged spectators are: ${purgedSpectators.map((spectator: any) => spectator.username).join(',')}`
   )
 
   properties.currentSpectators = remainingSpectators
-  purgedSpectators.forEach((removedSpectator: any) => {
-    interaction.channel.send(
+  purgedSpectators.forEach(async (removedSpectator: any) => {
+    await interaction.channel!.send(
       `Purged <@${removedSpectator.id}> from list of current spectators!`
     )
   })
 }
 
-export function createEmbed (list: any, title: any, color: any, interaction: any)  {
+export function createEmbed (list: any, title: any, color: any, interaction: any): Discord.MessageEmbed {
   const embed = new Discord.MessageEmbed()
     .setTitle(title)
     .setColor(color)
@@ -130,7 +127,7 @@ export function createEmbed (list: any, title: any, color: any, interaction: any
 
 // exports.clearTeamRoles = clearTeamRoles
 export function clearTeamRoles (interaction: Discord.CommandInteraction<Discord.CacheType>, firstTeamRoleId: any, secondTeamRoleId: any): Array<Promise<Discord.GuildMember>> {
-  if(!interaction.guild) return [];
+  if (!interaction.guild) return []
   const promises: any = []
   if (firstTeamRoleId) {
     interaction.guild.roles.cache
@@ -138,18 +135,18 @@ export function clearTeamRoles (interaction: Discord.CommandInteraction<Discord.
       .members.forEach((member: any) => {
         promises.push(
           member.roles.remove(
-            interaction.guild.roles.cache.get(firstTeamRoleId)
+            interaction.guild!.roles.cache.get(firstTeamRoleId)
           )
         )
       })
   }
   if (secondTeamRoleId) {
     interaction.guild.roles.cache
-      .get(secondTeamRoleId)
+      .get(secondTeamRoleId)!
       .members.forEach((member: any) => {
         promises.push(
           member.roles.remove(
-            interaction.guild.roles.cache.get(secondTeamRoleId)
+            interaction.guild!.roles.cache.get(secondTeamRoleId)
           )
         )
       })

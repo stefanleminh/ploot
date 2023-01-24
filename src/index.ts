@@ -41,4 +41,8 @@ for (const file of eventFiles) {
   }
 }
 
-client.login(properties.config.token)
+client.login(properties.config.token).then(() => {
+  logger.info('Logged in!')
+}).catch(err => {
+  logger.error(`Could not log in due to error: ${err}`)
+})

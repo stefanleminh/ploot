@@ -1,7 +1,6 @@
-import { CommandInteraction } from 'discord.js'
+import Discord, { CommandInteraction } from 'discord.js'
 import { Properties } from '../types/properties'
-const Discord = require('discord.js')
-const { SlashCommandBuilder } = require('@discordjs/builders')
+import { SlashCommandBuilder } from '@discordjs/builders'
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -19,7 +18,7 @@ module.exports = {
       .setColor('#B1F7AA')
       .setAuthor({
         name: `${interaction.guild.name} 6v6-Event`,
-        iconURL: interaction.guild.iconURL
+        iconURL: String(interaction.guild.iconURL)
       })
 
     sortedCommands.forEach((command: any) => {

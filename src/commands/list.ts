@@ -1,8 +1,8 @@
 import { Properties } from '../types/properties'
 import { CommandInteraction, Collection, GuildMember } from 'discord.js'
 
-const functions = require('../modules/functions')
-const { SlashCommandBuilder } = require('@discordjs/builders')
+import { SlashCommandBuilder } from '@discordjs/builders'
+import { createEmbed } from '../modules/functions'
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -33,8 +33,8 @@ module.exports = {
       .map((guildmember: any) => guildmember.user)
 
     const embeds = [
-      functions.createEmbed(currentPlayers, 'Players', '#000088', interaction),
-      functions.createEmbed(
+      createEmbed(currentPlayers, 'Players', '#000088', interaction),
+      createEmbed(
         currentSpectators,
         'Spectators',
         '#fe0000',

@@ -2,10 +2,9 @@ import { Properties } from '../types/properties'
 import path from 'path'
 import { logging } from '../logging/winston'
 import { CommandInteraction } from 'discord.js'
-
-const validation = require('../modules/validation')
+import { isActiveSession, isConfigured } from '../modules/validation'
+import { SlashCommandBuilder } from '@discordjs/builders'
 const logger = logging(path.basename(__filename))
-const { SlashCommandBuilder } = require('@discordjs/builders')
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -18,24 +17,22 @@ module.exports = {
   async execute (interaction: CommandInteraction, properties: Properties) {
     if (interaction.guild == null) return
     await interaction.deferReply()
-    const isActiveSession = await validation.isActiveSession(
+    // TODO: Either run configure or give an error message if not configured
+    if (await isActiveSession(
       properties,
       interaction.guild.id
-    )
-    // TODO: Either run configure or give an error message if not configured
-    if (isActiveSession) {
-      interaction.editReply(
+    )) {
+      await interaction.editReply(
         "There's already a session running! Please run /endsession first before starting a new session."
       )
       return
     }
 
-    const isConfigured = await validation.isConfigured(
+    if (!await isConfigured(
       properties,
       interaction.guild.id
-    )
-    if (!isConfigured) {
-      interaction.editReply(
+    )) {
+      await interaction.editReply(
         'I am not configured for this server yet! Please run /configure first before starting a new session.'
       )
       return
@@ -67,7 +64,10 @@ module.exports = {
     logger.info('Setting second team role id to: ' + secondTeamRole.id)
     await properties.secondTeamRoleIds.set(interaction.guild.id, secondTeamRole.id)
 
-    if (!validation.isActiveSession(properties)) {
+    if (!await isActiveSession(
+      properties,
+      interaction.guild.id
+    )) {
       await interaction.reply(
         'Unable to add channels to start a session! Please try again or check the help command.'
       )

@@ -1,8 +1,8 @@
 import path from 'path'
 import { logging } from '../logging/winston'
-import * as validation from '../modules/validation'
 import { Client, Interaction } from 'discord.js'
 import { Properties } from 'src/types/properties'
+import { isActiveSession } from '../modules/validation'
 
 const logger = logging(path.basename(__filename))
 
@@ -16,7 +16,7 @@ module.exports = {
     if (!command) return
     if (
       command.requiresActiveSession &&
-      !validation.isActiveSession(properties, interaction.guild!.id)
+      !await isActiveSession(properties, interaction.guild!.id)
     ) {
       await interaction.reply(
         'You have not started a session yet! Please run the /newsession command.'

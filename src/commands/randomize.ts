@@ -1,11 +1,10 @@
 import { Properties } from '../types/properties'
 import path from 'path'
 import { logging } from '../logging/winston'
-import { CommandInteraction, Collection, Guild, GuildMember } from 'discord.js'
-
-const functions = require('../modules/functions')
+import { CommandInteraction, Collection, GuildMember } from 'discord.js'
+import { SlashCommandBuilder } from '@discordjs/builders'
+import { clearTeamRoles, createEmbed } from '../modules/functions'
 const logger = logging(path.basename(__filename))
-const { SlashCommandBuilder } = require('@discordjs/builders')
 const MAX_AMOUNT_OF_PLAYERS = 10
 
 module.exports = {
@@ -28,7 +27,7 @@ module.exports = {
     )
 
     await Promise.all(
-      functions.clearTeamRoles(interaction, firstTeamRoleId, secondTeamRoleId)
+      clearTeamRoles(interaction, firstTeamRoleId, secondTeamRoleId)
     )
     const lobbyVcId = await properties.lobbies.get(interaction.guild.id)
     const firstTeamVcId = await properties.firstTeamVcs.get(interaction.guild.id)
@@ -120,19 +119,19 @@ module.exports = {
     )
 
     const embeds = [
-      functions.createEmbed(
+      createEmbed(
         firstTeam,
         interaction.guild.channels.cache.get(firstTeamVcId)!.name,
         '#000088',
         interaction
       ),
-      functions.createEmbed(
+      createEmbed(
         secondTeam,
         interaction.guild.channels.cache.get(secondTeamVcId)!.name,
         '#fe0000',
         interaction
       ),
-      functions.createEmbed(
+      createEmbed(
         spectatorTeam,
         interaction.guild.channels.cache.get(lobbyVcId)!.name,
         '#ffa500',
@@ -145,7 +144,7 @@ module.exports = {
   }
 }
 
-async function fillPlayerPool (interaction: any, properties: Properties, playerPool: any, lobbyVcId: any) {
+async function fillPlayerPool (interaction: any, properties: Properties, playerPool: any, lobbyVcId: any): Promise<any> {
   logger.info('Entering fillPlayerPool')
   let resultPlayerPool = []
   const spectatorRoleId = await properties.spectatorRoleIds.get(
@@ -165,8 +164,7 @@ async function fillPlayerPool (interaction: any, properties: Properties, playerP
     randomizedPlayers.slice(0, MAX_AMOUNT_OF_PLAYERS - playerPool.length)
   )
   logger.info(
-    'Playerpool is: ' +
-      resultPlayerPool.map((player: any) => player.user.username).join(', ')
+    `Playerpool is: ${resultPlayerPool.map((player: any) => player.user.username).join(', ')}`
   )
   // Add rest to spectators
   await properties.lastRoundSpectatorIds.set(
@@ -176,11 +174,10 @@ async function fillPlayerPool (interaction: any, properties: Properties, playerP
       .map((player: any) => player.user.id)
   )
   logger.info(
-    'Players that got added to spectators for this round are: ' +
-      randomizedPlayers
-        .slice(MAX_AMOUNT_OF_PLAYERS - playerPool.length)
-        .map((player: any) => player.user.username)
-        .join(', ')
+    `Players that got added to spectators for this round are: ${randomizedPlayers
+      .slice(MAX_AMOUNT_OF_PLAYERS - playerPool.length)
+      .map((player: any) => player.user.username)
+      .join(', ')}`
   )
   return resultPlayerPool
 }
@@ -189,7 +186,7 @@ async function fillPlayerPool (interaction: any, properties: Properties, playerP
  * Shuffles array in place.
  * @param {Array} array items An array containing the items.
  */
-function shuffle (array: any) {
+function shuffle (array: any): any {
   let j
   let x
   let i
@@ -203,7 +200,7 @@ function shuffle (array: any) {
   return result
 }
 
-function createTeams (players: any, firstTeamRoleId: any, secondTeamRoleId: any) {
+function createTeams (players: any, firstTeamRoleId: any, secondTeamRoleId: any): any {
   logger.info(
     `Creating teams with parameters: ${players}, ${firstTeamRoleId}, ${secondTeamRoleId}`
   )

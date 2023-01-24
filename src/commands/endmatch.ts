@@ -3,9 +3,9 @@ import { Properties } from '../types/properties'
 import path from 'path'
 import { logging } from '../logging/winston'
 import { CommandInteraction, Collection, GuildMember } from 'discord.js'
+import { SlashCommandBuilder } from '@discordjs/builders'
+import { clearTeamRoles } from '../modules/functions'
 const logger = logging(path.basename(__filename))
-const { SlashCommandBuilder } = require('@discordjs/builders')
-const functions = require('../modules/functions')
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -51,7 +51,7 @@ module.exports = {
       })
     }
 
-    functions.clearTeamRoles(interaction, firstTeamRoleId, secondTeamRoleId)
+    clearTeamRoles(interaction, firstTeamRoleId, secondTeamRoleId)
     await Promise.all(promises)
     await interaction.editReply('GG!')
   }

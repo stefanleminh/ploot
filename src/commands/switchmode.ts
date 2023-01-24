@@ -3,8 +3,8 @@ import { Properties } from '../types/properties'
 import path from 'path'
 import { logging } from '../logging/winston'
 import { CommandInteraction, Collection, GuildMember } from 'discord.js'
+import { SlashCommandBuilder } from '@discordjs/builders'
 const logger = logging(path.basename(__filename))
-const { SlashCommandBuilder } = require('@discordjs/builders')
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -27,7 +27,7 @@ module.exports = {
 
     const lobbyVcMembers = interaction.guild.channels.cache
       .get(lobbyVc)!.members as Collection<string, GuildMember>
-    const guildUser = await lobbyVcMembers.get(userParameter.id)
+    const guildUser = lobbyVcMembers.get(userParameter.id)
 
     if (guildUser == null) {
       logger.info(
@@ -48,11 +48,11 @@ module.exports = {
     if (!isSpectator) {
       await guildUser.roles.add(spectatorRoleId)
       logger.info(`User ${userParameter.username} is now a spectator`)
-      interaction.reply(`<@${userParameter.id}> is now spectator.`)
+      await interaction.reply(`<@${userParameter.id}> is now spectator.`)
     } else {
       await guildUser.roles.remove(spectatorRoleId)
       logger.info(`User ${userParameter.username} is now an active player`)
-      interaction.reply(`<@${userParameter.id}> is now an active player.`)
+      await interaction.reply(`<@${userParameter.id}> is now an active player.`)
     }
   }
 }

@@ -13,11 +13,14 @@ module.exports = {
   args: '',
   requiresActiveSession: true,
   async execute (interaction: CommandInteraction, properties: Properties) {
-    if (interaction.guild == null) return
+    if (!interaction.guild) return
+
     const promises: any = []
     await interaction.deferReply()
 
     const lobbyVcId = await properties.lobbies.get(interaction.guild.id)
+    if (interaction.guild.channels.cache
+      .get(lobbyVcId) === undefined) return
     const firstTeamVcId = await properties.firstTeamVcs.get(interaction.guild.id)
     const secondTeamVcId = await properties.secondTeamVcs.get(interaction.guild.id)
 

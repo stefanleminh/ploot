@@ -12,7 +12,7 @@ module.exports = {
     .setName('configure')
     .setDescription('Configures the server'),
   args: '',
-  requiresActiveSession: true,
+  requiresActiveSession: false,
   async execute (interaction: CommandInteraction, properties: Properties) {
     if (interaction.guild == null) return
     await interaction.deferReply()

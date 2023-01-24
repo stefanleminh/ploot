@@ -21,7 +21,7 @@ module.exports = {
       .readdirSync('./src/commands')
       .filter((file: any) => file.endsWith('.ts'))
     for (const file of commandFiles) {
-      const command = require('../commands/' + file)
+      const command = require(`../commands/${file}`)
       commands.push(command.data.toJSON())
       properties.commands.set(command.data.name, command)
       logger.info(`Loaded command ${command.data.name}`)
@@ -32,7 +32,7 @@ module.exports = {
     const rest = new REST({
       version: '9'
     }).setToken(TOKEN)
-    ;(async () => {
+    void (async () => {
       try {
         if (!TEST_GUILD_ID) {
           await rest.put(Routes.applicationCommands(CLIENT_ID), {
