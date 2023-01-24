@@ -2,8 +2,8 @@ import { CommandInteraction, GuildMember } from 'discord.js'
 import { Properties } from '../types/properties'
 import { SlashCommandBuilder } from '@discordjs/builders'
 import path from 'path'
-import * as functions from '../modules/functions'
 import { logging } from '../logging/winston'
+import { clearTeamRoles } from 'src/modules/functions'
 const logger = logging(path.basename(__filename))
 
 module.exports = {
@@ -14,7 +14,7 @@ module.exports = {
     ),
   args: '',
   requiresActiveSession: true,
-  async execute (interaction: CommandInteraction, properties: Properties) {
+  async execute (interaction: CommandInteraction, properties: Properties): Promise<void> {
     if (interaction.guild == null) return
     if (interaction.guild === null || interaction.guild === undefined) {
       throw new Error('Interaction is not part of a guild!')
@@ -44,11 +44,11 @@ module.exports = {
     }
 
     promises.concat(
-      functions.clearTeamRoles(interaction, firstTeamRoleId, secondTeamRoleId)
+      clearTeamRoles(interaction, firstTeamRoleId, secondTeamRoleId)
     )
 
     await properties.lastRoundSpectatorIds.set(interaction.guild.id, [])
-    await Promise.all(promises)
+    await Promise.allSettled(promises)
     logger.debug('Cleared data and roles from participants!')
     await interaction.editReply(
       'I cleared all data and roles from participants!'

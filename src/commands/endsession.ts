@@ -14,7 +14,7 @@ module.exports = {
   requiresActiveSession: true,
   async execute (interaction: CommandInteraction, properties: Properties) {
     if (interaction.guild == null) return
-    const promises = []
+    const promises: Array<Promise<void>> = []
     const spectatorRoleId = await properties.spectatorRoleIds.get(
       interaction.guild.id
     )
@@ -34,7 +34,7 @@ module.exports = {
       properties.lastRoundSpectatorIds.delete(interaction.guild.id)
     )
 
-    await Promise.all(promises)
+    await Promise.allSettled(promises)
     logger.debug('Session ended! Cleared all data.')
 
     await interaction.reply('I ended the session and cleared all data.')

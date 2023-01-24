@@ -1,5 +1,5 @@
 import { Properties } from '../types/properties'
-import { CommandInteraction, Collection, GuildMember } from 'discord.js'
+import { CommandInteraction, Collection, GuildMember, Role } from 'discord.js'
 
 import { SlashCommandBuilder } from '@discordjs/builders'
 import { createEmbed } from '../modules/functions'
@@ -21,16 +21,16 @@ module.exports = {
     )
     const lobbyVcMembers = interaction.guild.channels.cache
       .get(lobbyVc)!.members as Collection<string, GuildMember>
-    const currentPlayers = lobbyVcMembers.filter((member: any) => {
-      return member.roles.cache.every((role: any) => role.id !== spectatorRoleId) &&
+    const currentPlayers = lobbyVcMembers.filter((member: GuildMember) => {
+      return member.roles.cache.every((role: Role) => role.id !== spectatorRoleId) &&
         !member.user.bot
     })
-      .map((guildmember: any) => guildmember.user)
-    const currentSpectators = lobbyVcMembers.filter((member: any) => {
-      return member.roles.cache.some((role: any) => role.id === spectatorRoleId) &&
+      .map((guildmember: GuildMember) => guildmember.user)
+    const currentSpectators = lobbyVcMembers.filter((member: GuildMember) => {
+      return member.roles.cache.some((role: Role) => role.id === spectatorRoleId) &&
         !member.user.bot
     })
-      .map((guildmember: any) => guildmember.user)
+      .map((guildmember: GuildMember) => guildmember.user)
 
     const embeds = [
       createEmbed(currentPlayers, 'Players', '#000088', interaction),

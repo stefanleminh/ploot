@@ -23,7 +23,7 @@ module.exports = {
     const firstTeamVc = await properties.firstTeamVcs.get(interaction.guild.id)
     const secondTeamVc = await properties.secondTeamVcs.get(interaction.guild.id)
 
-    const promises: any = []
+    const promises: Array<Promise<GuildMember>> = []
 
     const firstTeamRoleId = await properties.firstTeamRoleIds.get(
       interaction.guild.id
@@ -33,7 +33,7 @@ module.exports = {
     )
     const firstTeamVcMembers = interaction.guild.channels.cache.get(firstTeamVc)!.members as Collection<string, GuildMember>
     if (firstTeamVcMembers.size > 0) {
-      firstTeamVcMembers.forEach((player: any) => {
+      firstTeamVcMembers.forEach((player: GuildMember) => {
         promises.push(player.voice.setChannel(lobbyVc))
         logger.info(
             `Moving user ${player.user.username} to voice channel ${lobbyVc.name}`
@@ -43,7 +43,7 @@ module.exports = {
 
     const secondTeamVcMembers = interaction.guild.channels.cache.get(secondTeamVc)!.members as Collection<string, GuildMember>
     if (secondTeamVcMembers.size > 0) {
-      secondTeamVcMembers.forEach((player: any) => {
+      secondTeamVcMembers.forEach((player: GuildMember) => {
         promises.push(player.voice.setChannel(lobbyVc))
         logger.info(
             `Moving user ${player.user.username} to voice channel ${lobbyVc.name}`
@@ -51,8 +51,8 @@ module.exports = {
       })
     }
 
-    clearTeamRoles(interaction, firstTeamRoleId, secondTeamRoleId)
-    await Promise.all(promises)
+    await Promise.allSettled(clearTeamRoles(interaction, firstTeamRoleId, secondTeamRoleId))
+    await Promise.allSettled(promises)
     await interaction.editReply('GG!')
   }
 }

@@ -24,8 +24,8 @@ const properties: Properties = {
   firstTeamRoleIds: new Keyv(),
   secondTeamRoleIds: new Keyv(),
   lastRoundSpectatorIds: new Keyv(),
-  currentSpectators: undefined,
-  currentPlayers: undefined
+  currentSpectators: new Keyv(),
+  currentPlayers: new Keyv()
 }
 
 const eventFiles = fs

@@ -4,7 +4,7 @@ import path from 'path'
 import { logging } from '../logging/winston'
 const logger = logging(path.basename(__filename))
 
-export async function isConfigured (properties: Properties, guildId: any): Promise<boolean> {
+export async function isConfigured (properties: Properties, guildId: string): Promise<boolean> {
   const isConfigured =
     (await properties.lobbies.get(guildId)) !== undefined &&
     (await properties.firstTeamVcs.get(guildId)) !== undefined &&

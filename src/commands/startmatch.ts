@@ -2,7 +2,7 @@ import { Properties } from '../types/properties'
 
 import path from 'path'
 import { logging } from '../logging/winston'
-import { CommandInteraction, Collection, GuildMember, VoiceChannel } from 'discord.js'
+import { CommandInteraction, Collection, GuildMember, VoiceChannel, Role, User } from 'discord.js'
 import { SlashCommandBuilder } from '@discordjs/builders'
 const logger = logging(path.basename(__filename))
 
@@ -15,7 +15,7 @@ module.exports = {
   async execute (interaction: CommandInteraction, properties: Properties) {
     if (!interaction.guild) return
 
-    const promises: any = []
+    const promises: Array<Promise<GuildMember>> = []
     await interaction.deferReply()
 
     const lobbyVcId = await properties.lobbies.get(interaction.guild.id)
@@ -30,27 +30,27 @@ module.exports = {
     const lobbyVcMembers = interaction.guild.channels.cache
       .get(lobbyVcId)!
       .members as Collection<string, GuildMember>
-    const firstTeam = lobbyVcMembers.filter((member: any) => member.roles.cache.some((role: any) => role.id === firstTeamRoleId)
+    const firstTeam = lobbyVcMembers.filter((member: GuildMember) => member.roles.cache.some((role: Role) => role.id === firstTeamRoleId)
     )
-      .map((guildmember: any) => guildmember.user)
+      .map((guildmember: GuildMember) => guildmember.user)
 
     const secondTeamRoleId = await properties.secondTeamRoleIds.get(
       interaction.guild.id
     )
-    const secondTeam = lobbyVcMembers.filter((member: any) => member.roles.cache.some((role: any) => role.id === secondTeamRoleId)
+    const secondTeam = lobbyVcMembers.filter((member: GuildMember) => member.roles.cache.some((role: Role) => role.id === secondTeamRoleId)
     )
-      .map((guildmember: any) => guildmember.user)
+      .map((guildmember: GuildMember) => guildmember.user)
 
-    firstTeam.forEach((player: any) => {
+    firstTeam.forEach((player: User) => {
       const member = interaction.guild!.members.cache.get(player.id)!
       promises.push(setVoiceChannel(member, firstTeamVcId, interaction))
     })
 
-    secondTeam.forEach((player: any) => {
+    secondTeam.forEach((player: User) => {
       const member = interaction.guild!.members.cache.get(player.id)!
       promises.push(setVoiceChannel(member, secondTeamVcId, interaction))
     })
-    await Promise.all(promises)
+    await Promise.allSettled(promises)
     await interaction.editReply('GLHF!')
   }
 }

@@ -1,13 +1,15 @@
+import Collection from 'discord.js'
+import { Config } from './config';
 export interface Properties {
-  currentSpectators: any
-  currentPlayers: any
-  commands: any
-  config: any
-  lobbies: any
-  firstTeamVcs: any
-  secondTeamVcs: any
-  spectatorRoleIds: any
-  firstTeamRoleIds: any
-  secondTeamRoleIds: any
-  lastRoundSpectatorIds: any
+  currentSpectators: Keyv
+  currentPlayers: Keyv
+  commands: Collection
+  config: Config
+  lobbies: Keyv
+  firstTeamVcs: Keyv
+  secondTeamVcs: Keyv
+  spectatorRoleIds: Keyv
+  firstTeamRoleIds: Keyv
+  secondTeamRoleIds: Keyv
+  lastRoundSpectatorIds: Keyv
 }

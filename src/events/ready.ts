@@ -4,7 +4,8 @@ import { Properties } from '../types/properties'
 import path from 'path'
 import { logging } from '../logging/winston'
 import { REST } from '@discordjs/rest'
-import { Routes } from 'discord-api-types/v9'
+import { RESTPostAPIApplicationCommandsJSONBody, Routes } from 'discord-api-types/v9'
+import { Command } from '../types/command'
 const logger = logging(path.basename(__filename))
 const config = require('../../config.json')
 const TOKEN = config.token
@@ -15,13 +16,13 @@ module.exports = {
   name: 'ready',
   once: true,
   execute (client: Client, properties: Properties) {
-    const commands = []
+    const commands: RESTPostAPIApplicationCommandsJSONBody[] = []
     // Take commands
     const commandFiles = fs
       .readdirSync('./src/commands')
-      .filter((file: any) => file.endsWith('.ts'))
+      .filter((file: any) => file.endsWith('.ts') || file.endsWith('.js'))
     for (const file of commandFiles) {
-      const command = require(`../commands/${file}`)
+      const command: Command = require(`../commands/${file}`)
       commands.push(command.data.toJSON())
       properties.commands.set(command.data.name, command)
       logger.info(`Loaded command ${command.data.name}`)
