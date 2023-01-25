@@ -3,7 +3,7 @@ import { type Properties } from '../types/properties'
 import { SlashCommandBuilder } from '@discordjs/builders'
 import path from 'path'
 import { logging } from '../logging/winston'
-import { clearTeamRoles } from 'src/modules/functions'
+import { clearTeamRoles } from '../modules/functions'
 const logger = logging(path.basename(__filename))
 
 module.exports = {

@@ -1,7 +1,7 @@
 import { type Properties } from '../types/properties'
 import path from 'path'
 import { logging } from '../logging/winston'
-import { type CommandInteraction, type Collection, type GuildMember, type Role, type User } from 'discord.js'
+import { type CommandInteraction, type Collection, type GuildMember, type Role, type User, type Guild } from 'discord.js'
 import { SlashCommandBuilder } from '@discordjs/builders'
 import { clearTeamRoles, createEmbed } from '../modules/functions'
 const logger = logging(path.basename(__filename))
@@ -16,22 +16,20 @@ module.exports = {
   async execute (interaction: CommandInteraction, properties: Properties) {
     if (!interaction.guild) return
     await interaction.deferReply()
-    const firstTeamRoleId: string = await properties.firstTeamRoleIds.get(
-      interaction.guild.id
-    )
-    const secondTeamRoleId: string = await properties.secondTeamRoleIds.get(
-      interaction.guild.id
-    )
-    const spectatorRoleId: string = await properties.spectatorRoleIds.get(
-      interaction.guild.id
-    )
+    const [firstTeamRoleId, secondTeamRoleId, spectatorRoleId] = await Promise.all([
+      properties.firstTeamRoleIds.get(interaction.guild.id),
+      properties.secondTeamRoleIds.get(interaction.guild.id),
+      properties.spectatorRoleIds.get(interaction.guild.id)
+    ])
 
     await Promise.allSettled(
       clearTeamRoles(interaction, firstTeamRoleId, secondTeamRoleId)
     )
-    const lobbyVcId: string = await properties.lobbies.get(interaction.guild.id)
-    const firstTeamVcId: string = await properties.firstTeamVcs.get(interaction.guild.id)
-    const secondTeamVcId: string = await properties.secondTeamVcs.get(interaction.guild.id)
+    const [lobbyVcId, firstTeamVcId, secondTeamVcId] = await Promise.all([
+      properties.lobbies.get(interaction.guild.id),
+      properties.firstTeamVcs.get(interaction.guild.id),
+      properties.secondTeamVcs.get(interaction.guild.id)
+    ])
     // Filter out whoever is not in VC
     const lastRoundSpectatorIds: string[] = await properties.lastRoundSpectatorIds.get(
       interaction.guild.id
@@ -75,7 +73,7 @@ module.exports = {
       )
     } else if (playerPool.length < MAX_AMOUNT_OF_PLAYERS) {
       playerPool = await fillPlayerPool(
-        interaction,
+        interaction.guild,
         properties,
         playerPool,
         lobbyVcId
@@ -144,14 +142,14 @@ module.exports = {
   }
 }
 
-async function fillPlayerPool (interaction: CommandInteraction, properties: Properties, playerPool: GuildMember[], lobbyVcId: string): Promise<GuildMember[]> {
+async function fillPlayerPool (guild: Guild, properties: Properties, playerPool: GuildMember[], lobbyVcId: string): Promise<GuildMember[]> {
   logger.info('Entering fillPlayerPool')
   let resultPlayerPool = []
   const spectatorRoleId = await properties.spectatorRoleIds.get(
-    interaction.guild!.id
+    guild.id
   )
   const randomizedPlayers = shuffle([
-    ...(interaction.guild!.channels.cache
+    ...(guild.channels.cache
       .get(lobbyVcId)!
       .members as Collection<string, GuildMember>).filter(
       (player: GuildMember) => !playerPool.includes(player) &&
@@ -168,7 +166,7 @@ async function fillPlayerPool (interaction: CommandInteraction, properties: Prop
   )
   // Add rest to spectators
   await properties.lastRoundSpectatorIds.set(
-    interaction.guild!.id,
+    guild.id,
     randomizedPlayers
       .slice(MAX_AMOUNT_OF_PLAYERS - playerPool.length)
       .map((player: GuildMember) => player.user.id)
@@ -201,20 +199,16 @@ function shuffle (array: GuildMember[]): GuildMember[] {
 }
 
 function createTeams (players: GuildMember[], firstTeamRoleId: string, secondTeamRoleId: string): Array<Promise<GuildMember>> {
-  logger.info(
-    `Creating teams with parameters: ${players}, ${firstTeamRoleId}, ${secondTeamRoleId}`
-  )
+  logger.info(`Creating teams with parameters: ${players}, ${firstTeamRoleId}, ${secondTeamRoleId}`)
+
   const promises: Array<Promise<GuildMember>> = []
-  const firstTeam = players.slice(0, players.length / 2)
+  const teamSize = players.length / 2
 
-  firstTeam.forEach((member: GuildMember) => {
-    promises.push(member.roles.add(firstTeamRoleId))
-  })
-  const secondTeam = players.slice(players.length / 2, players.length)
-
-  secondTeam.forEach((member: GuildMember) => {
-    promises.push(member.roles.add(secondTeamRoleId))
-  })
-
+  for (let i = 0; i < teamSize; i++) {
+    promises.push(players[i].roles.add(firstTeamRoleId))
+  }
+  for (let i = teamSize; i < players.length; i++) {
+    promises.push(players[i].roles.add(secondTeamRoleId))
+  }
   return promises
 }
