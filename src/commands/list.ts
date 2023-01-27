@@ -33,12 +33,12 @@ module.exports = {
       .map((guildmember: GuildMember) => guildmember.user)
 
     const embeds = [
-      createEmbed(currentPlayers, 'Players', '#000088', interaction),
+      createEmbed(currentPlayers, 'Players', '#000088', interaction.guild),
       createEmbed(
         currentSpectators,
         'Spectators',
         '#fe0000',
-        interaction
+        interaction.guild
       )
     ]
 

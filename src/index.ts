@@ -31,6 +31,7 @@ const properties: Properties = {
 const eventFiles = fs
   .readdirSync('./src/events')
   .filter((file: string) => file.endsWith('.ts'))
+
 for (const file of eventFiles) {
   const event = require(`./events/${file}`)
   logger.info(`Loaded event ${event.name}`)

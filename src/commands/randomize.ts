@@ -23,7 +23,7 @@ module.exports = {
     ])
 
     await Promise.allSettled(
-      clearTeamRoles(interaction, firstTeamRoleId, secondTeamRoleId)
+      clearTeamRoles(interaction.guild, firstTeamRoleId, secondTeamRoleId)
     )
     const [lobbyVcId, firstTeamVcId, secondTeamVcId] = await Promise.all([
       properties.lobbies.get(interaction.guild.id),
@@ -121,19 +121,19 @@ module.exports = {
         firstTeam,
         interaction.guild.channels.cache.get(firstTeamVcId)!.name,
         '#000088',
-        interaction
+        interaction.guild
       ),
       createEmbed(
         secondTeam,
         interaction.guild.channels.cache.get(secondTeamVcId)!.name,
         '#fe0000',
-        interaction
+        interaction.guild
       ),
       createEmbed(
         spectatorTeam,
         interaction.guild.channels.cache.get(lobbyVcId)!.name,
         '#ffa500',
-        interaction
+        interaction.guild
       )
     ]
     logger.info('==========randomize end==========')

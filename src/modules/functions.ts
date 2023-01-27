@@ -1,4 +1,4 @@
-import Discord, { type CommandInteraction, type GuildMember, type HexColorString, type User } from 'discord.js'
+import Discord, { type Guild, type GuildMember, type HexColorString, type User } from 'discord.js'
 
 export function chunk (arr: User[], chunkSize: number): User[][] {
   const R = []
@@ -8,13 +8,13 @@ export function chunk (arr: User[], chunkSize: number): User[][] {
   return R
 }
 
-export function createEmbed (list: User[], title: string, color: HexColorString, interaction: CommandInteraction): Discord.MessageEmbed {
+export function createEmbed (list: User[], title: string, color: HexColorString, guild: Guild): Discord.MessageEmbed {
   const embed = new Discord.MessageEmbed()
     .setTitle(title)
     .setColor(color)
     .setAuthor({
-      name: `${interaction.guild!.name} 6v6-Event`,
-      iconURL: `${interaction.guild!.iconURL()}`
+      name: `${guild.name} 6v6-Event`,
+      iconURL: `${guild.iconURL()}`
     })
     .addFields(
       chunk(list, 6).map(chunk => {
@@ -28,30 +28,31 @@ export function createEmbed (list: User[], title: string, color: HexColorString,
   return embed
 }
 
-export function clearTeamRoles (interaction: Discord.CommandInteraction, firstTeamRoleId: string, secondTeamRoleId: string): Array<Promise<GuildMember>> {
-  if (!interaction.guild) return []
+export function clearTeamRoles (guild: Guild, firstTeamRoleId: string, secondTeamRoleId: string): Array<Promise<GuildMember>> {
   const promises: Array<Promise<GuildMember>> = []
   if (firstTeamRoleId) {
-    interaction.guild.roles.cache
+    const firstTeamRole = guild.roles.cache
       .get(firstTeamRoleId)!
+    firstTeamRole
       .members.forEach((member: GuildMember) => {
         promises.push(
           member.roles.remove(
-            interaction.guild!.roles.cache.get(firstTeamRoleId)!
+            firstTeamRole
           )
         )
       })
   }
   if (secondTeamRoleId) {
-    interaction.guild.roles.cache
+    guild.roles.cache
       .get(secondTeamRoleId)!
       .members.forEach((member: GuildMember) => {
         promises.push(
           member.roles.remove(
-            interaction.guild!.roles.cache.get(secondTeamRoleId)!
+            guild.roles.cache.get(secondTeamRoleId)!
           )
         )
       })
   }
+  console.log({ promises })
   return promises
 }

@@ -51,7 +51,7 @@ module.exports = {
       })
     }
 
-    await Promise.allSettled(clearTeamRoles(interaction, firstTeamRoleId, secondTeamRoleId))
+    await Promise.allSettled(clearTeamRoles(interaction.guild, firstTeamRoleId, secondTeamRoleId))
     await Promise.allSettled(promises)
     await interaction.editReply('GG!')
   }

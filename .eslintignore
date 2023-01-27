@@ -13,3 +13,4 @@ test.js
 !.eslintrc
 /src/types
 *.js
+*.spec.ts
