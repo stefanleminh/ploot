@@ -1,19 +1,20 @@
-const { SlashCommandBuilder } = require('@discordjs/builders')
-const {
-  MessageActionRow,
-  MessageSelectMenu,
-  MessageButton
-} = require('discord.js')
-const path = require('path')
-const logger = require('../logging/winston')(path.basename(__filename))
+import { type CollectorFilter, type CommandInteraction, MessageActionRow, MessageSelectMenu, MessageButton } from 'discord.js'
+import { type Properties } from '../types/properties'
+import path from 'path'
+import { logging } from '../logging/winston'
+
+import { SlashCommandBuilder } from '@discordjs/builders'
+
+const logger = logging(path.basename(__filename))
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('configure')
     .setDescription('Configures the server'),
   args: '',
-  requiresActiveSession: true,
-  async execute (interaction, client) {
+  requiresActiveSession: false,
+  async execute (interaction: CommandInteraction, properties: Properties) {
+    if (interaction.guild == null) return
     await interaction.deferReply()
 
     const voiceChannels = interaction.guild.channels.cache
@@ -47,11 +48,11 @@ module.exports = {
     const secondTeamSelect = new MessageActionRow().addComponents(secondTeamVc)
     const submitRow = new MessageActionRow().addComponents(button)
 
-    const filter = i => {
+    const filter: CollectorFilter<any> = i => {
       return i.user.id === interaction.user.id
     }
 
-    const selectCollector = interaction.channel.createMessageComponentCollector(
+    const selectCollector = interaction.channel!.createMessageComponentCollector(
       {
         filter,
         componentType: 'SELECT_MENU'
@@ -59,30 +60,33 @@ module.exports = {
     )
 
     selectCollector.on('collect', async selectInteraction => {
+      if (selectInteraction.guild === null || selectInteraction.guild === undefined) {
+        throw new Error('Interaction is not part of a guild!')
+      }
       let property
       if (selectInteraction.customId === 'spectatorVc') {
-        property = client.lobbies
+        property = properties.lobbies
       } else if (selectInteraction.customId === 'firstTeamVc') {
-        property = client.firstTeamVcs
+        property = properties.firstTeamVcs
       } else if (selectInteraction.customId === 'secondTeamVc') {
-        property = client.secondTeamVcs
+        property = properties.secondTeamVcs
       }
 
       await property.set(
         selectInteraction.guild.id,
         selectInteraction.values[0]
       )
-      const channelName = await interaction.guild.channels.cache.get(
+      const channelName = interaction.guild!.channels.cache.get(
         selectInteraction.values[0]
-      ).name
+      )!.name
       logger.info(`Set ${selectInteraction.customId} to ${channelName}.`)
-      selectInteraction.reply({
+      await selectInteraction.reply({
         content: `Set ${selectInteraction.customId} to <#${selectInteraction.values[0]}>.`,
         ephemeral: true
       })
     })
 
-    const buttonCollector = interaction.channel.createMessageComponentCollector(
+    const buttonCollector = interaction.channel!.createMessageComponentCollector(
       { filter, componentType: 'BUTTON' }
     )
     buttonCollector.on('collect', async i => {
