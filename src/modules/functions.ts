@@ -1,4 +1,4 @@
-import Discord, { type Guild, type GuildMember, type HexColorString, type User } from 'discord.js'
+import Discord, { type Collection, type Role, type Guild, type GuildMember, type HexColorString, type User } from 'discord.js'
 
 export function chunk (arr: User[], chunkSize: number): User[][] {
   const R = []
@@ -28,10 +28,10 @@ export function createEmbed (list: User[], title: string, color: HexColorString,
   return embed
 }
 
-export function clearTeamRoles (guild: Guild, firstTeamRoleId: string, secondTeamRoleId: string): Array<Promise<GuildMember>> {
+export function clearTeamRoles (roleCache: Collection<string, Role>, firstTeamRoleId: string, secondTeamRoleId: string): Array<Promise<GuildMember>> {
   const promises: Array<Promise<GuildMember>> = []
   if (firstTeamRoleId) {
-    const firstTeamRole = guild.roles.cache
+    const firstTeamRole = roleCache
       .get(firstTeamRoleId)!
     firstTeamRole
       .members.forEach((member: GuildMember) => {
@@ -43,12 +43,12 @@ export function clearTeamRoles (guild: Guild, firstTeamRoleId: string, secondTea
       })
   }
   if (secondTeamRoleId) {
-    guild.roles.cache
+    roleCache
       .get(secondTeamRoleId)!
       .members.forEach((member: GuildMember) => {
         promises.push(
           member.roles.remove(
-            guild.roles.cache.get(secondTeamRoleId)!
+            roleCache.get(secondTeamRoleId)!
           )
         )
       })

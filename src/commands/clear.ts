@@ -44,7 +44,7 @@ module.exports = {
     }
 
     promises.concat(
-      clearTeamRoles(interaction.guild, firstTeamRoleId, secondTeamRoleId)
+      clearTeamRoles(interaction.guild.roles.cache, firstTeamRoleId, secondTeamRoleId)
     )
 
     await properties.lastRoundSpectatorIds.set(interaction.guild.id, [])
