@@ -1,8 +1,8 @@
 import { type VoiceState } from 'discord.js'
 import { type Properties } from 'src/types/properties'
-
-const path = require('path')
-const logger = require('../logging/winston')(path.basename(__filename))
+import path from 'path'
+import { logging } from '../logging/winston'
+const logger = logging(path.basename(__filename))
 const validation = require('../modules/validation')
 
 module.exports = {

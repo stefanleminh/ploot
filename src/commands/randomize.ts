@@ -23,7 +23,7 @@ module.exports = {
     ])
 
     await Promise.allSettled(
-      clearTeamRoles(interaction.guild, firstTeamRoleId, secondTeamRoleId)
+      clearTeamRoles(interaction.guild.roles.cache, firstTeamRoleId, secondTeamRoleId)
     )
     const [lobbyVcId, firstTeamVcId, secondTeamVcId] = await Promise.all([
       properties.lobbies.get(interaction.guild.id),
