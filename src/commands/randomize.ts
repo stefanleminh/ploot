@@ -207,8 +207,11 @@ function createTeams (players: GuildMember[], firstTeamRoleId: string, secondTea
   for (let i = 0; i < teamSize; i++) {
     promises.push(players[i].roles.add(firstTeamRoleId))
   }
-  for (let i = teamSize; i < players.length; i++) {
-    promises.push(players[i].roles.add(secondTeamRoleId))
+  if (teamSize > 2) {
+    for (let i = teamSize; i < players.length; i++) {
+      promises.push(players[i].roles.add(secondTeamRoleId))
+    }
   }
+
   return promises
 }

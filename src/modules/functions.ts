@@ -65,6 +65,5 @@ export function clearTeamRoles (roleCache: Collection<string, Role>, firstTeamRo
         )
       })
   }
-  console.log({ promises })
   return promises
 }

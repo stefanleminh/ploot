@@ -1,4 +1,4 @@
-import { type VoiceState } from 'discord.js'
+import { type Client, type VoiceState } from 'discord.js'
 import { type Properties } from 'src/types/properties'
 import path from 'path'
 import { logging } from '../logging/winston'
@@ -7,7 +7,7 @@ const validation = require('../modules/validation')
 
 module.exports = {
   name: 'voiceStateUpdate',
-  async execute (oldState: VoiceState, newState: VoiceState, properties: Properties) {
+  async execute (oldState: VoiceState, newState: VoiceState, client: Client, properties: Properties) {
     const lobbyVcId = await properties.lobbies.get(newState.guild.id)
     const isLobbyUpdate =
       newState.channelId === lobbyVcId || oldState.channelId === lobbyVcId
@@ -29,10 +29,6 @@ module.exports = {
         return
       }
       logger.info(`User ${oldState.member!.user.username} has left the lobby`)
-
-      logger.debug(
-        'Removed participant ' + newState.member!.user.username + ' from lobby'
-      )
     }
   }
 }
