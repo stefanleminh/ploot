@@ -1,5 +1,7 @@
 import Discord, { type Collection, type Role, type Guild, type GuildMember, type HexColorString, type User } from 'discord.js'
-
+import path from 'path'
+import { logging } from '../logging/winston'
+const logger = logging(path.basename(__filename))
 export function chunk (arr: User[], chunkSize: number): User[][] {
   const R = []
   for (let i = 0, len = arr.length; i < len; i += chunkSize) {
@@ -35,6 +37,11 @@ export function clearTeamRoles (roleCache: Collection<string, Role>, firstTeamRo
       .get(firstTeamRoleId)!
     firstTeamRole
       .members.forEach((member: GuildMember) => {
+        logger.info(
+          `Removing role ${
+            roleCache.get(firstTeamRoleId)!.name
+          } from member ${member.user.username}`
+        )
         promises.push(
           member.roles.remove(
             firstTeamRole
@@ -46,6 +53,11 @@ export function clearTeamRoles (roleCache: Collection<string, Role>, firstTeamRo
     roleCache
       .get(secondTeamRoleId)!
       .members.forEach((member: GuildMember) => {
+        logger.info(
+          `Removing role ${
+            roleCache.get(secondTeamRoleId)!.name
+          } from member ${member.user.username}`
+        )
         promises.push(
           member.roles.remove(
             roleCache.get(secondTeamRoleId)!
