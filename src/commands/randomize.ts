@@ -199,7 +199,7 @@ function shuffle (array: GuildMember[]): GuildMember[] {
 }
 
 function createTeams (players: GuildMember[], firstTeamRoleId: string, secondTeamRoleId: string): Array<Promise<GuildMember>> {
-  logger.info(`Creating teams with parameters: ${players}, ${firstTeamRoleId}, ${secondTeamRoleId}`)
+  logger.info(`Creating teams with parameters: ${players.map(member => member.user.username)}, ${firstTeamRoleId}, ${secondTeamRoleId}`)
 
   const promises: Array<Promise<GuildMember>> = []
   const teamSize = players.length / 2
