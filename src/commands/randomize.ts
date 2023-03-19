@@ -16,14 +16,16 @@ module.exports = {
   async execute (interaction: CommandInteraction, properties: Properties) {
     if (!interaction.guild) return
     await interaction.deferReply()
+
     const [firstTeamRoleId, secondTeamRoleId, spectatorRoleId] = await Promise.all([
       properties.firstTeamRoleIds.get(interaction.guild.id),
       properties.secondTeamRoleIds.get(interaction.guild.id),
       properties.spectatorRoleIds.get(interaction.guild.id)
     ])
 
+    const roles = await interaction.guild.roles.fetch()
     await Promise.allSettled(
-      clearTeamRoles(interaction.guild.roles.cache, firstTeamRoleId, secondTeamRoleId)
+      clearTeamRoles(roles, firstTeamRoleId, secondTeamRoleId)
     )
     const [lobbyVcId, firstTeamVcId, secondTeamVcId] = await Promise.all([
       properties.lobbies.get(interaction.guild.id),
@@ -43,6 +45,7 @@ module.exports = {
     logger.info('==========randomize start==========')
     let playerPool = lastRoundSpectatorIdsInLobby
       .map((id: string) => interaction.guild!.members.cache.get(id)!)
+      .filter((member: GuildMember) => !member.roles.cache.some((role: Role) => role.id === spectatorRoleId) && !member.user.bot)
       .slice(0, MAX_AMOUNT_OF_PLAYERS + 1)
     if (playerPool.length > 0) {
       logger.info(
@@ -205,10 +208,12 @@ function createTeams (players: GuildMember[], firstTeamRoleId: string, secondTea
   const teamSize = players.length / 2
 
   for (let i = 0; i < teamSize; i++) {
+    logger.info(`Adding role with id ${firstTeamRoleId} to member ${players[i].user.username}`)
     promises.push(players[i].roles.add(firstTeamRoleId))
   }
   if (teamSize > 2) {
     for (let i = teamSize; i < players.length; i++) {
+      logger.info(`Adding role with id ${secondTeamRoleId} to member ${players[i].user.username}`)
       promises.push(players[i].roles.add(secondTeamRoleId))
     }
   }

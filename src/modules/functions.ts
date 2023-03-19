@@ -30,16 +30,16 @@ export function createEmbed (list: User[], title: string, color: HexColorString,
   return embed
 }
 
-export function clearTeamRoles (roleCache: Collection<string, Role>, firstTeamRoleId: string, secondTeamRoleId: string): Array<Promise<GuildMember>> {
+export function clearTeamRoles (roles: Collection<string, Role>, firstTeamRoleId: string, secondTeamRoleId: string): Array<Promise<GuildMember>> {
   const promises: Array<Promise<GuildMember>> = []
   if (firstTeamRoleId) {
-    const firstTeamRole = roleCache
+    const firstTeamRole = roles
       .get(firstTeamRoleId)!
     firstTeamRole
       .members.forEach((member: GuildMember) => {
         logger.info(
           `Removing role ${
-            roleCache.get(firstTeamRoleId)!.name
+            roles.get(firstTeamRoleId)!.name
           } from member ${member.user.username}`
         )
         promises.push(
@@ -50,17 +50,17 @@ export function clearTeamRoles (roleCache: Collection<string, Role>, firstTeamRo
       })
   }
   if (secondTeamRoleId) {
-    roleCache
+    roles
       .get(secondTeamRoleId)!
       .members.forEach((member: GuildMember) => {
         logger.info(
           `Removing role ${
-            roleCache.get(secondTeamRoleId)!.name
+            roles.get(secondTeamRoleId)!.name
           } from member ${member.user.username}`
         )
         promises.push(
           member.roles.remove(
-            roleCache.get(secondTeamRoleId)!
+            roles.get(secondTeamRoleId)!
           )
         )
       })
