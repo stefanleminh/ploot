@@ -3,7 +3,7 @@ import { chunk } from './functions'
 import {jest} from '@jest/globals'
 
 jest.mock('../logging/winston.js', () => ({
-  logger: {
+  logging: {
     info: jest.fn(),
     error: jest.fn(),
   },
