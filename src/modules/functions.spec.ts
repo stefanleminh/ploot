@@ -2,12 +2,11 @@ import { User } from 'discord.js'
 import { chunk } from './functions'
 import {jest} from '@jest/globals'
 
-jest.mock('../logging/winston.js', () => ({
-  logging: {
-    info: jest.fn(),
-    error: jest.fn(),
-  },
-}))
+jest.mock('../../config.json', () => ({
+    token:        "",
+    loggingLevel: "",
+    testGuildId:  "",
+  }), { virtual: true })
 
 describe('chunk', () => {
   test('correctly chunks an array of users into chunks of specified size', () => {
