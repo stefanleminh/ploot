@@ -1,7 +1,7 @@
 import { type Properties } from '../types/properties.js'
 import path from 'path'
 import { logging } from '../logging/winston.js'
-import { type CommandInteraction, type Collection, type GuildMember, type Role, type User, type Guild, MessageEmbed } from 'discord.js'
+import { type CommandInteraction, type Collection, type GuildMember, type Role, type Guild } from 'discord.js'
 import { SlashCommandBuilder } from '@discordjs/builders'
 import { clearTeamRoles, createTeamEmbeds } from '../modules/functions.js'
 import { fileURLToPath } from 'url'
