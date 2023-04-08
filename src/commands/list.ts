@@ -1,10 +1,11 @@
-import { type Properties } from '../types/properties'
+import { type Properties } from '../types/properties.js'
 import { type CommandInteraction, type Collection, type GuildMember, type Role } from 'discord.js'
 
 import { SlashCommandBuilder } from '@discordjs/builders'
-import { createEmbed } from '../modules/functions'
+import { createEmbed } from '../modules/functions.js'
+import { type Command } from 'types/command.js'
 
-module.exports = {
+export const command: Command = {
   data: new SlashCommandBuilder()
     .setName('list')
     .setDescription('Lists active players and spectators.'),

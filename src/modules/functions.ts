@@ -1,6 +1,9 @@
 import Discord, { type Collection, type Role, type Guild, type GuildMember, type HexColorString, type User } from 'discord.js'
 import path from 'path'
-import { logging } from '../logging/winston'
+import { logging } from '../logging/winston.js'
+import { fileURLToPath } from 'url'
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const __filename = fileURLToPath(import.meta.url)
 const logger = logging(path.basename(__filename))
 export function chunk (arr: User[], chunkSize: number): User[][] {
   const R = []

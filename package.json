@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "An Overwatch bot that manages 6v6-Events or Scrims.",
   "main": "index.ts",
+  "type": "module",
   "scripts": {
-    "start": "ts-node src/index.ts",
-    "start-js": "node build/src/index.js",
+    "start": "ts-node-esm src/index.ts",
+    "start-js": "npm run build && node build/src/index.js",
     "watch": "nodemon build/index.js",
     "test": "jest --detectOpenHandles",
     "lint": "eslint .",
@@ -32,7 +33,7 @@
   },
   "devDependencies": {
     "@types/jest": "^29.2.6",
-    "@types/node": "^18.11.9",
+    "@types/node": "^18.15.11",
     "@typescript-eslint/eslint-plugin": "^5.49.0",
     "@typescript-eslint/parser": "^5.49.0",
     "eslint": "^8.32.0",

@@ -1,28 +1,33 @@
 import { type Client } from 'discord.js'
-import { type Properties } from '../types/properties'
-
-import path from 'path'
-import { logging } from '../logging/winston'
+import { type Properties } from '../types/properties.js'
+import fs from 'fs'
+import path, { dirname } from 'path'
+import { logging } from '../logging/winston.js'
 import { REST } from '@discordjs/rest'
 import { type RESTPostAPIApplicationCommandsJSONBody, Routes } from 'discord-api-types/v9'
-import { type Command } from '../types/command'
+import config from '../../config.json' assert { type: 'json' }
+import { fileURLToPath } from 'url'
+import { type PlootEvent } from 'types/plootevent.js'
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const __filename = fileURLToPath(import.meta.url)
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const __dirname = dirname(fileURLToPath(new URL('.', import.meta.url)))
 const logger = logging(path.basename(__filename))
-const config = require('../../config.json')
 const TOKEN = config.token
 const TEST_GUILD_ID = config.testGuildId
-const fs = require('fs')
 
-module.exports = {
+export const event: PlootEvent = {
   name: 'ready',
   once: true,
-  execute (client: Client, properties: Properties) {
+  async execute (client: Client, properties: Properties) {
     const commands: RESTPostAPIApplicationCommandsJSONBody[] = []
     // Take commands
     const commandFiles = fs
-      .readdirSync('./src/commands')
+      .readdirSync(__dirname + '/commands')
       .filter((file: any) => file.endsWith('.ts') || file.endsWith('.js'))
     for (const file of commandFiles) {
-      const command: Command = require(`../commands/${file}`)
+      const script = `../commands/${file}`
+      const { command } = await import (script)
       commands.push(command.data.toJSON())
       properties.commands.set(command.data.name, command)
       logger.info(`Loaded command ${command.data.name}`)

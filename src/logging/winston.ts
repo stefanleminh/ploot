@@ -1,20 +1,20 @@
 /* eslint-disable */
-const winston = require('winston')
-const config = require('../../config')
+import {createLogger, transports, format} from 'winston';
+import config from '../../config.json' assert { type: "json" };
 
 export function logging (filename: string) {
-  return new winston.createLogger({
+  return createLogger({
     level: config.loggingLevel,
     transports: [
-      new winston.transports.Console(),
-      new winston.transports.File({ filename: '../logs/logs.log' })
+      new transports.Console(),
+      new transports.File({ filename: '../logs/logs.log' })
     ],
-    format: winston.format.combine(
-      winston.format.timestamp({
+    format: format.combine(
+     format.timestamp({
         format: 'YYYY-MM-DD HH:mm:ss'
       }),
-      winston.format.label({ label: filename }),
-      winston.format.printf(
+      format.label({ label: filename }),
+      format.printf(
         (info: any) => `[${info.timestamp}] [${info.label}] [${info.level}]: ${
           info.message
         } ${info.stack || ''}`

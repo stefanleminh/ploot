@@ -1,10 +1,15 @@
 import { Client, Intents, Collection } from 'discord.js'
 import fs from 'fs'
-import path from 'path'
-import { logging } from './logging/winston'
+import path, { dirname } from 'path'
+import { logging } from './logging/winston.js'
 import Keyv from 'keyv'
-import { type Properties } from './types/properties'
-import config from '../config.json'
+import { type Properties } from './types/properties.js'
+import config from '../config.json' assert { type: 'json' }
+import { fileURLToPath } from 'url'
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const __filename = fileURLToPath(import.meta.url)
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const __dirname = dirname(fileURLToPath(new URL('.', import.meta.url)))
 const logger = logging(path.basename(__filename))
 const client = new Client({
   intents: [
@@ -29,11 +34,12 @@ const properties: Properties = {
 }
 
 const eventFiles = fs
-  .readdirSync('./src/events')
-  .filter((file: string) => file.endsWith('.ts'))
+  .readdirSync(__dirname + '/src/events')
+  .filter((file: any) => file.endsWith('.ts') || file.endsWith('.js'))
 
 for (const file of eventFiles) {
-  const event = require(`./events/${file}`)
+  const script = `./events/${file}`
+  const { event } = await import(script)
   logger.info(`Loaded event ${event.name}`)
   if (event.once) {
     client.once(event.name, (...args: any) => event.execute(client, properties, ...args))

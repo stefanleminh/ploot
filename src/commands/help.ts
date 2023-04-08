@@ -1,9 +1,9 @@
 import Discord, { type CommandInteraction } from 'discord.js'
-import { type Properties } from '../types/properties'
+import { type Properties } from '../types/properties.js'
 import { SlashCommandBuilder } from '@discordjs/builders'
-import { type Command } from '../types/command'
+import { type Command } from '../types/command.js'
 
-module.exports = {
+export const command: Command = {
   data: new SlashCommandBuilder()
     .setName('help')
     .setDescription('Shows this help message.'),

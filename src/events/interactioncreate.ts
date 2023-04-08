@@ -1,12 +1,15 @@
 import path from 'path'
-import { logging } from '../logging/winston'
+import { logging } from '../logging/winston.js'
 import { type Client, type Interaction } from 'discord.js'
-import { type Properties } from 'src/types/properties'
-import { isActiveSession } from '../modules/validation'
-
+import { type Properties } from '../types/properties.js'
+import { isActiveSession } from '../modules/validation.js'
+import { fileURLToPath } from 'url'
+import { type PlootEvent } from 'types/plootevent.js'
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const __filename = fileURLToPath(import.meta.url)
 const logger = logging(path.basename(__filename))
 
-module.exports = {
+export const event: PlootEvent = {
   name: 'interactionCreate',
   async execute (interaction: Interaction, client: Client, properties: Properties) {
     if (!interaction.isCommand()) return

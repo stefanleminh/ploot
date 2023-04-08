@@ -1,17 +1,20 @@
 import { type Client, type VoiceState } from 'discord.js'
-import { type Properties } from 'src/types/properties'
+import { type Properties } from '../types/properties.js'
 import path from 'path'
-import { logging } from '../logging/winston'
+import { logging } from '../logging/winston.js'
+import { fileURLToPath } from 'url'
+import { isActiveSession } from '../modules/validation.js'
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const __filename = fileURLToPath(import.meta.url)
 const logger = logging(path.basename(__filename))
-const validation = require('../modules/validation')
 
-module.exports = {
+export const event = {
   name: 'voiceStateUpdate',
   async execute (oldState: VoiceState, newState: VoiceState, client: Client, properties: Properties) {
     const lobbyVcId = await properties.lobbies.get(newState.guild.id)
     const isLobbyUpdate =
       newState.channelId === lobbyVcId || oldState.channelId === lobbyVcId
-    if (!isLobbyUpdate || !validation.isActiveSession(properties, newState.guild.id)) {
+    if (!isLobbyUpdate || !(await isActiveSession(properties, newState.guild.id))) {
       return
     }
     const newUserChannel = newState.channel
