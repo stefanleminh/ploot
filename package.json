@@ -5,10 +5,10 @@
   "main": "index.ts",
   "type": "module",
   "scripts": {
-    "start": "ts-node-esm src/index.ts",
-    "start-js": "npm run build && node build/src/index.js",
+    "start-dev": "ts-node-esm src/index.ts",
+    "start": "npm run build && node build/src/index.js",
     "watch": "nodemon build/index.js",
-    "test": "jest --detectOpenHandles",
+    "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --detectOpenHandles",
     "lint": "eslint .",
     "format": "eslint . --fix",
     "build": "tsc",
@@ -32,7 +32,7 @@
     "winston": "^3.3.3"
   },
   "devDependencies": {
-    "@types/jest": "^29.2.6",
+    "@types/jest": "^29.5.0",
     "@types/node": "^18.15.11",
     "@typescript-eslint/eslint-plugin": "^5.49.0",
     "@typescript-eslint/parser": "^5.49.0",

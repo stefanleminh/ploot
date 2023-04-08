@@ -35,7 +35,7 @@ export const command: Command = {
       properties.spectatorRoleIds.delete(interaction.guild.id),
       properties.firstTeamRoleIds.delete(interaction.guild.id),
       properties.secondTeamRoleIds.delete(interaction.guild.id),
-      properties.lastRoundSpectatorIds.delete(interaction.guild.id)
+      properties.guaranteedPlayersNextRoundIds.delete(interaction.guild.id)
     )
 
     await Promise.allSettled(promises)

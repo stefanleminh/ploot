@@ -51,7 +51,7 @@ export const command: Command = {
       clearTeamRoles(interaction.guild.roles.cache, firstTeamRoleId, secondTeamRoleId)
     )
 
-    await properties.lastRoundSpectatorIds.set(interaction.guild.id, [])
+    await properties.guaranteedPlayersNextRoundIds.set(interaction.guild.id, [])
     await Promise.allSettled(promises)
     logger.debug('Cleared data and roles from participants!')
     await interaction.editReply(

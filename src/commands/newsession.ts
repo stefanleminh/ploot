@@ -78,7 +78,7 @@ export const command: Command = {
       return
     }
 
-    await properties.lastRoundSpectatorIds.set(interaction.guild.id, [])
+    await properties.guaranteedPlayersNextRoundIds.set(interaction.guild.id, [])
 
     await interaction.editReply(
       `New session has been created! <#${lobbyVcId}> is the general/spectator's lobby. <#${firstTeamVcId}> is the first team's lobby. <#${secondTeamVcId}> is the second team's lobby. <@&${spectatorRole.id}> is the role for dedicated spectators. <@&${firstTeamRole.id}> is the first teams role. <@&${secondTeamRole.id}> is the second teams role. `

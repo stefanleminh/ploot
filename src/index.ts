@@ -28,7 +28,7 @@ const properties: Properties = {
   spectatorRoleIds: new Keyv(),
   firstTeamRoleIds: new Keyv(),
   secondTeamRoleIds: new Keyv(),
-  lastRoundSpectatorIds: new Keyv(),
+  guaranteedPlayersNextRoundIds: new Keyv(),
   currentSpectators: new Keyv(),
   currentPlayers: new Keyv()
 }

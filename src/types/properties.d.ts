@@ -11,5 +11,5 @@ export interface Properties {
   spectatorRoleIds: Keyv
   firstTeamRoleIds: Keyv
   secondTeamRoleIds: Keyv
-  lastRoundSpectatorIds: Keyv
+  guaranteedPlayersNextRoundIds: Keyv
 }
