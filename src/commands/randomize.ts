@@ -84,7 +84,7 @@ export const command: Command = {
   }
 }
 
-async function setNextRoundGuaranteedPlayers (playerPool: GuildMember[], lobbyVcMembers: Collection<string, GuildMember>, spectatorRoleId: any, properties: Properties, guild: Guild): Promise<void> {
+export async function setNextRoundGuaranteedPlayers (playerPool: GuildMember[], lobbyVcMembers: Collection<string, GuildMember>, spectatorRoleId: any, properties: Properties, guild: Guild): Promise<void> {
   const playerIds = new Set(playerPool.map(player => player.user.id))
   const availablePlayers = lobbyVcMembers.filter(player => !playerPool.includes(player) && !player.roles.cache.has(spectatorRoleId))
   const guaranteedPlayersNextRound = availablePlayers.filter(player => !playerIds.has(player.user.id))
@@ -101,7 +101,7 @@ async function setNextRoundGuaranteedPlayers (playerPool: GuildMember[], lobbyVc
   )
 }
 
-async function fillPlayerPool (guild: Guild, properties: Properties, playerPool: GuildMember[], lobbyVcId: string): Promise<GuildMember[]> {
+export async function fillPlayerPool (guild: Guild, properties: Properties, playerPool: GuildMember[], lobbyVcId: string): Promise<GuildMember[]> {
   logger.info('Entering fillPlayerPool')
   let resultPlayerPool = []
   const spectatorRoleId = await properties.spectatorRoleIds.get(
