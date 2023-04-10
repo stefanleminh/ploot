@@ -11,6 +11,7 @@ module.exports = {
     ]
   },
   moduleNameMapper: {
-    '^../logging/winston': '<rootDir>/src/logging/winston.ts'
+    '^../logging/winston': '<rootDir>/src/logging/winston.ts',
+    '^../modules/functions.js': '<rootDir>/src/modules/functions.ts'
   }
 }

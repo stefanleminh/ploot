@@ -31,11 +31,13 @@ export const command: Command = {
     await Promise.allSettled(
       clearTeamRoles(roles, firstTeamRoleId, secondTeamRoleId)
     )
+
     const [lobbyVcId, firstTeamVcId, secondTeamVcId] = await Promise.all([
       properties.lobbies.get(interaction.guild.id),
       properties.firstTeamVcs.get(interaction.guild.id),
       properties.secondTeamVcs.get(interaction.guild.id)
     ])
+    // Get last round's spectators and make them guaranteed players
     const lastRoundSpectatorIds: string[] = await properties.guaranteedPlayersNextRoundIds.get(
       interaction.guild.id
     )
@@ -155,17 +157,20 @@ function shuffle (array: GuildMember[]): GuildMember[] {
   return result
 }
 
-function createTeams (players: GuildMember[], firstTeamRoleId: string, secondTeamRoleId: string): Array<Promise<GuildMember>> {
+export function createTeams (players: GuildMember[], firstTeamRoleId: string, secondTeamRoleId: string): Array<Promise<GuildMember>> {
   logger.info(`Creating teams with parameters: ${players.map(member => member.user.username)}, ${firstTeamRoleId}, ${secondTeamRoleId}`)
-
+  if (players.length > MAX_AMOUNT_OF_PLAYERS) {
+    logger.warn(`More players in pool of size ${players.length} than allowed size of ${MAX_AMOUNT_OF_PLAYERS}! Any players beyond that will be cut off.`)
+    players = players.slice(0, MAX_AMOUNT_OF_PLAYERS)
+  }
   const promises: Array<Promise<GuildMember>> = []
-  const teamSize = players.length / 2
+  const teamSize = Math.ceil(players.length / 2)
 
   for (let i = 0; i < teamSize; i++) {
     logger.info(`Adding role with id ${firstTeamRoleId} to member ${players[i].user.username}`)
     promises.push(players[i].roles.add(firstTeamRoleId))
   }
-  if (teamSize > 2) {
+  if (teamSize >= 1) {
     for (let i = teamSize; i < players.length; i++) {
       logger.info(`Adding role with id ${secondTeamRoleId} to member ${players[i].user.username}`)
       promises.push(players[i].roles.add(secondTeamRoleId))
