@@ -24,7 +24,7 @@ export const event: PlootEvent = {
     // Take commands
     const commandFiles = fs
       .readdirSync(__dirname + '/commands')
-      .filter((file: any) => file.endsWith('.ts') || file.endsWith('.js'))
+      .filter((file: any) => (file.endsWith('.ts') && !file.includes('spec')) || file.endsWith('.js'))
     for (const file of commandFiles) {
       const script = `../commands/${file}`
       const { command } = await import (script)
