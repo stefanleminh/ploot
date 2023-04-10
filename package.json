@@ -8,7 +8,7 @@
     "start-dev": "ts-node-esm src/index.ts",
     "start": "npm run build && node build/src/index.js",
     "watch": "nodemon build/index.js",
-    "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --detectOpenHandles",
+    "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js",
     "test-ci": "cp ./src/__mocks__/mock-config.json config.json && npm run test && rm config.json",
     "lint": "eslint .",
     "format": "eslint . --fix",
