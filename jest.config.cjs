@@ -11,7 +11,6 @@ module.exports = {
     ]
   },
   moduleNameMapper: {
-    '^../logging/winston': '<rootDir>/src/logging/winston.ts',
-    '^../../config\\.json$': '<rootDir>/src/__mocks__/mock-config.json'
+    '^../logging/winston': '<rootDir>/src/logging/winston.ts'
   }
 }
