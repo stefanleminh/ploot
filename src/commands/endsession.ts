@@ -1,12 +1,16 @@
-import { type Properties } from '../types/properties'
+import { type Properties } from '../types/properties.js'
 
 import path from 'path'
-import { logging } from '../logging/winston'
+import { logging } from '../logging/winston.js'
 import { type CommandInteraction } from 'discord.js'
 import { SlashCommandBuilder } from '@discordjs/builders'
+import { fileURLToPath } from 'url'
+import { type Command } from 'types/command.js'
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const __filename = fileURLToPath(import.meta.url)
 const logger = logging(path.basename(__filename))
 
-module.exports = {
+export const command: Command = {
   data: new SlashCommandBuilder()
     .setName('endsession')
     .setDescription('Ends the session and clears all the data.'),
@@ -31,7 +35,7 @@ module.exports = {
       properties.spectatorRoleIds.delete(interaction.guild.id),
       properties.firstTeamRoleIds.delete(interaction.guild.id),
       properties.secondTeamRoleIds.delete(interaction.guild.id),
-      properties.lastRoundSpectatorIds.delete(interaction.guild.id)
+      properties.guaranteedPlayersNextRoundIds.delete(interaction.guild.id)
     )
 
     await Promise.allSettled(promises)

@@ -3,11 +3,13 @@
   "version": "1.0.0",
   "description": "An Overwatch bot that manages 6v6-Events or Scrims.",
   "main": "index.ts",
+  "type": "module",
   "scripts": {
-    "start": "ts-node src/index.ts",
-    "start-js": "node build/src/index.js",
+    "start-dev": "ts-node-esm src/index.ts --ignore **/*.spec.ts",
+    "start": "npm run build && node build/src/index.js",
     "watch": "nodemon build/index.js",
-    "test": "jest --detectOpenHandles",
+    "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js",
+    "test-ci": "cp ./src/__mocks__/mock-config.json config.json && npm run test && rm config.json",
     "lint": "eslint .",
     "format": "eslint . --fix",
     "build": "tsc",
@@ -28,11 +30,12 @@
     "discord-api-types": "^0.32.1",
     "discord.js": "^13.7.0",
     "keyv": "^4.3.2",
-    "winston": "^3.3.3"
+    "winston": "^3.3.3",
+    "winston-daily-rotate-file": "^4.7.1"
   },
   "devDependencies": {
-    "@types/jest": "^29.2.6",
-    "@types/node": "^18.11.9",
+    "@types/jest": "^29.5.0",
+    "@types/node": "^18.15.11",
     "@typescript-eslint/eslint-plugin": "^5.49.0",
     "@typescript-eslint/parser": "^5.49.0",
     "eslint": "^8.32.0",

@@ -1,7 +1,10 @@
-import { type Properties } from '../types/properties'
+import { type Properties } from '../types/properties.js'
 
 import path from 'path'
-import { logging } from '../logging/winston'
+import { logging } from '../logging/winston.js'
+import { fileURLToPath } from 'url'
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const __filename = fileURLToPath(import.meta.url)
 const logger = logging(path.basename(__filename))
 
 export async function isConfigured (properties: Properties, guildId: string): Promise<boolean> {

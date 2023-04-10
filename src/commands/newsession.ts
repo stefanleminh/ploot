@@ -1,12 +1,16 @@
-import { type Properties } from '../types/properties'
+import { type Properties } from '../types/properties.js'
 import path from 'path'
-import { logging } from '../logging/winston'
+import { logging } from '../logging/winston.js'
 import { type CommandInteraction } from 'discord.js'
-import { isActiveSession, isConfigured } from '../modules/validation'
+import { isActiveSession, isConfigured } from '../modules/validation.js'
 import { SlashCommandBuilder } from '@discordjs/builders'
+import { fileURLToPath } from 'url'
+import { type Command } from 'types/command.js'
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const __filename = fileURLToPath(import.meta.url)
 const logger = logging(path.basename(__filename))
 
-module.exports = {
+export const command: Command = {
   data: new SlashCommandBuilder()
     .setName('newsession')
     .setDescription(
@@ -74,7 +78,7 @@ module.exports = {
       return
     }
 
-    await properties.lastRoundSpectatorIds.set(interaction.guild.id, [])
+    await properties.guaranteedPlayersNextRoundIds.set(interaction.guild.id, [])
 
     await interaction.editReply(
       `New session has been created! <#${lobbyVcId}> is the general/spectator's lobby. <#${firstTeamVcId}> is the first team's lobby. <#${secondTeamVcId}> is the second team's lobby. <@&${spectatorRole.id}> is the role for dedicated spectators. <@&${firstTeamRole.id}> is the first teams role. <@&${secondTeamRole.id}> is the second teams role. `

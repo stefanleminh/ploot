@@ -1,12 +1,16 @@
 import { type CommandInteraction, type GuildMember } from 'discord.js'
-import { type Properties } from '../types/properties'
+import { type Properties } from '../types/properties.js'
 import { SlashCommandBuilder } from '@discordjs/builders'
 import path from 'path'
-import { logging } from '../logging/winston'
-import { clearTeamRoles } from '../modules/functions'
+import { logging } from '../logging/winston.js'
+import { clearTeamRoles } from '../modules/functions.js'
+import { fileURLToPath } from 'url'
+import { type Command } from 'types/command.js'
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const __filename = fileURLToPath(import.meta.url)
 const logger = logging(path.basename(__filename))
 
-module.exports = {
+export const command: Command = {
   data: new SlashCommandBuilder()
     .setName('clear')
     .setDescription(
@@ -47,7 +51,7 @@ module.exports = {
       clearTeamRoles(interaction.guild.roles.cache, firstTeamRoleId, secondTeamRoleId)
     )
 
-    await properties.lastRoundSpectatorIds.set(interaction.guild.id, [])
+    await properties.guaranteedPlayersNextRoundIds.set(interaction.guild.id, [])
     await Promise.allSettled(promises)
     logger.debug('Cleared data and roles from participants!')
     await interaction.editReply(

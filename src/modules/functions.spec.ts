@@ -1,5 +1,5 @@
-import { Guild, Role, Collection, GuildMember, User } from 'discord.js'
-import { chunk, clearTeamRoles } from './functions'
+import { User } from 'discord.js'
+import { chunk } from './functions'
 
 describe('chunk', () => {
   test('correctly chunks an array of users into chunks of specified size', () => {
