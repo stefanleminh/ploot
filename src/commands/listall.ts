@@ -7,7 +7,7 @@ import { type Command } from 'types/command.js'
 
 export const command: Command = {
   data: new SlashCommandBuilder()
-    .setName('list')
+    .setName('listall')
     .setDescription('Lists active players and spectators.'),
   args: '',
   requiresActiveSession: true,

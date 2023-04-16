@@ -12,6 +12,7 @@ module.exports = {
   },
   moduleNameMapper: {
     '^../logging/winston': '<rootDir>/src/logging/winston.ts',
-    '^../modules/functions.js': '<rootDir>/src/modules/functions.ts'
+    '^../modules/functions.js': '<rootDir>/src/modules/functions.ts',
+    '^./listteams.js': '<rootDir>/src/commands/listteams.ts'
   }
 }
