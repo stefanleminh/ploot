@@ -3,9 +3,10 @@ import path from 'path'
 import { logging } from '../logging/winston.js'
 import { type CommandInteraction, type Collection, type GuildMember, type Role, type Guild } from 'discord.js'
 import { SlashCommandBuilder } from '@discordjs/builders'
-import { clearTeamRoles, createTeamEmbeds } from '../modules/functions.js'
+import { clearTeamRoles } from '../modules/functions.js'
 import { fileURLToPath } from 'url'
 import { type Command } from 'types/command.js'
+import * as listTeams from './listteams.js'
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const __filename = fileURLToPath(import.meta.url)
 const logger = logging(path.basename(__filename))
@@ -32,11 +33,8 @@ export const command: Command = {
       clearTeamRoles(roles, firstTeamRoleId, secondTeamRoleId)
     )
 
-    const [lobbyVcId, firstTeamVcId, secondTeamVcId] = await Promise.all([
-      properties.lobbies.get(interaction.guild.id),
-      properties.firstTeamVcs.get(interaction.guild.id),
-      properties.secondTeamVcs.get(interaction.guild.id)
-    ])
+    const lobbyVcId = await properties.lobbies.get(interaction.guild.id)
+
     // Get last round's spectators and make them guaranteed players
     const lastRoundSpectatorIds: string[] = await properties.guaranteedPlayersNextRoundIds.get(
       interaction.guild.id
@@ -77,10 +75,9 @@ export const command: Command = {
     // Update cache with new roles
     await interaction.guild.members.fetch()
 
-    const embeds = createTeamEmbeds(lobbyVcMembers, firstTeamRoleId, secondTeamRoleId, spectatorRoleId, interaction.guild, firstTeamVcId, secondTeamVcId, lobbyVcId)
     logger.info('==========randomize end==========')
 
-    await interaction.editReply({ embeds })
+    await listTeams.command.execute(interaction, properties)
   }
 }
 
