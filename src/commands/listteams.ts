@@ -20,6 +20,10 @@ export const command: Command = {
     if (interaction.guild == null) return
     if (!interaction.deferred) await interaction.deferReply()
 
+    // Update cache with new roles
+    await interaction.guild.members.fetch({ force: true })
+    await interaction.guild.roles.fetch()
+
     const [firstTeamRoleId, secondTeamRoleId, spectatorRoleId] = await Promise.all([
       properties.firstTeamRoleIds.get(interaction.guild.id),
       properties.secondTeamRoleIds.get(interaction.guild.id),
@@ -30,10 +34,8 @@ export const command: Command = {
       properties.firstTeamVcs.get(interaction.guild.id),
       properties.secondTeamVcs.get(interaction.guild.id)
     ])
-    const lobbyVcMembers: Collection<string, GuildMember> = (interaction.guild.channels.cache
-      .get(lobbyVcId)!
-      .members as Collection<string, GuildMember>)
-      .filter(member => !member.user.bot)
+
+    const lobbyVcMembers: Collection<string, GuildMember> = (await interaction.guild.channels.fetch()).get(lobbyVcId)!.members.filter(member => !member.user.bot)
     const embeds = createTeamEmbeds(lobbyVcMembers, firstTeamRoleId, secondTeamRoleId, spectatorRoleId, interaction.guild, firstTeamVcId, secondTeamVcId, lobbyVcId)
     await interaction.editReply({ embeds })
   }
