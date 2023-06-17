@@ -72,6 +72,9 @@ export const command: Command = {
       createTeams(randomizedPlayerPool, firstTeamRoleId, secondTeamRoleId)
     )
 
+    // Update cache with new roles
+    await interaction.guild.members.fetch()
+
     logger.info('==========randomize end==========')
 
     await listTeams.command.execute(interaction, properties)
