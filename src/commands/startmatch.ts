@@ -31,6 +31,10 @@ export const command: Command = {
     const firstTeamRoleId = await properties.firstTeamRoleIds.get(
       interaction.guild.id
     )
+
+    // Update cache with new roles
+    await interaction.guild.members.fetch()
+
     const lobbyVcMembers = interaction.guild.channels.cache
       .get(lobbyVcId)!
       .members as Collection<string, GuildMember>

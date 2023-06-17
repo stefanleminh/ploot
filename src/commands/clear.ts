@@ -48,7 +48,7 @@ export const command: Command = {
     }
 
     promises.concat(
-      clearTeamRoles(interaction.guild.roles.cache, firstTeamRoleId, secondTeamRoleId)
+      clearTeamRoles(interaction.guild.roles.cache, firstTeamRoleId, secondTeamRoleId, interaction.guild.members)
     )
 
     await properties.guaranteedPlayersNextRoundIds.set(interaction.guild.id, [])
