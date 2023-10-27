@@ -18,6 +18,7 @@ export const command: Command = {
   requiresActiveSession: true,
   async execute (interaction: CommandInteraction, properties: Properties) {
     if (interaction.guild == null) return
+    await interaction.deferReply()
     const promises: Array<Promise<void>> = []
     const spectatorRoleId = await properties.spectatorRoleIds.get(
       interaction.guild.id
@@ -41,6 +42,6 @@ export const command: Command = {
     await Promise.allSettled(promises)
     logger.debug('Session ended! Cleared all data.')
 
-    await interaction.reply('I ended the session and cleared all data.')
+    await interaction.editReply('I ended the session and cleared all data.')
   }
 }
