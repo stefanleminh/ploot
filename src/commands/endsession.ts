@@ -38,7 +38,7 @@ export const command: Command = {
       properties.guaranteedPlayersNextRoundIds.delete(interaction.guild.id)
     )
 
-    await Promise.allSettled(promises)
+    await Promise.all(promises)
     logger.debug('Session ended! Cleared all data.')
 
     await interaction.reply('I ended the session and cleared all data.')

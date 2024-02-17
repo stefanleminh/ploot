@@ -52,7 +52,7 @@ export const command: Command = {
     )
 
     await properties.guaranteedPlayersNextRoundIds.set(interaction.guild.id, [])
-    await Promise.allSettled(promises)
+    await Promise.all(promises)
     logger.debug('Cleared data and roles from participants!')
     await interaction.editReply(
       'I cleared all data and roles from participants!'

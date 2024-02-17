@@ -29,7 +29,7 @@ export const command: Command = {
     ])
 
     const roles = await interaction.guild.roles.fetch()
-    await Promise.allSettled(
+    await Promise.all(
       clearTeamRoles(roles, firstTeamRoleId, secondTeamRoleId)
     )
 
@@ -68,7 +68,7 @@ export const command: Command = {
       )
     }
     const randomizedPlayerPool = shuffle(playerPool)
-    await Promise.allSettled(
+    await Promise.all(
       createTeams(randomizedPlayerPool, firstTeamRoleId, secondTeamRoleId)
     )
 

@@ -54,7 +54,7 @@ export const command: Command = {
       const member = interaction.guild!.members.cache.get(player.id)!
       promises.push(setVoiceChannel(member, secondTeamVcId, interaction))
     })
-    await Promise.allSettled(promises)
+    await Promise.all(promises)
     await interaction.editReply('GLHF!')
   }
 }

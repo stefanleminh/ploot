@@ -55,8 +55,9 @@ export const command: Command = {
       })
     }
 
-    await Promise.allSettled(clearTeamRoles(interaction.guild.roles.cache, firstTeamRoleId, secondTeamRoleId))
-    await Promise.allSettled(promises)
+    const clearTeamRolesPromise = await Promise.all(clearTeamRoles(interaction.guild.roles.cache, firstTeamRoleId, secondTeamRoleId))
+    logger.info(JSON.stringify(clearTeamRolesPromise))
+    await Promise.all(promises)
     await interaction.editReply('GG!')
   }
 }
