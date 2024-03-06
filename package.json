@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/stefanleminh/ploot#readme",
   "dependencies": {
-    "@discordjs/rest": "^0.4.1",
+    "@discordjs/rest": "^2.2.0",
     "discord-api-types": "^0.32.1",
     "discord.js": "^13.7.0",
     "keyv": "^4.3.2",
