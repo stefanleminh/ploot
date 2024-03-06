@@ -1,4 +1,4 @@
-import { Collection, Guild, GuildMember, Role } from 'discord.js'
+import { Collection, Guild, GuildMember, GuildMemberManager, Role } from 'discord.js'
 import {
   createTeams,
   fillPlayerPool,
@@ -11,6 +11,9 @@ describe('createTeams', () => {
   let players: GuildMember[]
   const firstTeamRoleId = 'first_team_role'
   const secondTeamRoleId = 'second_team_role'
+  const mockMembers = {
+    fetch: jest.fn()
+  } as unknown as GuildMemberManager
 
   beforeEach(() => {
     players = [
@@ -58,7 +61,7 @@ describe('createTeams', () => {
   })
 
   it('should add the correct team roles to both all', async () => {
-    const promises = createTeams(players, firstTeamRoleId, secondTeamRoleId)
+    const promises = createTeams(players, firstTeamRoleId, secondTeamRoleId, mockMembers)
 
     await Promise.all(promises)
 
@@ -76,7 +79,7 @@ describe('createTeams', () => {
 
   it('should add the correct team roles to both all even if amount of players is uneven', async () => {
     players = players.slice(0, 9)
-    const promises = createTeams(players, firstTeamRoleId, secondTeamRoleId)
+    const promises = createTeams(players, firstTeamRoleId, secondTeamRoleId, mockMembers)
 
     await Promise.all(promises)
 
@@ -93,7 +96,7 @@ describe('createTeams', () => {
 
   it('should just put the players in opposite teams if there are only two players', async () => {
     players = players.slice(0, 2)
-    const promises = createTeams(players, firstTeamRoleId, secondTeamRoleId)
+    const promises = createTeams(players, firstTeamRoleId, secondTeamRoleId, mockMembers)
 
     await Promise.all(promises)
 
@@ -103,7 +106,7 @@ describe('createTeams', () => {
 
   it('should just put the player in one team if there is only one player', async () => {
     players = players.slice(0, 1)
-    const promises = createTeams(players, firstTeamRoleId, secondTeamRoleId)
+    const promises = createTeams(players, firstTeamRoleId, secondTeamRoleId, mockMembers)
 
     await Promise.all(promises)
 
@@ -113,7 +116,7 @@ describe('createTeams', () => {
   it('should exit gracefully when there are no players', async () => {
     players = []
     await expect(
-      Promise.all(createTeams(players, firstTeamRoleId, secondTeamRoleId))
+      Promise.all(createTeams(players, firstTeamRoleId, secondTeamRoleId, mockMembers))
     ).resolves.not.toThrowError()
   })
 
@@ -122,7 +125,7 @@ describe('createTeams', () => {
       user: { username: 'player11' },
       roles: { add: jest.fn().mockResolvedValue(null as never) }
     } as unknown as GuildMember)
-    const promises = createTeams(players, firstTeamRoleId, secondTeamRoleId)
+    const promises = createTeams(players, firstTeamRoleId, secondTeamRoleId, mockMembers)
 
     await Promise.all(promises)
 
