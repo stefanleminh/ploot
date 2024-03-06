@@ -11,7 +11,7 @@ export const event: PlootEvent = {
   name: 'rateLimit',
   async execute (rateLimitData: RateLimitData) {
     logger.info(
-      `Rate limit reached! Timeout: ${rateLimitData.timeout} Limit: ${rateLimitData.limit}`
+      `Rate limit reached! Timeout: ${rateLimitData.timeToReset} Limit: ${rateLimitData.limit}`
     )
   }
 }

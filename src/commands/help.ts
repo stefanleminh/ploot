@@ -14,7 +14,7 @@ export const command: Command = {
     const sortedCommands = properties.commands.sort((a: Command, b: Command) =>
       a.data.name.localeCompare(b.data.name)
     )
-    const helpEmbed = new Discord.MessageEmbed()
+    const helpEmbed = new Discord.EmbedBuilder()
       .setTitle('Help')
       .setColor('#B1F7AA')
       .setAuthor({
@@ -23,10 +23,10 @@ export const command: Command = {
       })
 
     sortedCommands.forEach((command: Command) => {
-      helpEmbed.addField(
-        `/${command.data.name} ${command.args}`,
-        `${command.data.description}`
-      )
+      helpEmbed.addFields({
+        name: `/${command.data.name} ${command.args}`,
+        value: `${command.data.description}`
+      })
     })
 
     await interaction.reply({ embeds: [helpEmbed] })

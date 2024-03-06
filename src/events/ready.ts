@@ -1,4 +1,4 @@
-import { type Client } from 'discord.js'
+import { ActivityType, type Client } from 'discord.js'
 import { type Properties } from '../types/properties.js'
 import fs from 'fs'
 import path, { dirname } from 'path'
@@ -64,6 +64,6 @@ export const event: PlootEvent = {
     logger.info(
       `${client.user!.tag}, ready to serve ${client.users.cache.size} users in ${client.guilds.cache.size} servers.`
     )
-    client.user!.setActivity(' everyone 👀', { type: 'WATCHING' })
+    client.user!.setActivity(' everyone 👀', { type: ActivityType.Watching })
   }
 }

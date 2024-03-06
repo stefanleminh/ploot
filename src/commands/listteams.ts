@@ -1,6 +1,6 @@
 import { type Command } from '../types/command.js'
 import { SlashCommandBuilder } from '@discordjs/builders'
-import { type Guild, type MessageEmbed, type Role, type User, type Collection, type CommandInteraction, type GuildMember } from 'discord.js'
+import { type Guild, type EmbedBuilder, type Role, type User, type Collection, type CommandInteraction, type GuildMember } from 'discord.js'
 import { type Properties } from '../types/properties.js'
 import { createEmbed } from '../modules/functions.js'
 import path from 'path'
@@ -44,7 +44,7 @@ export const command: Command = {
   }
 }
 
-function createTeamEmbeds (lobbyVcMembers: Collection<string, GuildMember>, firstTeamRoleId: any, secondTeamRoleId: any, spectatorRoleId: any, guild: Guild, firstTeamVcId: any, secondTeamVcId: any, lobbyVcId: any): MessageEmbed[] {
+function createTeamEmbeds (lobbyVcMembers: Collection<string, GuildMember>, firstTeamRoleId: any, secondTeamRoleId: any, spectatorRoleId: any, guild: Guild, firstTeamVcId: any, secondTeamVcId: any, lobbyVcId: any): EmbedBuilder[] {
   const firstTeam: User[] = lobbyVcMembers
     .filter((member: GuildMember) => member.roles.cache.some((role: Role) => role.id === firstTeamRoleId))
     .map((guildmember: GuildMember) => guildmember.user)

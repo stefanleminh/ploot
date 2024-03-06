@@ -14,8 +14,8 @@ export function chunk (arr: User[], chunkSize: number): User[][] {
   return R
 }
 
-export function createEmbed (list: User[], title: string, color: HexColorString, guild: Guild): Discord.MessageEmbed {
-  const embed = new Discord.MessageEmbed()
+export function createEmbed (list: User[], title: string, color: HexColorString, guild: Guild): Discord.EmbedBuilder {
+  const embed = new Discord.EmbedBuilder()
     .setTitle(title)
     .setColor(color)
     .setAuthor({
