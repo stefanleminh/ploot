@@ -161,6 +161,10 @@ export function createTeams (players: GuildMember[], firstTeamRoleId: string, se
   const promises: Array<Promise<any>> = []
   const teamSize = Math.ceil(players.length / 2)
 
+  if (players.length === 0) {
+    return promises
+  }
+
   for (let i = 0; i < teamSize; i++) {
     logger.info(`Adding role with id ${firstTeamRoleId} to member ${players[i].user.username}`)
     promises.push(players[i].roles.add(firstTeamRoleId))

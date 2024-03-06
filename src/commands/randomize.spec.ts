@@ -4,7 +4,7 @@ import {
   fillPlayerPool,
   setNextRoundGuaranteedPlayers
 } from './randomize'
-import { jest } from '@jest/globals'
+import { expect, describe, beforeEach, it, jest} from "bun:test"
 import { Properties } from '../types/properties'
 
 describe('createTeams', () => {
@@ -115,9 +115,14 @@ describe('createTeams', () => {
 
   it('should exit gracefully when there are no players', async () => {
     players = []
-    await expect(
-      Promise.all(createTeams(players, firstTeamRoleId, secondTeamRoleId, mockMembers))
-    ).resolves.not.toThrowError()
+    try {
+      await Promise.all(createTeams(players, firstTeamRoleId, secondTeamRoleId, mockMembers));
+      // If no error thrown, test passes
+      expect(true).toBe(true);
+    } catch (error) {
+      // If error thrown, test fails
+      throw new Error('Test failed with error: ' + error.message);
+    }
   })
 
   it('should work even if playerpool is larger than MAX_AMOUNT_OF_PLAYERS', async () => {

@@ -5,15 +5,14 @@
   "main": "index.ts",
   "type": "module",
   "scripts": {
-    "start-dev": "bun index.ts",
-    "start": "bun run build && node ../build/index.js",
-    "watch": "bun index.ts --watch",
+    "start": "bun ./src/index.ts",
+    "start-prod": "bun run build && node ../build/index.js",
+    "watch": "bun ./src/index.ts --watch",
     "test": "bun test",
     "test-ci": "cp ./src/__mocks__/mock-config.json config.json && bun run test && rm config.json",
     "lint": "eslint .",
     "format": "eslint . --fix",
-    "build": "bun build index.ts --outdir ./build --target=bun",
-    "ts-migrate": "ts-migrate"
+    "build": "bun build index.ts --outdir ./build --target=bun"
   },
   "repository": {
     "type": "git",
@@ -36,6 +35,7 @@
     "@types/node": "^18.15.11",
     "@typescript-eslint/eslint-plugin": "^5.49.0",
     "@typescript-eslint/parser": "^5.49.0",
+    "bun-types": "^1.0.30",
     "eslint": "^8.32.0",
     "eslint-config-standard-with-typescript": "^32.0.0",
     "eslint-plugin-import": "^2.27.5",
@@ -45,7 +45,6 @@
     "nodemon": "^2.0.7",
     "standard": "^16.0.3",
     "ts-jest": "^29.0.5",
-    "ts-migrate": "^0.1.35",
     "ts-node": "^10.9.1",
     "ts-standard": "^12.0.1",
     "typescript": "^5.3.3"
