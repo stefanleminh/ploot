@@ -1,4 +1,4 @@
-import { Client, Intents, Collection } from 'discord.js'
+import { Client, GatewayIntentBits, Collection } from 'discord.js'
 import fs from 'fs'
 import path, { dirname } from 'path'
 import { logging } from './logging/winston.js'
@@ -13,9 +13,9 @@ const __dirname = dirname(fileURLToPath(new URL('.', import.meta.url)))
 const logger = logging(path.basename(__filename))
 const client = new Client({
   intents: [
-    Intents.FLAGS.GUILDS,
-    Intents.FLAGS.GUILD_VOICE_STATES,
-    Intents.FLAGS.GUILD_MEMBERS
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildVoiceStates,
+    GatewayIntentBits.GuildMembers
   ]
 })
 

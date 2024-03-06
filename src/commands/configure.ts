@@ -1,4 +1,4 @@
-import { type CollectorFilter, type CommandInteraction, MessageActionRow, MessageSelectMenu, MessageButton } from 'discord.js'
+import { type CollectorFilter, type CommandInteraction, ComponentType, ChannelType, StringSelectMenuBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js'
 import { type Properties } from '../types/properties.js'
 import path from 'path'
 import { logging } from '../logging/winston.js'
@@ -21,35 +21,35 @@ export const command: Command = {
     await interaction.deferReply()
 
     const voiceChannels = interaction.guild.channels.cache
-      .filter(channel => channel.type === 'GUILD_VOICE')
+      .filter(channel => channel.type === ChannelType.GuildVoice)
       .map(channel => ({
         label: channel.name,
         value: channel.id
       }))
-    const spectatorVc = new MessageSelectMenu()
+    const spectatorVc = new StringSelectMenuBuilder()
       .setCustomId('spectatorVc')
       .setPlaceholder('Please specify the lobby VC')
       .addOptions(voiceChannels)
 
-    const firstTeamVc = new MessageSelectMenu()
+    const firstTeamVc = new StringSelectMenuBuilder()
       .setCustomId('firstTeamVc')
       .setPlaceholder('Please specify the first team VC')
       .addOptions(voiceChannels)
 
-    const secondTeamVc = new MessageSelectMenu()
+    const secondTeamVc = new StringSelectMenuBuilder()
       .setCustomId('secondTeamVc')
       .setPlaceholder('Please specify the second team VC')
       .addOptions(voiceChannels)
 
-    const button = new MessageButton()
+    const button = new ButtonBuilder()
       .setCustomId('submit')
       .setLabel('Submit')
-      .setStyle('PRIMARY')
+      .setStyle(ButtonStyle.Primary)
 
-    const spectatorSelect = new MessageActionRow().addComponents(spectatorVc)
-    const firstTeamSelect = new MessageActionRow().addComponents(firstTeamVc)
-    const secondTeamSelect = new MessageActionRow().addComponents(secondTeamVc)
-    const submitRow = new MessageActionRow().addComponents(button)
+    const spectatorSelect = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(spectatorVc)
+    const firstTeamSelect = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(firstTeamVc)
+    const secondTeamSelect = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(secondTeamVc)
+    const submitRow = new ActionRowBuilder<ButtonBuilder>().addComponents(button)
 
     const filter: CollectorFilter<any> = i => {
       return i.user.id === interaction.user.id
@@ -58,7 +58,7 @@ export const command: Command = {
     const selectCollector = interaction.channel!.createMessageComponentCollector(
       {
         filter,
-        componentType: 'SELECT_MENU'
+        componentType: ComponentType.StringSelect
       }
     )
 
@@ -90,7 +90,7 @@ export const command: Command = {
     })
 
     const buttonCollector = interaction.channel!.createMessageComponentCollector(
-      { filter, componentType: 'BUTTON' }
+      { filter, componentType: ComponentType.Button }
     )
     buttonCollector.on('collect', async i => {
       await interaction.editReply({
