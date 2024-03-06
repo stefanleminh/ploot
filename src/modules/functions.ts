@@ -1,4 +1,4 @@
-import Discord, { type Collection, type Role, type Guild, type GuildMember, type HexColorString, type User } from 'discord.js'
+import Discord, { type Collection, type Role, type Guild, type GuildMember, type HexColorString, type User, type GuildMemberManager } from 'discord.js'
 import path from 'path'
 import { logging } from '../logging/winston.js'
 import { fileURLToPath } from 'url'
@@ -34,8 +34,8 @@ export function createEmbed (list: User[], title: string, color: HexColorString,
   return embed
 }
 
-export function clearTeamRoles (roles: Collection<string, Role>, firstTeamRoleId: string, secondTeamRoleId: string): Array<Promise<GuildMember>> {
-  const promises: Array<Promise<GuildMember>> = []
+export function clearTeamRoles (roles: Collection<string, Role>, firstTeamRoleId: string, secondTeamRoleId: string, members: GuildMemberManager): Array<Promise<GuildMember>> {
+  const promises: Array<Promise<any>> = []
   if (firstTeamRoleId) {
     const firstTeamRole = roles
       .get(firstTeamRoleId)!
@@ -69,5 +69,9 @@ export function clearTeamRoles (roles: Collection<string, Role>, firstTeamRoleId
         )
       })
   }
+  promises.push(
+    // Update cache with new roles
+    members.fetch()
+  )
   return promises
 }

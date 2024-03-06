@@ -1,7 +1,7 @@
 import { type Properties } from '../types/properties.js'
 import path from 'path'
 import { logging } from '../logging/winston.js'
-import { type CommandInteraction, type Collection, type GuildMember, type Role, type Guild } from 'discord.js'
+import { type CommandInteraction, type Collection, type GuildMember, type Role, type Guild, type GuildMemberManager } from 'discord.js'
 import { SlashCommandBuilder } from '@discordjs/builders'
 import { clearTeamRoles } from '../modules/functions.js'
 import { fileURLToPath } from 'url'
@@ -30,7 +30,7 @@ export const command: Command = {
 
     const roles = await interaction.guild.roles.fetch()
     await Promise.all(
-      clearTeamRoles(roles, firstTeamRoleId, secondTeamRoleId)
+      clearTeamRoles(roles, firstTeamRoleId, secondTeamRoleId, interaction.guild.members)
     )
 
     const lobbyVcId = await properties.lobbies.get(interaction.guild.id)
@@ -39,6 +39,7 @@ export const command: Command = {
     const lastRoundSpectatorIds: string[] = await properties.guaranteedPlayersNextRoundIds.get(
       interaction.guild.id
     )
+
     const lobbyVcMembers: Collection<string, GuildMember> = (interaction.guild.channels.cache
       .get(lobbyVcId)!
       .members as Collection<string, GuildMember>)
@@ -69,11 +70,8 @@ export const command: Command = {
     }
     const randomizedPlayerPool = shuffle(playerPool)
     await Promise.all(
-      createTeams(randomizedPlayerPool, firstTeamRoleId, secondTeamRoleId)
+      createTeams(randomizedPlayerPool, firstTeamRoleId, secondTeamRoleId, interaction.guild.members)
     )
-
-    // Update cache with new roles
-    await interaction.guild.members.fetch()
 
     logger.info('==========randomize end==========')
 
@@ -154,13 +152,13 @@ function shuffle (array: GuildMember[]): GuildMember[] {
   return result
 }
 
-export function createTeams (players: GuildMember[], firstTeamRoleId: string, secondTeamRoleId: string): Array<Promise<GuildMember>> {
+export function createTeams (players: GuildMember[], firstTeamRoleId: string, secondTeamRoleId: string, members: GuildMemberManager): Array<Promise<GuildMember>> {
   logger.info(`Creating teams with parameters: ${players.map(member => member.user.username)}, ${firstTeamRoleId}, ${secondTeamRoleId}`)
   if (players.length > MAX_AMOUNT_OF_PLAYERS) {
     logger.warn(`More players in pool of size ${players.length} than allowed size of ${MAX_AMOUNT_OF_PLAYERS}! Any players beyond that will be cut off.`)
     players = players.slice(0, MAX_AMOUNT_OF_PLAYERS)
   }
-  const promises: Array<Promise<GuildMember>> = []
+  const promises: Array<Promise<any>> = []
   const teamSize = Math.ceil(players.length / 2)
 
   for (let i = 0; i < teamSize; i++) {
@@ -173,6 +171,11 @@ export function createTeams (players: GuildMember[], firstTeamRoleId: string, se
       promises.push(players[i].roles.add(secondTeamRoleId))
     }
   }
+
+  promises.push(
+    // Update cache with new roles
+    members.fetch()
+  )
 
   return promises
 }
