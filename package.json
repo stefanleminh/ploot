@@ -5,14 +5,14 @@
   "main": "index.ts",
   "type": "module",
   "scripts": {
-    "start-dev": "ts-node-esm src/index.ts --ignore **/*.spec.ts",
-    "start": "npm run build && node build/src/index.js",
-    "watch": "nodemon build/index.js",
-    "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js",
-    "test-ci": "cp ./src/__mocks__/mock-config.json config.json && npm run test && rm config.json",
+    "start-dev": "bun index.ts",
+    "start": "bun run build && node ../build/index.js",
+    "watch": "bun index.ts --watch",
+    "test": "bun test",
+    "test-ci": "cp ./src/__mocks__/mock-config.json config.json && bun run test && rm config.json",
     "lint": "eslint .",
     "format": "eslint . --fix",
-    "build": "tsc",
+    "build": "bun build index.ts --outdir ./build --target=bun",
     "ts-migrate": "ts-migrate"
   },
   "repository": {
