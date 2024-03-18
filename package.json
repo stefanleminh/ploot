@@ -27,7 +27,7 @@
   "homepage": "https://github.com/stefanleminh/ploot#readme",
   "dependencies": {
     "discord.js": "^14.14.1",
-    "keyv": "^4.3.2",
+    "keyv": "^4.5.4",
     "winston": "^3.3.3",
     "winston-daily-rotate-file": "^4.7.1"
   },
